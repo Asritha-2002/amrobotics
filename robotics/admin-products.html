@@ -6,6 +6,7 @@
 <title>Products - AM ROBOTICS Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;}
 :root{
@@ -274,20 +275,20 @@ select.form-control{cursor:pointer;}
   </div>
   <div class="store-pill" id="store-pill">🇮🇳 <span>India Store · INR</span></div>
   <div class="nav-group-label">Main</div>
-  <a class="nav-item" href="dashboard.html"><div class="nav-icon ic-blue">🏠</div>Dashboard</a>
+  <a class="nav-item" href="dashboard.html"><div class="nav-icon ic-blue"><i data-lucide="layout-dashboard"></i></div>Dashboard</a>
   <div class="nav-group-label">Catalog</div>
-  <a class="nav-item active"><div class="nav-icon ic-green">📦</div>Products</a>
+  <a class="nav-item active"><div class="nav-icon ic-green"><i data-lucide="package"></i></div>Products</a>
   <div class="nav-group-label">Sales</div>
-  <a class="nav-item" href="dashboard.html"><div class="nav-icon ic-orange">🛒</div>Orders</a>
-  <a class="nav-item" href="admin-customers.html"><div class="nav-icon ic-red">👥</div>Customers</a>
-  <a class="nav-item" href="admin-vouchers.html"><div class="nav-icon ic-purple">🏷️</div>Vouchers</a>
+  <a class="nav-item" href="dashboard.html"><div class="nav-icon ic-orange"><i data-lucide="shopping-cart"></i></div>Orders</a>
+  <a class="nav-item" href="admin-customers.html"><div class="nav-icon ic-red"><i data-lucide="users"></i></div>Customers</a>
+  <a class="nav-item" href="admin-vouchers.html"><div class="nav-icon ic-purple"><i data-lucide="badge-percent"></i></div>Vouchers</a>
   <div class="nav-group-label">Content</div>
-  <a class="nav-item" onclick="window.location.href='admin-shop-details.html'"><div class="nav-icon ic-pink">🏪</div>Shop Details</a>
+  <a class="nav-item" onclick="window.location.href='admin-shop-details.html'"><div class="nav-icon ic-pink"><i data-lucide="store"></i></div>Shop Details</a>
   <div class="nav-group-label">Settings</div>
-  <a class="nav-item" onclick="window.location.href='admin-settings.html'"><div class="nav-icon ic-yellow">⚙️</div>Settings</a>
+  <a class="nav-item" onclick="window.location.href='admin-settings.html'"><div class="nav-icon ic-yellow"><i data-lucide="settings"></i></div>Settings</a>
   <div class="sidebar-footer">
     <button class="logout-nav" onclick="openLogout()">
-      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;">🚪</div>Logout
+      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;"><i data-lucide="log-out"></i></div>Logout
     </button>
   </div>
 </aside>
@@ -297,7 +298,7 @@ select.form-control{cursor:pointer;}
   <div class="topbar">
     <button class="hamburger-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
     <div class="topbar-right">
-      <div class="tb-icon-btn" title="Settings" onclick="window.location.href='admin-settings.html'">⚙️</div>
+      <div class="tb-icon-btn" title="Settings" onclick="window.location.href='admin-settings.html'"><i data-lucide="settings"></i></div>
       <div class="admin-pill">
         <div class="admin-avatar">A</div>
         <div class="admin-info">
@@ -315,27 +316,27 @@ select.form-control{cursor:pointer;}
         <h2>Products</h2>
         <p>Manage your catalog</p>
       </div>
-      <button class="btn btn-primary" onclick="openAddModal()">➕ Add Product</button>
+      <button class="btn btn-primary" onclick="openAddModal()"><i data-lucide="package"></i> Add Product</button>
     </div>
 
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-green">📦</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-green"><i data-lucide="package"></i></div></div>
         <div class="stat-value" id="stat-total">—</div>
         <div class="stat-label">Total Products</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-blue">✅</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-blue"><i data-lucide="badge-check"></i></div></div>
         <div class="stat-value" id="stat-active">—</div>
         <div class="stat-label">Active</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-orange">📉</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-orange"><i data-lucide="package-search"></i></div></div>
         <div class="stat-value" id="stat-low">—</div>
         <div class="stat-label">Low Stock (≤5)</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-purple">🚫</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-purple"><i data-lucide="package-x"></i></div></div>
         <div class="stat-value" id="stat-out">—</div>
         <div class="stat-label">Out of Stock</div>
       </div>
@@ -386,7 +387,7 @@ select.form-control{cursor:pointer;}
 
   <div class="vd-footer">
     <button class="btn btn-outline btn-sm" onclick="closeViewDrawer()">Close</button>
-    <button class="btn btn-primary btn-sm" id="vd-edit-btn" onclick="closeViewDrawerAndEdit()">✏️ Edit Product</button>
+    <button class="btn btn-primary btn-sm" id="vd-edit-btn" onclick="closeViewDrawerAndEdit()"> Edit Product</button>
   </div>
 </div>
 
@@ -506,7 +507,7 @@ select.form-control{cursor:pointer;}
         </div>
         <div class="img-upload-zone" onclick="document.getElementById('f-categoryImage').click()">
           <input type="file" id="f-categoryImage" accept="image/*" onchange="handleCatImageSelect(event)">
-          <div class="upload-icon">🏷️</div>
+          <div class="upload-icon"><i data-lucide="badge-percent"></i></div>
           <p>Upload category image</p>
         </div>
         <div id="new-cat-img-preview"></div>
@@ -524,7 +525,7 @@ select.form-control{cursor:pointer;}
 <!-- ═══ LOGOUT MODAL ═══ -->
 <div class="logout-modal-overlay" id="logout-modal">
   <div class="logout-modal-box">
-    <div class="modal-icon-wrap">🚪</div>
+    <div class="modal-icon-wrap"><i data-lucide="log-out"></i></div>
     <h3>Confirm Logout</h3>
     <p>Are you sure you want to log out of the AM Robotics Admin panel?</p>
     <div class="modal-btns">
@@ -633,8 +634,8 @@ function renderPage(page) {
         <td>${statusPill}</td>
         <td>
           <div style="display:flex;gap:8px;">
-            <button class="act-btn" onclick="openEditModal('${p._id}')">✏️ Edit</button>
-            <button class="act-btn act-btn-view" onclick="openViewDrawer('${p._id}')" title="View Details">👁️ View</button>
+            <button class="act-btn" onclick="openEditModal('${p._id}')"><i data-lucide="square-pen"></i> Edit</button>
+            <button class="act-btn act-btn-view" onclick="openViewDrawer('${p._id}')" title="View Details"><i data-lucide="eye"></i> View</button>
           </div>
         </td>
       </tr>`;
@@ -690,7 +691,7 @@ function openViewDrawer(id) {
       <div class="vd-main-img" id="vd-main-img">
         ${firstImg
           ? `<img id="vd-main-img-el" src="${firstImg}" alt="${p.name}">`
-          : `<span>📦</span>`}
+          : `<span><i data-lucide="package"></i></span>`}
       </div>
       ${thumbsHtml}
     </div>
@@ -1049,6 +1050,9 @@ document.addEventListener('click', function(e){
 });
 
 loadProducts();
+</script>
+<script>
+lucide.createIcons();
 </script>
 </body>
 </html>

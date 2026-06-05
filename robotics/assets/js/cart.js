@@ -82,9 +82,49 @@ let cartState = {
   subtotal: 0,
   vouchers: [],
   appliedVoucher: null,   // { voucherId, code, title, discountType, discount, discountAmount }
-  isGuest: false
+  isGuest: false,
+    gstPercent: 0,
+    deliveryCharge: 0
 };
 
+async function fetchFinalCharges() {
+  try {
+    const res  = await fetch(`${CONFIG.API_BASE}/final-charges`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.success && data.charge && !data.charge.isFree) {
+      cartState.gstPercent = data.charge.numericValue || 0; // stores 2 (meaning 2%)
+    } else {
+      cartState.gstPercent = 0;
+    }
+  } catch (err) {
+    console.warn("[cart] fetchFinalCharges failed:", err);
+    cartState.gstPercent = 0;
+  }
+}
+
+async function fetchDeliveryCharges() {
+  try {
+    const country = localStorage.getItem("selectedCountry") || "IN";
+
+    // map IN → India, US → US  (must match your DB name field)
+    const countryNameMap = { IN: "India", US: "US" };
+    const countryName = countryNameMap[country] || "India";
+
+    const res = await fetch(`${CONFIG.API_BASE}/delivery-charges?country=${countryName}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (data.success && data.charge && !data.charge.isFree) {
+      cartState.deliveryCharge = data.charge.numericValue || 0;
+    } else {
+      cartState.deliveryCharge = 0; // free
+    }
+  } catch (err) {
+    console.warn("[cart] fetchDeliveryCharges failed:", err);
+    cartState.deliveryCharge = 0;
+  }
+}
 /* ── fetch cart ──────────────────────────────────── */
 
 async function fetchCart() {
@@ -222,11 +262,27 @@ function renderSummary() {
   // voucher discount
   const v               = cartState.appliedVoucher;
   const voucherDiscount = v ? (v.discountAmount || 0) : 0;
-  const finalTotal      = Math.max(0, cartState.subtotal - voucherDiscount);
+ const gstAmount      = Math.round(cartState.subtotal * (cartState.gstPercent / 100));
+  const deliveryCharge = cartState.deliveryCharge || 0;
+  const finalTotal     = Math.max(0, cartState.subtotal - voucherDiscount + gstAmount + deliveryCharge);
 
   subtotalEl.textContent = fmt(cartState.subtotal);
   savingEl.textContent   = mrpSaving > 0 ? `-${fmt(mrpSaving)}` : fmt(0);
   totalEl.textContent    = fmt(finalTotal);
+  // delivery row
+  const deliveryRowEl  = document.getElementById("deliveryRow");
+  const deliveryAmtEl  = document.getElementById("deliveryAmount");
+  if (deliveryRowEl) {
+    deliveryRowEl.style.display = "";
+    if (deliveryAmtEl) deliveryAmtEl.textContent = deliveryCharge > 0 ? fmt(deliveryCharge) : "Free";
+  }
+  // GST row
+const gstRowEl = document.getElementById("gstRow");
+const gstEl    = document.getElementById("gstAmount");
+if (gstRowEl) {
+  gstRowEl.style.display = gstAmount > 0 ? "" : "none";
+  if (gstEl) gstEl.textContent = `${fmt(gstAmount)} (${cartState.gstPercent}%)`;
+}
 
   // show/hide voucher discount row
   if (voucherRowEl) {
@@ -410,7 +466,9 @@ async function changeQty(productId, delta) {
     } catch (err) {
       console.error("[cart] updateQty failed:", err);
       showToast("Failed to update quantity", "error");
-      await renderCart();
+      await fetchFinalCharges();
+  await fetchDeliveryCharges();
+  await renderCart();
     }
   }
 }
@@ -445,6 +503,8 @@ async function removeItem(productId) {
     }
   }
 
+  await fetchFinalCharges();
+  await fetchDeliveryCharges();
   await renderCart();
 }
 
@@ -474,14 +534,16 @@ async function proceedToCheckout() {
         Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({
-        items: cartState.items.map(i => ({   // ← ADD THIS
-          productId: i.productId,
-          quantity:  i.quantity
-        })),
-        voucherId:      cartState.appliedVoucher?.voucherId      || null,
-        voucherName:    cartState.appliedVoucher?.code    || null,
-        discountAmount: cartState.appliedVoucher?.discountAmount || 0
-      })
+  items: cartState.items.map(i => ({
+    productId: i.productId,
+    quantity:  i.quantity
+  })),
+  voucherId:      cartState.appliedVoucher?.voucherId      || null,
+  voucherCode:    cartState.appliedVoucher?.code           || null,  // ← was voucherName
+  discountAmount: cartState.appliedVoucher?.discountAmount || 0,
+  gstPercent: cartState.gstPercent,
+gstAmount:  Math.round(cartState.subtotal * (cartState.gstPercent / 100))
+})
     });
 
     const data = await response.json();
@@ -520,6 +582,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await new Promise(r => setTimeout(r, 150));
     retries++;
   }
-
+  await fetchFinalCharges();
+  await fetchDeliveryCharges();
   await renderCart();
 });

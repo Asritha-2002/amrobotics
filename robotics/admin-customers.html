@@ -6,6 +6,7 @@
 <title>Customers - AM ROBOTICS Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;}
 :root{
@@ -374,37 +375,37 @@ body{display:flex;min-height:100vh;background:var(--main-bg);}
 
   <div class="nav-group-label">Main</div>
   <a class="nav-item" href="dashboard.html">
-    <div class="nav-icon ic-blue">🏠</div>Dashboard
+    <div class="nav-icon ic-blue"><i data-lucide="layout-dashboard"></i></div>Dashboard
   </a>
 
   <div class="nav-group-label">Catalog</div>
   <a class="nav-item" onclick="window.location.href='admin-products.html'">
-    <div class="nav-icon ic-green">📦</div>Products
+    <div class="nav-icon ic-green"><i data-lucide="package"></i></div>Products
   </a>
   <div class="nav-group-label">Sales</div>
   <a class="nav-item" href="dashboard.html#orders">
-    <div class="nav-icon ic-orange">🛒</div>Orders
+    <div class="nav-icon ic-orange"><i data-lucide="shopping-cart"></i></div>Orders
   </a>
   <a class="nav-item active">
-    <div class="nav-icon ic-red">👥</div>Customers
+    <div class="nav-icon ic-red"><i data-lucide="users"></i></div>Customers
   </a>
   <a class="nav-item" href="admin-vouchers.html">
-    <div class="nav-icon ic-purple">🏷️</div>Vouchers
+    <div class="nav-icon ic-purple"><i data-lucide="badge-percent"></i></div>Vouchers
   </a>
     <div class="nav-group-label">Content</div>
   <a class="nav-item" onclick="window.location.href='admin-shop-details.html'">
-  <div class="nav-icon ic-pink">🏪</div>
+  <div class="nav-icon ic-pink"><i data-lucide="store"></i></div>
   Shop Details
 </a>
 
   <div class="nav-group-label">Settings</div>
   <a class="nav-item" onclick="window.location.href='admin-settings.html'">
-    <div class="nav-icon ic-yellow">⚙️</div>Settings
+    <div class="nav-icon ic-yellow"><i data-lucide="settings"></i></div>Settings
   </a>
 
   <div class="sidebar-footer">
     <button class="logout-nav" onclick="openLogout()">
-      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;">🚪</div>
+      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;"><i data-lucide="log-out"></i></div>
       Logout
     </button>
   </div>
@@ -417,7 +418,7 @@ body{display:flex;min-height:100vh;background:var(--main-bg);}
   <div class="topbar">
     <button class="hamburger-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
      <div class="topbar-right">
-      <div class="tb-icon-btn" title="Settings" onclick="window.location.href='admin-settings.html'">⚙️</div>
+      <div class="tb-icon-btn" title="Settings" onclick="window.location.href='admin-settings.html'"><i data-lucide="settings"></i></div>
 
       <div class="admin-pill">
         <div class="admin-avatar">A</div>
@@ -444,22 +445,22 @@ body{display:flex;min-height:100vh;background:var(--main-bg);}
     <!-- Stats -->
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-purple">👥</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-purple"><i data-lucide="users"></i></div></div>
         <div class="stat-value" id="stat-total">—</div>
         <div class="stat-label">Total Customers</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-green">✅</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-green"><i data-lucide="badge-check"></i></div></div>
         <div class="stat-value" id="stat-verified">—</div>
         <div class="stat-label">Verified</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-blue">🏠</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-blue"> <i data-lucide="layout-dashboard"></i></div></div>
         <div class="stat-value" id="stat-with-addr">—</div>
         <div class="stat-label">With Address</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-orange">🔒</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-orange"><i data-lucide="user-x"></i></div></div>
         <div class="stat-value" id="stat-inactive">—</div>
         <div class="stat-label">Inactive</div>
       </div>
@@ -530,7 +531,7 @@ body{display:flex;min-height:100vh;background:var(--main-bg);}
 <!-- ═══ LOGOUT MODAL ═══ -->
 <div class="modal-overlay" id="logout-modal">
   <div class="modal-box">
-    <div class="modal-icon-wrap">🚪</div>
+    <div class="modal-icon-wrap"><i data-lucide="log-out"></i></div>
     <h3>Confirm Logout</h3>
     <p>Are you sure you want to log out of the AM Robotics Admin panel?</p>
     <div class="modal-btns">
@@ -805,6 +806,9 @@ document.getElementById('logout-modal').addEventListener('click', function(e){
 
 // Init
 loadCustomers();
+</script>
+<script>
+lucide.createIcons();
 </script>
 </body>
 </html>

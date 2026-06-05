@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard - AM ROBOTICS Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;}
 
@@ -109,6 +111,11 @@ body{display:flex;min-height:100vh;background:var(--main-bg);}
   display:flex;align-items:center;justify-content:center;
   font-size:16px;flex-shrink:0;
   color:#fff;
+}
+.nav-icon svg{
+   width:18px;
+   height:18px;
+   stroke-width:2.2;
 }
 
 .ic-blue   {background:#4f8ef7;}
@@ -456,7 +463,9 @@ select.form-control{cursor:pointer;}
   <div class="nav-group-label">Main</div>
 
   <a class="nav-item active" onclick="navigate('dashboard',this)">
-    <div class="nav-icon ic-blue">🏠</div>
+    <div class="nav-icon ic-blue">
+   <i data-lucide="layout-dashboard"></i>
+</div>
     Dashboard
     <span class="nav-dot"></span>
   </a>
@@ -464,7 +473,7 @@ select.form-control{cursor:pointer;}
   <div class="nav-group-label">Catalog</div>
 
   <a class="nav-item" onclick="window.location.href='admin-products.html'">
-    <div class="nav-icon ic-green">📦</div>
+    <div class="nav-icon ic-green"><i data-lucide="package"></i></div>
     Products
     <span class="nav-badge-count" id="products-count">—</span>
   </a>
@@ -472,38 +481,38 @@ select.form-control{cursor:pointer;}
   <div class="nav-group-label">Sales</div>
 
   <a class="nav-item" onclick="navigate('orders',this)">
-    <div class="nav-icon ic-orange">🛒</div>
+    <div class="nav-icon ic-orange"><i data-lucide="shopping-cart"></i></div>
     Orders
     <span class="nav-badge-count red" id="orders-count">—</span>
   </a>
 
   <a class="nav-item" onclick="window.location.href='admin-customers.html'">
-  <div class="nav-icon ic-red">👥</div>
+  <div class="nav-icon ic-red"><i data-lucide="users"></i></div>
   Customers
 </a>
 
   <a class="nav-item" onclick="window.location.href='admin-vouchers.html'">
-    <div class="nav-icon ic-purple">🏷️</div>
+    <div class="nav-icon ic-purple"><i data-lucide="badge-percent"></i></div>
     Vouchers
   </a>
 
   <div class="nav-group-label">Content</div>
 <a class="nav-item" onclick="window.location.href='admin-shop-details.html'">
-  <div class="nav-icon ic-pink">🏪</div>
+  <div class="nav-icon ic-pink"><i data-lucide="store"></i></div>
   Shop Details
 </a>
 
   <div class="nav-group-label">Settings</div>
 
   <a class="nav-item" onclick="window.location.href='admin-settings.html'">
-    <div class="nav-icon ic-yellow">⚙️</div>
+    <div class="nav-icon ic-yellow"><i data-lucide="settings"></i></div>
     Settings
   </a>
 
 
   <div class="sidebar-footer">
     <button class="logout-nav" onclick="openLogout()">
-      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;">🚪</div>
+      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;"><i data-lucide="log-out"></i></div>
       Logout
     </button>
   </div>
@@ -519,7 +528,7 @@ select.form-control{cursor:pointer;}
 
 
     <div class="topbar-right">
-      <div class="tb-icon-btn" title="Settings" onclick="window.location.href='admin-settings.html'">⚙️</div>
+      <div class="tb-icon-btn" title="Settings" onclick="window.location.href='admin-settings.html'"><i data-lucide="settings"></i></div>
 
       <div class="admin-pill">
         <div class="admin-avatar">A</div>
@@ -547,7 +556,7 @@ select.form-control{cursor:pointer;}
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-card-top">
-          <div class="stat-icon-box sib-blue">💰</div>
+          <div class="stat-icon-box sib-blue"><i data-lucide="bar-chart-3"></i></div>
           <span class="stat-trend trend-up" id="stat-rev-trend">—</span>
         </div>
         <div class="stat-value" id="stat-revenue">—</div>
@@ -555,7 +564,7 @@ select.form-control{cursor:pointer;}
       </div>
       <div class="stat-card">
         <div class="stat-card-top">
-          <div class="stat-icon-box sib-green">🛒</div>
+          <div class="stat-icon-box sib-green"><i data-lucide="shopping-cart"></i></div>
           <span class="stat-trend trend-flat" id="stat-ord-trend">—</span>
         </div>
         <div class="stat-value" id="stat-orders">—</div>
@@ -563,7 +572,7 @@ select.form-control{cursor:pointer;}
       </div>
       <div class="stat-card">
         <div class="stat-card-top">
-          <div class="stat-icon-box sib-orange">📦</div>
+          <div class="stat-icon-box sib-orange"><i data-lucide="package"></i></div>
           <span class="stat-trend trend-flat">—</span>
         </div>
         <div class="stat-value" id="stat-products">—</div>
@@ -571,7 +580,7 @@ select.form-control{cursor:pointer;}
       </div>
       <div class="stat-card">
         <div class="stat-card-top">
-          <div class="stat-icon-box sib-purple">👥</div>
+          <div class="stat-icon-box sib-purple"><i data-lucide="users"></i></div>
           <span class="stat-trend trend-flat">—</span>
         </div>
         <div class="stat-value" id="stat-customers">—</div>
@@ -596,7 +605,7 @@ select.form-control{cursor:pointer;}
         </div>
         <div class="card-body" style="padding:6px 22px;">
           <div id="activity-list">
-            <div class="empty-state"><div class="empty-icon">📋</div><p>No recent activity yet.</p></div>
+            <div class="empty-state"><div class="empty-icon"><i data-lucide="shopping-cart"></i></div><p>No recent activity yet.</p></div>
           </div>
         </div>
       </div>
@@ -607,20 +616,20 @@ select.form-control{cursor:pointer;}
       <div style="font-size:14px;font-weight:600;color:#1a1d2e;margin-bottom:14px;">Quick Actions</div>
       <div class="qa-grid">
         <div class="qa-card" onclick="window.location.href='admin-products.html'">
-          <div class="qa-icon">➕</div><h4>Add Product</h4><p>List a new item</p>
+          <div class="qa-icon"><i data-lucide="package-plus"></i></div><h4>Add Product</h4><p>List a new item</p>
         </div>
         <div class="qa-card" onclick="navigate('orders',null)">
-          <div class="qa-icon">📋</div><h4>View Orders</h4><p>Manage all orders</p>
+          <div class="qa-icon"><i data-lucide="shopping-cart"></i></div><h4>View Orders</h4><p>Manage all orders</p>
         </div>
         
         <div class="qa-card" onclick="window.location.href='admin-vouchers.html'">
-          <div class="qa-icon">🏷️</div><h4>Vouchers</h4><p>Create discount codes</p>
+          <div class="qa-icon"><i data-lucide="badge-percent"></i></div><h4>Vouchers</h4><p>Create discount codes</p>
         </div>
         <div class="qa-card" onclick="window.location.href='admin-customers.html'">
-          <div class="qa-icon">👥</div><h4>Customers</h4><p>User management</p>
+          <div class="qa-icon"><i data-lucide="users"></i></div><h4>Customers</h4><p>User management</p>
         </div>
         <div class="qa-card" onclick="window.location.href='admin-settings.html'">
-          <div class="qa-icon">⚙️</div><h4>Settings</h4><p>Store configuration</p>
+          <div class="qa-icon"><i data-lucide="settings"></i></div><h4>Settings</h4><p>Store configuration</p>
         </div>
       </div>
     </div>
@@ -637,7 +646,7 @@ select.form-control{cursor:pointer;}
             <tr><th>Order ID</th><th>Customer</th><th>Product</th><th>Amount</th><th>Status</th></tr>
           </thead>
           <tbody id="recent-orders-body">
-            <tr><td colspan="5"><div class="empty-state"><div class="empty-icon">📦</div><p>No orders yet — connect your API.</p></div></td></tr>
+            <tr><td colspan="5"><div class="empty-state"><div class="empty-icon"><i data-lucide="package"></i></div><p>No orders yet — connect your API.</p></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -657,7 +666,7 @@ select.form-control{cursor:pointer;}
 
     <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));">
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-blue">📋</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-blue"><i data-lucide="shopping-cart"></i></div></div>
         <div class="stat-value" id="ord-total">—</div><div class="stat-label">Total Orders</div>
       </div>
       <div class="stat-card">
@@ -701,7 +710,7 @@ select.form-control{cursor:pointer;}
 <!-- ═══ LOGOUT MODAL ═══ -->
 <div class="modal-overlay" id="logout-modal">
   <div class="modal-box">
-    <div class="modal-icon-wrap">🚪</div>
+    <div class="modal-icon-wrap"><i data-lucide="log-out"></i></div>
     <h3>Confirm Logout</h3>
     <p>Are you sure you want to log out of the AM Robotics Admin panel? You'll need to sign in again to access the dashboard.</p>
     <div class="modal-btns">
@@ -852,6 +861,9 @@ document.addEventListener('click', function(e){
 });
 
 
+</script>
+<script>
+lucide.createIcons();
 </script>
 </body>
 </html>

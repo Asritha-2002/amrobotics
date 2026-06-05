@@ -6,6 +6,7 @@
 <title>Vouchers - AM ROBOTICS Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;}
 :root{
@@ -255,20 +256,20 @@ textarea.form-control{resize:vertical;min-height:70px;}
   </div>
   <div class="store-pill" id="store-pill">🇮🇳 <span>India Store · INR</span></div>
   <div class="nav-group-label">Main</div>
-  <a class="nav-item" href="dashboard.html"><div class="nav-icon ic-blue">🏠</div>Dashboard</a>
+  <a class="nav-item" href="dashboard.html"><div class="nav-icon ic-blue"><i data-lucide="layout-dashboard"></i></div>Dashboard</a>
   <div class="nav-group-label">Catalog</div>
-  <a class="nav-item" href="admin-products.html"><div class="nav-icon ic-green">📦</div>Products</a>
+  <a class="nav-item" href="admin-products.html"><div class="nav-icon ic-green"><i data-lucide="package"></i></div>Products</a>
   <div class="nav-group-label">Sales</div>
-  <a class="nav-item" href="dashboard.html"><div class="nav-icon ic-orange">🛒</div>Orders</a>
-  <a class="nav-item" href="admin-customers.html"><div class="nav-icon ic-red">👥</div>Customers</a>
-  <a class="nav-item active"><div class="nav-icon ic-purple">🏷️</div>Vouchers</a>
+  <a class="nav-item" href="dashboard.html"><div class="nav-icon ic-orange"><i data-lucide="shopping-cart"></i></div>Orders</a>
+  <a class="nav-item" href="admin-customers.html"><div class="nav-icon ic-red"><i data-lucide="users"></i></div>Customers</a>
+  <a class="nav-item active"><div class="nav-icon ic-purple"><i data-lucide="badge-percent"></i></div>Vouchers</a>
   <div class="nav-group-label">Content</div>
-  <a class="nav-item" href="admin-shop-details.html"><div class="nav-icon ic-pink">🏪</div>Shop Details</a>
+  <a class="nav-item" href="admin-shop-details.html"><div class="nav-icon ic-pink"><i data-lucide="store"></i></div>Shop Details</a>
   <div class="nav-group-label">Settings</div>
-  <a class="nav-item" href="admin-settings.html"><div class="nav-icon ic-yellow">⚙️</div>Settings</a>
+  <a class="nav-item" href="admin-settings.html"><div class="nav-icon ic-yellow"><i data-lucide="settings"></i></div>Settings</a>
   <div class="sidebar-footer">
     <button class="logout-nav" onclick="openLogout()">
-      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;">🚪</div>Logout
+      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;"><i data-lucide="log-out"></i></div>Logout
     </button>
   </div>
 </aside>
@@ -278,7 +279,7 @@ textarea.form-control{resize:vertical;min-height:70px;}
   <div class="topbar">
     <button class="hamburger-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
     <div class="topbar-right">
-      <div class="tb-icon-btn" onclick="window.location.href='admin-settings.html'">⚙️</div>
+      <div class="tb-icon-btn" onclick="window.location.href='admin-settings.html'"><i data-lucide="settings"></i></div>
       <div class="admin-pill">
         <div class="admin-avatar">A</div>
         <div class="admin-info">
@@ -296,38 +297,38 @@ textarea.form-control{resize:vertical;min-height:70px;}
         <h2>Vouchers</h2>
         <p>Discount codes and promotions</p>
       </div>
-      <button class="btn btn-primary" onclick="openAddModal()">➕ Create Voucher</button>
+      <button class="btn btn-primary" onclick="openAddModal()"><i data-lucide="package-plus"></i> Create Voucher</button>
     </div>
 
     <!-- Stats from /admin/vouchers/stats -->
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-purple">🏷️</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-purple"><i data-lucide="badge-percent"></i></div></div>
         <div class="stat-value" id="stat-total">—</div>
         <div class="stat-label">Total Vouchers</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-green">✅</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-green"><i data-lucide="badge-check"></i></div></div>
         <div class="stat-value" id="stat-active">—</div>
         <div class="stat-label">Active</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-yellow">🔜</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-yellow"><i data-lucide="clock-3"></i></div></div>
         <div class="stat-value" id="stat-upcoming">—</div>
         <div class="stat-label">Upcoming</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-red">⏰</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-red"><i data-lucide="calendar-x"></i></div></div>
         <div class="stat-value" id="stat-expired">—</div>
         <div class="stat-label">Expired</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-orange">📊</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-orange"><i data-lucide="chart-column"></i></div></div>
         <div class="stat-value" id="stat-usage">—</div>
         <div class="stat-label">Total Uses</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-blue">💸</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-blue"><i data-lucide="badge-percent"></i></div></div>
         <div class="stat-value" id="stat-discount">—</div>
         <div class="stat-label">Discount Given</div>
       </div>
@@ -561,7 +562,7 @@ textarea.form-control{resize:vertical;min-height:70px;}
 <!-- ═══ LOGOUT MODAL ═══ -->
 <div class="logout-overlay" id="logout-modal">
   <div class="logout-box">
-    <div class="logout-icon-wrap">🚪</div>
+    <div class="logout-icon-wrap"><i data-lucide="log-out"></i></div>
     <h3>Confirm Logout</h3>
     <p>Are you sure you want to log out?</p>
     <div class="modal-btns">
@@ -1240,6 +1241,9 @@ document.addEventListener('keydown', e => {
 
 /* ── INIT ── */
 Promise.all([loadVouchers(), loadStats()]);
+</script>
+<script>
+lucide.createIcons();
 </script>
 </body>
 </html>

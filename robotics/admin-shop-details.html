@@ -6,6 +6,7 @@
 <title>Shop Details - AM ROBOTICS Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;}
 :root{
@@ -253,38 +254,38 @@ select.form-control{cursor:pointer;}
 
   <div class="nav-group-label">Main</div>
   <a class="nav-item" href="dashboard.html">
-    <div class="nav-icon ic-blue">🏠</div>Dashboard
+    <div class="nav-icon ic-blue"><i data-lucide="layout-dashboard"></i></div>Dashboard
   </a>
 
   <div class="nav-group-label">Catalog</div>
   <a class="nav-item" href="admin-products.html">
-    <div class="nav-icon ic-green">📦</div>Products
+    <div class="nav-icon ic-green"><i data-lucide="package"></i></div>Products
   </a>
 
   <div class="nav-group-label">Sales</div>
   <a class="nav-item" href="dashboard.html">
-    <div class="nav-icon ic-orange">🛒</div>Orders
+    <div class="nav-icon ic-orange"><i data-lucide="shopping-cart"></i></div>Orders
   </a>
   <a class="nav-item" href="admin-customers.html">
-    <div class="nav-icon ic-red">👥</div>Customers
+    <div class="nav-icon ic-red"><i data-lucide="users"></i></div>Customers
   </a>
   <a class="nav-item" href="admin-vouchers.html">
-    <div class="nav-icon ic-purple">🏷️</div>Vouchers
+    <div class="nav-icon ic-purple"><i data-lucide="badge-percent"></i></div>Vouchers
   </a>
 
   <div class="nav-group-label">Content</div>
   <a class="nav-item active">
-    <div class="nav-icon ic-pink">🏪</div>Shop Details
+    <div class="nav-icon ic-pink"><i data-lucide="store"></i></div>Shop Details
   </a>
 
   <div class="nav-group-label">Settings</div>
   <a class="nav-item" onclick="window.location.href='admin-settings.html'">
-    <div class="nav-icon ic-yellow">⚙️</div>Settings
+    <div class="nav-icon ic-yellow"><i data-lucide="settings"></i></div>Settings
   </a>
 
   <div class="sidebar-footer">
     <button class="logout-nav" onclick="openLogout()">
-      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;">🚪</div>
+      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;"><i data-lucide="log-out"></i></div>
       Logout
     </button>
   </div>
@@ -298,7 +299,7 @@ select.form-control{cursor:pointer;}
     <button class="hamburger-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
 
      <div class="topbar-right">
-      <div class="tb-icon-btn" title="Settings" onclick="window.location.href='admin-settings.html'">⚙️</div>
+      <div class="tb-icon-btn" title="Settings" onclick="window.location.href='admin-settings.html'"><i data-lucide="settings"></i></div>
 
       <div class="admin-pill">
         <div class="admin-avatar">A</div>
@@ -320,7 +321,7 @@ select.form-control{cursor:pointer;}
         <h2>Shop Details</h2>
         <p>Manage GST and delivery charges</p>
       </div>
-      <button class="btn btn-primary" onclick="openAddModal()">➕ Add Detail</button>
+      <button class="btn btn-primary" onclick="openAddModal()"><i data-lucide="circle-plus"></i> Add Detail</button>
     </div>
 
     <!-- Stat Cards -->
@@ -331,7 +332,7 @@ select.form-control{cursor:pointer;}
     <!-- GST / Final Charges (India only) -->
     <div class="card" id="gst-card">
       <div class="card-header">
-        <span class="card-title">🧾 Final Charges (GST %)</span>
+        <span class="card-title">Final Charges (GST %)</span>
         <button class="card-action-btn" onclick="openAddModal('FINALCHARGES')">+ Add</button>
       </div>
       <div class="tbl-wrap">
@@ -349,7 +350,7 @@ select.form-control{cursor:pointer;}
     <!-- Delivery Charges -->
     <div class="card">
       <div class="card-header">
-        <span class="card-title">🚚 Delivery Charges</span>
+        <span class="card-title">Delivery Charges</span>
         <button class="card-action-btn" onclick="openAddModal('DELIVERY')">+ Add</button>
       </div>
       <div class="tbl-wrap">
@@ -404,7 +405,7 @@ select.form-control{cursor:pointer;}
 <!-- ═══ LOGOUT MODAL ═══ -->
 <div class="modal-overlay" id="logout-modal">
   <div class="modal-box modal-box-center">
-    <div class="modal-icon-wrap">🚪</div>
+    <div class="modal-icon-wrap"><i data-lucide="log-out"></i></div>
     <h3>Confirm Logout</h3>
     <p>Are you sure you want to log out of the AM Robotics Admin panel?</p>
     <div class="modal-btns">
@@ -464,16 +465,16 @@ function renderStats() {
   if (isIN) {
     html += `
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-green">🧾</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-green"><i data-lucide="badge-percent"></i></div></div>
         <div class="stat-value">${charges.length}</div>
         <div class="stat-label">Final Charges (GST)</div>
       </div>`;
   }
   html += `
     <div class="stat-card">
-      <div class="stat-card-top"><div class="stat-icon-box sib-blue">🚚</div></div>
+      <div class="stat-card-top"><div class="stat-icon-box sib-blue"><i data-lucide="truck"></i></div></div>
       <div class="stat-value">${delivery.length}</div>
-      <div class="stat-label">Delivery Types</div>
+      <div class="stat-label">Delivery Charges</div>
     </div>`;
 
   document.getElementById('stats-row').innerHTML = html;
@@ -481,6 +482,7 @@ function renderStats() {
 
 /* ── TABLES ── */
 function renderTables() {
+  
   const charges  = shopDetails.filter(d => d.category === 'FINALCHARGES');
   const delivery = shopDetails.filter(d => d.category === 'DELIVERY');
 
@@ -491,8 +493,8 @@ function renderTables() {
       <td>${d.value}</td>
       <td>
         <div style="display:flex;gap:8px;">
-          <button class="btn btn-sm btn-outline" onclick="openEditModal('${d._id}')">✏️ Edit</button>
-          <button class="btn btn-sm btn-danger-soft" onclick="deleteDetail('${d._id}')">🗑️ Delete</button>
+          <button class="btn btn-sm btn-outline" onclick="openEditModal('${d._id}')"><i data-lucide="square-pen"></i> Edit</button>
+          <button class="btn btn-sm btn-danger-soft" onclick="deleteDetail('${d._id}')"><i data-lucide="trash-2"></i> Delete</button>
         </div>
       </td>
     </tr>`;
@@ -510,8 +512,8 @@ function renderTables() {
       <td>${displayValue}</td>
       <td>
         <div style="display:flex;gap:8px;">
-          <button class="btn btn-sm btn-outline" onclick="openEditModal('${d._id}')">✏️ Edit</button>
-          <button class="btn btn-sm btn-danger-soft" onclick="deleteDetail('${d._id}')">🗑️ Delete</button>
+          <button class="btn btn-sm btn-outline" onclick="openEditModal('${d._id}')"><i data-lucide="square-pen"></i> Edit</button>
+          <button class="btn btn-sm btn-danger-soft" onclick="deleteDetail('${d._id}')"><i data-lucide="trash-2"></i> Delete</button>
         </div>
       </td>
     </tr>`;
@@ -523,9 +525,10 @@ function renderTables() {
     </td></tr>`;
 
   document.getElementById('sd-charges-body').innerHTML  =
-    charges.length  ? charges.map(chargeRow).join('')   : empty('🧾', 'No charges defined yet.');
+    charges.length  ? charges.map(chargeRow).join('')   : empty('<i data-lucide="badge-percent"></i>', 'No charges defined yet.');
   document.getElementById('sd-delivery-body').innerHTML =
-    delivery.length ? delivery.map(deliveryRow).join('') : empty('🚚', 'No delivery options yet.');
+    delivery.length ? delivery.map(deliveryRow).join('') : empty('<i data-lucide="truck"></i>', 'No delivery options yet.');
+    lucide.createIcons();
 }
 /* ── OPEN ADD MODAL ── */
 function openAddModal(presetCategory = '') {
@@ -636,6 +639,10 @@ document.addEventListener('click', function(e) {
 
 // Init
 loadShopDetails();
+</script>
+
+<script>
+lucide.createIcons();
 </script>
 </body>
 </html>
