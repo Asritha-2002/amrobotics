@@ -15,7 +15,8 @@ const voucherRoutes=require('./routes/voucherRoutes.js')
 const shopRoutes=require('./routes/shopRoutes.js')
 const cartRoutes = require("./routes/cartRoutes");
 const buyNowRoutes = require("./routes/buyNowRoutes");
-
+const addressRoutes = require("./routes/addressRoutes");
+const orderRoutes=require('./routes/orderRoutes.js')
 
 app.use(cors());
 app.use(express.json());
@@ -35,6 +36,8 @@ app.use('/api',voucherRoutes)
 app.use('/api/shop',shopRoutes)
 app.use("/api/cart", cartRoutes);
 app.use("/api",buyNowRoutes)
+app.use("/api", addressRoutes);
+app.use("/api", orderRoutes);
 
 
 const PORT = process.env.PORT || 5000;

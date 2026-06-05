@@ -12,29 +12,25 @@ const Voucher = require("../models/Voucher");
 router.post("/checkout-from-cart", auth, async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log("BODY RECEIVED");
 console.log(req.body);
 
     const {
-      items: bodyItems    = null,
-      voucherId           = null,
-      voucherName         = null,
-      discountAmount      = 0
-    } = req.body;
+  items: bodyItems    = null,
+  voucherId           = null,
+  voucherCode         = null,   // ← was voucherName
+  discountAmount      = 0
+} = req.body;
 
-    // ===============================
-    // Save to BuyNow model
-    // ===============================
-    const buyNowData = {
-      userId,
-      items: bodyItems && bodyItems.length > 0
-        ? bodyItems.map(item => ({
-            productId: item.productId,
-            quantity:  item.quantity
-          }))
-        : null,  // will be filled below from existing BuyNow
-      appliedVoucher: { voucherId, voucherName, discountAmount }
-    };
+// When saving buyNowData, store appliedVoucher properly:
+const buyNowData = {
+  userId,
+  items: bodyItems,
+  appliedVoucher: {
+    voucherId:      voucherId  || null,
+    voucherName:    voucherCode || null,   // schema field is voucherName, value comes from code
+    discountAmount: discountAmount || 0
+  }
+};
     console.log(buyNowData)
 
     // If no bodyItems, read existing BuyNow items
@@ -416,8 +412,22 @@ router.get("/checkout-from-cart", auth, async (req, res) => {
     });
 
     const availableVouchers = [];
-
+    const currentUserId = req.user.id.toString();
+   
     for (const voucher of vouchers) {
+        if (voucher.perUserLimit) {
+    const userUsageCount = voucher.usageLog.filter(
+      log => log.userId.toString() === currentUserId
+    ).length;
+
+    console.log("Voucher:", voucher.code);
+    console.log("currentUserId:", currentUserId);
+    console.log("usageLog userIds:", voucher.usageLog.map(l => String(l.userId)));
+    console.log("userUsageCount:", userUsageCount, "/ perUserLimit:", voucher.perUserLimit);
+
+    if (userUsageCount >= voucher.perUserLimit) continue;
+  }
+
 
       let applicable = false;
 

@@ -249,7 +249,22 @@ router.get("/cart", auth, async (req, res) => {
 
     const availableVouchers = [];
 
+    const currentUserId = req.user.id.toString();  // current logged-in user
+
     for (const voucher of vouchers) {
+
+      // ===========================
+      // Per-User Limit Check
+      // Skip voucher if this user
+      // has already hit their limit
+      // ===========================
+      if (voucher.perUserLimit) {
+        const userUsageCount = voucher.usageLog.filter(
+          log => log.userId.toString() === currentUserId
+        ).length;
+
+        if (userUsageCount >= voucher.perUserLimit) continue;
+      }
 
       let applicable = false;
 
@@ -339,7 +354,7 @@ router.get("/cart", auth, async (req, res) => {
       cartItems,
       subtotal,
       totalItems: cartItems.length,
-      appliedVoucher,        // null or voucher object
+      appliedVoucher,
       availableVouchers
     });
 
