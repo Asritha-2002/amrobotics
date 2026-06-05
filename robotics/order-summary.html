@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary - AM ROBOTICS</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/logo_resized.png">
+    <link rel="stylesheet" href="assets/css/app.min.css">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .order-summary-container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .order-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .order-number {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .items-list {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .item-row {
+            display: grid;
+            grid-template-columns: 100px 1fr 100px 100px 100px;
+            gap: 20px;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        .item-row:last-child {
+            border-bottom: none;
+        }
+        .item-image img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .summary-row.total {
+            border-bottom: 2px solid #333;
+            font-weight: 600;
+            font-size: 18px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+    </style>
+</head>
+<body>
+    <!-- Existing Header -->
+    <header class="th-header header-layout2">
+        <div class="sticky-wrapper">
+            <div class="container">
+                <div class="menu-area">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-auto">
+                            <div class="header-logo"><a href="index.html"><img src="assets/img/logo_resized.png" alt="AM Robotics"></a></div>
+                        </div>
+                        <div class="col-auto d-none d-lg-flex align-items-center gap-3">
+                            <a href="cart.html" class="icon-btn position-relative" title="Shopping Cart">
+                                <i class="far fa-shopping-cart" style="font-size: 20px;"></i>
+                                <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none; font-size: 10px;">0</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcumb-wrapper" data-overlay="black" data-opacity="7">
+        <div class="container">
+            <div class="breadcumb-content">
+                <h1 class="breadcumb-title">Order Summary</h1>
+                <ul class="breadcumb-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li>Order Summary</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="th-checkout-wrapper space-top space-extra-bottom">
+        <div class="container">
+            <div class="order-summary-container">
+                <div class="order-header">
+                    <div class="order-number">Order ID: <strong id="orderId"></strong></div>
+                    <h1>Order Summary</h1>
+                </div>
+
+                <div id="itemsList" class="items-list"></div>
+
+                <div id="summarySection">
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax</span>
+                        <span id="tax">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery Charge</span>
+                        <span id="deliveryCharge">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Payment Charge</span>
+                        <span id="paymentCharge">$0.00</span>
+                    </div>
+                    <div id="discountRow" class="summary-row" style="display: none; color: green;">
+                        <span>Discount</span>
+                        <span id="discount">-$0.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span id="total">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="proceedToCheckout()">Proceed to Checkout</button>
+                    <a href="cart.html" class="btn btn-secondary">Back to Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-wrapper footer-layout1 style2 bg-black space-top">
+        <div class="container">
+            <div class="footer-top">
+                <div class="row gy-30 justify-content-lg-between">
+                    <div class="col-lg-auto">
+                        <div class="contact-info-card contact-location-info">
+                            <p class="box-title">Location</p>
+                            <h4 class="box-text">#101, Ace Ventures, Hyderabad, 500035, Telangana, INDIA</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/cart-system.js"></script>
+    <script src="assets/js/order-summary.js"></script>
+</body>
+</html>

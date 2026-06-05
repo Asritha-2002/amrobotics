@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vouchers - AM ROBOTICS Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;}
+:root{
+  --sidebar-bg:#1e2235;--sidebar-w:260px;--topbar-h:70px;
+  --accent:#6c63ff;--text-muted:#9095a5;--main-bg:#f3f4f8;
+  --white:#ffffff;--border:#e5e7ef;
+}
+body{display:flex;min-height:100vh;background:var(--main-bg);}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);height:100vh;background:var(--sidebar-bg);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:200;overflow-y:auto;}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:#444b6e;border-radius:4px;}
+.sidebar-logo{padding:22px 20px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.07);}
+.logo-icon-box{width:40px;height:40px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.logo-text-wrap .logo-title{font-size:16px;font-weight:700;color:#fff;line-height:1.2;}
+.logo-text-wrap .logo-sub{font-size:11px;color:var(--text-muted);}
+.store-pill{margin:14px 16px 4px;padding:8px 14px;background:rgba(108,99,255,.18);border:1px solid rgba(108,99,255,.3);border-radius:8px;font-size:12px;font-weight:600;color:#a89fff;display:flex;align-items:center;gap:8px;}
+.nav-group-label{padding:14px 20px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,.25);}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 16px;margin:1px 8px;border-radius:10px;cursor:pointer;text-decoration:none;transition:.18s ease;color:rgba(255,255,255,.6);font-size:14px;font-weight:500;}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.12);color:#fff;}
+.nav-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:#fff;}
+.ic-blue{background:#4f8ef7;}.ic-red{background:#f05e5e;}.ic-green{background:#3dc47e;}
+.ic-orange{background:#f5923e;}.ic-purple{background:#9b67f5;}.ic-teal{background:#2bbfbf;}
+.ic-pink{background:#e94f8b;}.ic-yellow{background:#e8a838;}
+.sidebar-footer{margin-top:auto;padding:14px 12px;border-top:1px solid rgba(255,255,255,.07);}
+.logout-nav{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;cursor:pointer;color:rgba(255,100,100,.8);font-size:14px;font-weight:500;transition:.18s;background:none;border:none;width:100%;}
+.logout-nav:hover{background:rgba(239,68,68,.1);color:#f87171;}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{height:var(--topbar-h);background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:100;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.tb-icon-btn{width:38px;height:38px;border-radius:9px;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:#555;transition:.18s;}
+.tb-icon-btn:hover{background:var(--main-bg);}
+.admin-pill{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border:1px solid var(--border);border-radius:30px;background:var(--white);}
+.admin-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#4f8ef7,#9b67f5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;}
+.admin-info .admin-name{font-size:13px;font-weight:600;color:#222;}
+.admin-info .admin-role{font-size:11px;color:var(--text-muted);}
+.tb-logout-btn{width:38px;height:38px;border-radius:9px;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:#999;transition:.18s;}
+.tb-logout-btn:hover{color:#f05e5e;border-color:#f05e5e;background:#fff5f5;}
+
+/* ── PAGE ── */
+.page-content{padding:28px;display:flex;flex-direction:column;gap:24px;animation:fadeUp .25s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.page-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-header-left h2{font-size:20px;font-weight:700;color:#1a1d2e;}
+.page-header-left p{font-size:13px;color:var(--text-muted);margin-top:2px;}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:18px;}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;transition:.2s;}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.07);}
+.stat-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.stat-icon-box{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+.sib-blue{background:#ebf2ff;color:#4f8ef7;}.sib-green{background:#e8faf3;color:#3dc47e;}
+.sib-orange{background:#fff4ec;color:#f5923e;}.sib-purple{background:#f2eeff;color:#9b67f5;}
+.sib-red{background:#fff0f0;color:#f05e5e;}.sib-yellow{background:#fff8e6;color:#d4920a;}
+.stat-value{font-size:24px;font-weight:700;color:#1a1d2e;margin-bottom:2px;}
+.stat-label{font-size:11px;color:var(--text-muted);}
+
+/* ── CARD ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.card-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.card-title{font-size:15px;font-weight:600;color:#1a1d2e;}
+
+/* ── SEARCH / FILTERS ── */
+.filter-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.search-input{padding:8px 14px 8px 36px;border:1px solid var(--border);border-radius:9px;font-size:13px;outline:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%23999' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.868-3.833zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E") no-repeat 11px center;width:200px;transition:.18s;}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,99,255,.1);}
+.filter-select{padding:8px 12px;border:1px solid var(--border);border-radius:9px;font-size:13px;outline:none;background:#fff;cursor:pointer;}
+.filter-select:focus{border-color:var(--accent);}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;}
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{padding:11px 16px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;}
+.data-table td{padding:13px 16px;font-size:13px;color:#444;border-bottom:1px solid #f0f1f5;vertical-align:middle;}
+.data-table tr:last-child td{border-bottom:none;}
+.data-table tbody tr:hover td{background:#fafbff;}
+
+/* voucher code */
+.voucher-code{font-family:monospace;font-size:13px;font-weight:700;background:#f3f0ff;color:#6c63ff;padding:5px 12px;border-radius:8px;border:1px dashed #c4beff;letter-spacing:1px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s;}
+.voucher-code:hover{background:#ebe7ff;}
+
+/* pills */
+.status-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
+.status-pill::before{content:'';width:5px;height:5px;border-radius:50%;}
+.pill-success{background:#e8faf3;color:#2aab6a;}.pill-success::before{background:#2aab6a;}
+.pill-danger{background:#fff0f0;color:#d94040;}.pill-danger::before{background:#d94040;}
+.pill-warning{background:#fff8e6;color:#d4920a;}.pill-warning::before{background:#d4920a;}
+.pill-info{background:#ebf2ff;color:#3b7be0;}.pill-info::before{background:#3b7be0;}
+.pill-upcoming{background:#f2eeff;color:#9b67f5;}.pill-upcoming::before{background:#9b67f5;}
+
+/* discount badge */
+.discount-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;}
+.badge-pct{background:#e8faf3;color:#2aab6a;}
+.badge-flat{background:#ebf2ff;color:#3b7be0;}
+
+/* usage bar */
+.usage-bar-bg{height:5px;background:#f0f1f5;border-radius:10px;overflow:hidden;min-width:80px;}
+.usage-bar-fill{height:100%;border-radius:10px;}
+
+/* act btns */
+.act-btn{padding:6px 13px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#fff;color:#555;transition:.18s;}
+.act-btn:hover{border-color:var(--accent);color:var(--accent);}
+.act-btn-danger{border-color:#ffd6d6;color:#d94040;background:#fff0f0;}
+.act-btn-danger:hover{background:#ffe0e0;}
+
+/* ── BUTTONS ── */
+.btn{padding:10px 20px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.18s;display:inline-flex;align-items:center;gap:7px;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:#574fd6;}
+.btn-outline{background:transparent;border:1px solid var(--border);color:#555;}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.btn-danger-soft{background:#fff0f0;color:#d94040;border:1px solid #ffd6d6;}
+.btn-danger-soft:hover{background:#ffe0e0;}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-top:1px solid var(--border);flex-wrap:wrap;gap:10px;}
+.pagination-info{font-size:12px;color:var(--text-muted);}
+.pagination-btns{display:flex;gap:6px;}
+.pg-btn{padding:6px 13px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:#fff;color:#555;transition:.18s;}
+.pg-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+.pg-btn:disabled{opacity:.4;cursor:not-allowed;}
+.pg-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+/* ── EMPTY / SPINNER ── */
+.empty-state{text-align:center;padding:52px 20px;color:var(--text-muted);}
+.empty-state .empty-icon{font-size:44px;margin-bottom:12px;opacity:.5;}
+.empty-state p{font-size:14px;}
+.spinner-wrap{display:flex;justify-content:center;align-items:center;padding:60px;}
+.spinner{width:36px;height:36px;border:3px solid #e5e7ef;border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;z-index:999;overflow-y:auto;padding:30px 16px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:#fff;border-radius:18px;width:100%;max-width:640px;box-shadow:0 24px 60px rgba(0,0,0,.2);animation:fadeUp .22s ease;margin:auto;}
+.modal-header{padding:22px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-header h3{font-size:18px;font-weight:700;color:#1a1d2e;}
+.modal-close{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:18px;color:#999;display:flex;align-items:center;justify-content:center;transition:.18s;}
+.modal-close:hover{border-color:#f05e5e;color:#f05e5e;}
+.modal-body{padding:28px;max-height:70vh;overflow-y:auto;}
+.modal-footer{padding:18px 28px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:12px;}
+
+/* ── FORM ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:1/-1;}
+.form-group label{font-size:12px;font-weight:600;color:#555;}
+.form-group label .req{color:#f05e5e;margin-left:2px;}
+.form-control{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:9px;font-size:13px;color:#333;outline:none;background:#fff;transition:.18s;}
+.form-control:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,99,255,.1);}
+.form-control::placeholder{color:#bbb;}
+select.form-control{cursor:pointer;}
+textarea.form-control{resize:vertical;min-height:70px;}
+.form-hint{font-size:11px;color:var(--text-muted);}
+.form-section{margin-bottom:24px;}
+.form-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+
+/* code row */
+.code-row{display:flex;gap:8px;}
+.code-row .form-control{flex:1;}
+.gen-btn{padding:10px 14px;border-radius:9px;border:1px solid var(--border);background:#f3f4f8;color:#555;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.15s;flex-shrink:0;}
+.gen-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* conditional section */
+.cond-section{display:none;animation:fadeUp .2s ease;}
+.cond-section.show{display:block;}
+
+/* tags input style for categories */
+.tags-hint{font-size:11px;color:var(--text-muted);margin-top:4px;}
+
+/* toggle switch */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;}
+.toggle-label{font-size:13px;font-weight:500;color:#333;}
+.toggle{position:relative;display:inline-block;width:42px;height:22px;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:#e5e7ef;border-radius:22px;cursor:pointer;transition:.2s;}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:2px;bottom:2px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.toggle input:checked + .toggle-slider{background:var(--accent);}
+.toggle input:checked + .toggle-slider::before{transform:translateX(20px);}
+
+/* confirm modal */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1001;}
+.confirm-overlay.open{display:flex;}
+.confirm-box{background:#fff;border-radius:18px;padding:36px;max-width:400px;width:90%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.18);animation:fadeUp .2s ease;}
+.confirm-icon{width:60px;height:60px;border-radius:50%;background:#fff0f0;border:2px solid #ffd6d6;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 18px;}
+.confirm-box h3{font-size:18px;font-weight:700;color:#1a1d2e;margin-bottom:8px;}
+.confirm-box p{font-size:13px;color:#888;line-height:1.6;margin-bottom:26px;}
+.confirm-btns{display:flex;gap:10px;justify-content:center;}
+.confirm-btns .btn{flex:1;max-width:150px;justify-content:center;}
+
+/* logout */
+.logout-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000;}
+.logout-overlay.open{display:flex;}
+.logout-box{background:#fff;border-radius:18px;padding:36px;max-width:400px;width:90%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.18);}
+.logout-icon-wrap{width:60px;height:60px;border-radius:50%;background:#fff0f0;border:2px solid #ffd6d6;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 18px;}
+.logout-box h3{font-size:18px;font-weight:700;color:#1a1d2e;margin-bottom:8px;}
+.logout-box p{font-size:13px;color:#888;line-height:1.6;margin-bottom:26px;}
+.modal-btns{display:flex;gap:10px;justify-content:center;}
+.modal-btns .btn{flex:1;max-width:150px;justify-content:center;}
+
+/* toast */
+.toast{position:fixed;bottom:24px;right:24px;padding:13px 20px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:9999;transform:translateY(80px);opacity:0;transition:.3s ease;max-width:340px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{background:#1a1d2e;color:#3dc47e;border-left:4px solid #3dc47e;}
+.toast.error{background:#1a1d2e;color:#f05e5e;border-left:4px solid #f05e5e;}
+
+/* locked fields */
+.field-locked .form-control{background:#f8f9ff;color:#888;cursor:not-allowed;}
+.locked-note{font-size:11px;color:#f5923e;margin-top:3px;}
+
+/* hamburger */
+.hamburger-btn{display:none;width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:#fff;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:#555;margin-right:4px;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .hamburger-btn{display:flex;}
+  .topbar{padding:0 16px;}
+  .page-content{padding:16px;}
+  .admin-info{display:none;}
+  .form-grid{grid-template-columns:1fr;}
+  .form-group.full{grid-column:1;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr;}}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:#dde;border-radius:4px;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon-box">🤖</div>
+    <div class="logo-text-wrap">
+      <div class="logo-title">AM ROBOTICS</div>
+      <div class="logo-sub">Admin Panel</div>
+    </div>
+  </div>
+  <div class="store-pill" id="store-pill">🇮🇳 <span>India Store · INR</span></div>
+  <div class="nav-group-label">Main</div>
+  <a class="nav-item" href="dashboard.html"><div class="nav-icon ic-blue">🏠</div>Dashboard</a>
+  <div class="nav-group-label">Catalog</div>
+  <a class="nav-item" href="admin-products.html"><div class="nav-icon ic-green">📦</div>Products</a>
+  <div class="nav-group-label">Sales</div>
+  <a class="nav-item" href="dashboard.html"><div class="nav-icon ic-orange">🛒</div>Orders</a>
+  <a class="nav-item" href="admin-customers.html"><div class="nav-icon ic-red">👥</div>Customers</a>
+  <a class="nav-item active"><div class="nav-icon ic-purple">🏷️</div>Vouchers</a>
+  <div class="nav-group-label">Content</div>
+  <a class="nav-item" href="admin-shop-details.html"><div class="nav-icon ic-pink">🏪</div>Shop Details</a>
+  <div class="nav-group-label">Settings</div>
+  <a class="nav-item" href="admin-settings.html"><div class="nav-icon ic-yellow">⚙️</div>Settings</a>
+  <div class="sidebar-footer">
+    <button class="logout-nav" onclick="openLogout()">
+      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;">🚪</div>Logout
+    </button>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+  <div class="topbar">
+    <button class="hamburger-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+    <div class="topbar-right">
+      <div class="tb-icon-btn" onclick="window.location.href='admin-settings.html'">⚙️</div>
+      <div class="admin-pill">
+        <div class="admin-avatar">A</div>
+        <div class="admin-info">
+          <div class="admin-name">Admin</div>
+          <div class="admin-role">Administrator</div>
+        </div>
+      </div>
+      <div class="tb-logout-btn" onclick="openLogout()">↪</div>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="page-header">
+      <div class="page-header-left">
+        <h2>Vouchers</h2>
+        <p>Discount codes and promotions</p>
+      </div>
+      <button class="btn btn-primary" onclick="openAddModal()">➕ Create Voucher</button>
+    </div>
+
+    <!-- Stats from /admin/vouchers/stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-top"><div class="stat-icon-box sib-purple">🏷️</div></div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-label">Total Vouchers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-top"><div class="stat-icon-box sib-green">✅</div></div>
+        <div class="stat-value" id="stat-active">—</div>
+        <div class="stat-label">Active</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-top"><div class="stat-icon-box sib-yellow">🔜</div></div>
+        <div class="stat-value" id="stat-upcoming">—</div>
+        <div class="stat-label">Upcoming</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-top"><div class="stat-icon-box sib-red">⏰</div></div>
+        <div class="stat-value" id="stat-expired">—</div>
+        <div class="stat-label">Expired</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-top"><div class="stat-icon-box sib-orange">📊</div></div>
+        <div class="stat-value" id="stat-usage">—</div>
+        <div class="stat-label">Total Uses</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-top"><div class="stat-icon-box sib-blue">💸</div></div>
+        <div class="stat-value" id="stat-discount">—</div>
+        <div class="stat-label">Discount Given</div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">All Vouchers</span>
+        <div class="filter-row">
+          <select class="filter-select" id="statusFilter" onchange="applyFilters()">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="expired">Expired</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="exhausted">Exhausted</option>
+          </select>
+          <input class="search-input" id="searchInput" placeholder="Search code or title…" oninput="applyFilters()">
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Title</th>
+              <th>Discount</th>
+              <th>Eligibility</th>
+              <th>Applies To</th>
+              <th>Min Order</th>
+              <th>Usage</th>
+              <th>Validity</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="vouchers-body">
+            <tr><td colspan="10"><div class="spinner-wrap"><div class="spinner"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination" id="pagination" style="display:none;">
+        <span class="pagination-info" id="pg-info"></span>
+        <div class="pagination-btns" id="pg-btns"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADD / EDIT VOUCHER MODAL ═══ -->
+<div class="modal-overlay" id="voucher-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-title">Create Voucher</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- BASIC -->
+      <div class="form-section">
+        <div class="form-section-title">Basic Info</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Code <span class="req">*</span></label>
+            <div class="code-row">
+              <input type="text" id="f-code" class="form-control" placeholder="e.g. SAVE20" style="text-transform:uppercase;letter-spacing:1px;">
+              <button class="gen-btn" onclick="generateCode()">🎲 Auto</button>
+            </div>
+            <span class="form-hint">Uppercase letters, numbers, - and _ only</span>
+            <span id="code-locked-note" class="locked-note" style="display:none;">⚠️ Cannot change code after voucher has been used</span>
+          </div>
+          <div class="form-group">
+            <label>Title <span class="req">*</span></label>
+            <input type="text" id="f-title" class="form-control" placeholder="e.g. Welcome Offer">
+          </div>
+          <div class="form-group full">
+            <label>Description</label>
+            <input type="text" id="f-description" class="form-control" placeholder="e.g. 20% off for new users">
+          </div>
+          <div class="form-group">
+  <label>Country <span class="req">*</span></label>
+  <select id="f-country" class="form-control">
+    <option value="INDIA">🇮🇳 India</option>
+    <option value="US">🇺🇸 United States</option>
+  </select>
+</div>
+        </div>
+      </div>
+
+      <!-- DISCOUNT -->
+      <div class="form-section">
+        <div class="form-section-title">Discount</div>
+        <div class="form-grid">
+          <div class="form-group" id="discount-type-group">
+            <label>Discount Type <span class="req">*</span></label>
+            <select id="f-discountType" class="form-control" onchange="onDiscountTypeChange()">
+              <option value="percentage">Percentage (%)</option>
+              <option value="flat">Flat Amount</option>
+            </select>
+            <span id="dtype-locked-note" class="locked-note" style="display:none;">⚠️ Cannot change after voucher has been used</span>
+          </div>
+          <div class="form-group" id="discount-val-group">
+            <label id="f-discount-label">Discount % <span class="req">*</span></label>
+            <input type="number" id="f-discount" class="form-control" placeholder="e.g. 20" min="0.01" step="0.01">
+            <span id="dtype-locked-note2" class="locked-note" style="display:none;">⚠️ Cannot change after voucher has been used</span>
+          </div>
+          <div class="form-group" id="max-discount-group">
+            <label>Max Discount Cap <span style="font-weight:400;color:#bbb;">(percentage only)</span></label>
+            <input type="number" id="f-maxDiscountAmount" class="form-control" placeholder="e.g. 200 (blank = no cap)" min="0">
+            <span class="form-hint">Max ₹/$ that can be discounted</span>
+          </div>
+          <div class="form-group">
+            <label>Min Order Value</label>
+            <input type="number" id="f-minOrderValue" class="form-control" placeholder="e.g. 500 (0 = no minimum)" min="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- APPLIES TO -->
+      <div class="form-section">
+        <div class="form-section-title">Applies To</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Applies To <span class="req">*</span></label>
+            <select id="f-appliesTo" class="form-control" onchange="onAppliesToChange()">
+              <option value="all">All Products</option>
+              <option value="category">Specific Categories</option>
+              <option value="product">Specific Products</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Eligibility</label>
+            <select id="f-eligibility" class="form-control">
+              <option value="all">All Users</option>
+              <option value="new_users">New Users Only</option>
+              <option value="existing_users">Existing Users Only</option>
+            </select>
+          </div>
+
+          <!-- Categories field -->
+          <div class="form-group full cond-section" id="categories-section">
+  <label>Applicable Categories <span class="req">*</span></label>
+
+  <select
+    id="f-applicableCategories"
+    class="form-control"
+    multiple
+    style="height:180px;"
+  >
+  </select>
+
+  <span class="form-hint">
+    Hold Ctrl (Windows) or Cmd (Mac) to select multiple categories
+  </span>
+</div>
+
+          <!-- Products field -->
+          <div class="form-group full cond-section" id="products-section">
+            <label>Applicable Products <span class="req">*</span></label>
+            <div style="position:relative;">
+              <input type="text" id="f-product-search" class="form-control" placeholder="Search and select products…" oninput="searchProducts(this.value)">
+              <div id="product-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:9px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:100;max-height:180px;overflow-y:auto;margin-top:4px;"></div>
+            </div>
+            <div id="selected-products-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;"></div>
+            <span class="form-hint">Select one or more products</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- USAGE & DATES -->
+      <div class="form-section">
+        <div class="form-section-title">Usage Limits & Validity</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Max Total Uses <span style="font-weight:400;color:#bbb;">(blank = unlimited)</span></label>
+            <input type="number" id="f-maxUses" class="form-control" placeholder="e.g. 100" min="1">
+          </div>
+          <div class="form-group">
+            <label>Per User Limit</label>
+            <input type="number" id="f-perUserLimit" class="form-control" placeholder="Default: 1" min="1">
+          </div>
+          <div class="form-group">
+            <label>Start Date <span class="req">*</span></label>
+            <input type="datetime-local" id="f-startDate" class="form-control">
+          </div>
+          <div class="form-group">
+            <label>End Date <span class="req">*</span></label>
+            <input type="datetime-local" id="f-endDate" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <!-- STATUS -->
+      <div class="form-section" style="margin-bottom:0;">
+        <div class="form-section-title">Status</div>
+        <div class="toggle-row">
+          <span class="toggle-label">Voucher Active</span>
+          <label class="toggle">
+            <input type="checkbox" id="f-isActive" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+    </div><!-- /modal-body -->
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" id="submit-btn" onclick="submitVoucher()">
+        <span id="submit-label">Create Voucher</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DELETE CONFIRM ═══ -->
+<div class="confirm-overlay" id="confirm-modal">
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑️</div>
+    <h3>Delete Voucher</h3>
+    <p>Are you sure you want to delete voucher <strong id="confirm-code">—</strong>?<br>This is a soft delete — the voucher will be deactivated.</p>
+    <div class="confirm-btns">
+      <button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger-soft" id="confirm-del-btn" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LOGOUT MODAL ═══ -->
+<div class="logout-overlay" id="logout-modal">
+  <div class="logout-box">
+    <div class="logout-icon-wrap">🚪</div>
+    <h3>Confirm Logout</h3>
+    <p>Are you sure you want to log out?</p>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeLogout()">Cancel</button>
+      <button class="btn btn-danger-soft" onclick="confirmLogout()">Yes, Logout</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── AUTH ── */
+const token = localStorage.getItem('authToken');
+if (!token) window.location.replace('login.html');
+
+const API_BASE  = CONFIG.API_BASE;
+const PAGE_SIZE = 10;
+
+const country = localStorage.getItem('selectedCountry') || 'IN';
+const sym     = country === 'IN' ? '₹' : '$';
+document.getElementById('store-pill').innerHTML = country === 'IN'
+  ? '🇮🇳 <span>India Store · INR</span>'
+  : '🇺🇸 <span>USA Store · USD</span>';
+
+let allVouchers  = [];
+let filtered     = [];
+let currentPage  = 1;
+let editingId    = null;
+let deletingId   = null;
+let editingUsedCount = 0;
+
+// selected products for form
+let selectedProducts = []; // [{_id, name}]
+let allProductsCache = [];
+let categoriesCache = [];
+
+/* ══════════════════════════════
+   LOAD STATS
+══════════════════════════════ */
+async function loadStats() {
+  try {
+    const res  = await fetch(`${API_BASE}/admin/vouchers/stats`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) return;
+    const d = data.data;
+    document.getElementById('stat-total').textContent   = d.total    ?? '—';
+    document.getElementById('stat-active').textContent  = d.active   ?? '—';
+    document.getElementById('stat-upcoming').textContent= d.upcoming ?? '—';
+    document.getElementById('stat-expired').textContent = d.expired  ?? '—';
+    document.getElementById('stat-usage').textContent   = d.totalUsage ?? '—';
+    document.getElementById('stat-discount').textContent= `${sym}${(d.totalDiscountGiven || 0).toLocaleString()}`;
+  } catch(e) { /* stats non-critical */ }
+}
+
+/* ══════════════════════════════
+   LOAD VOUCHERS (GET /vouchers)
+══════════════════════════════ */
+async function loadVouchers() {
+  try {
+    const res  = await fetch(`${API_BASE}/vouchers?limit=200`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Failed to load');
+
+    allVouchers = (Array.isArray(data)
+  ? data
+  : (data.data || data.vouchers || [])
+).filter(v => {
+  return country === 'IN'
+    ? v.country === 'INDIA'
+    : v.country === 'US';
+});
+
+filtered = [...allVouchers];
+    renderPage(1);
+  } catch (err) {
+    showToast(err.message, 'error');
+    document.getElementById('vouchers-body').innerHTML = `
+      <tr><td colspan="10">
+        <div class="empty-state"><div class="empty-icon">⚠️</div><p>${err.message}</p></div>
+      </td></tr>`;
+  }
+}
+
+/* ── RENDER TABLE ── */
+function renderPage(page) {
+  currentPage = page;
+  const start = (page - 1) * PAGE_SIZE;
+  const slice = filtered.slice(start, start + PAGE_SIZE);
+  const now   = new Date();
+
+  if (filtered.length === 0) {
+    document.getElementById('vouchers-body').innerHTML = `
+      <tr><td colspan="10">
+        <div class="empty-state"><div class="empty-icon">🏷️</div><p>No vouchers found.</p></div>
+      </td></tr>`;
+    document.getElementById('pagination').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('vouchers-body').innerHTML = slice.map(v => {
+
+    // ── Status pill ──
+    const computedStatus = v.status || computeStatus(v, now);
+    let statusPill;
+    if      (computedStatus === 'active')    statusPill = `<span class="status-pill pill-success">Active</span>`;
+    else if (computedStatus === 'upcoming')  statusPill = `<span class="status-pill pill-upcoming">Upcoming</span>`;
+    else if (computedStatus === 'expired')   statusPill = `<span class="status-pill pill-danger">Expired</span>`;
+    else if (computedStatus === 'exhausted') statusPill = `<span class="status-pill pill-warning">Exhausted</span>`;
+    else                                     statusPill = `<span class="status-pill pill-danger">Inactive</span>`;
+
+    // ── Discount ──
+    const discBadge = v.discountType === 'percentage'
+      ? `<span class="discount-badge badge-pct">${v.discount}% OFF</span>`
+      : `<span class="discount-badge badge-flat">${sym}${v.discount} OFF</span>`;
+
+    // ── Usage ──
+    const used  = v.usedCount || 0;
+    const maxU  = v.maxUses || null;
+    const pct   = maxU ? Math.min(100, Math.round((used/maxU)*100)) : 0;
+    const barColor = pct >= 90 ? '#f05e5e' : pct >= 60 ? '#f5923e' : 'var(--accent)';
+    const usageHTML = maxU
+      ? `<div style="display:flex;flex-direction:column;gap:4px;min-width:90px;">
+           <span style="font-size:12px;">${used} / ${maxU}</span>
+           <div class="usage-bar-bg"><div class="usage-bar-fill" style="width:${pct}%;background:${barColor};"></div></div>
+         </div>`
+      : `<span style="font-size:12px;color:var(--text-muted);">${used} / ∞</span>`;
+
+    // ── Validity ──
+    const start = v.startDate ? new Date(v.startDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '—';
+    const end   = v.endDate   ? new Date(v.endDate  ).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '—';
+    const isExpired = v.endDate && new Date(v.endDate) < now;
+
+    // ── Eligibility ──
+    const eligMap = {all:'All',new_users:'New Users',existing_users:'Existing Users'};
+
+    // ── Applies to ──
+    const appliesToMap = {all:'All Products',category:'Category',product:'Product'};
+
+    return `
+      <tr>
+        <td>
+          <span class="voucher-code" onclick="copyCode('${v.code}')" title="Click to copy">
+            ${v.code} <span style="font-size:10px;opacity:.5;">📋</span>
+          </span>
+        </td>
+        <td style="font-size:13px;font-weight:500;color:#1a1d2e;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${v.title||''}">${v.title||'—'}</td>
+        <td>${discBadge}
+          ${v.maxDiscountAmount ? `<div style="font-size:10px;color:var(--text-muted);margin-top:3px;">Cap: ${sym}${v.maxDiscountAmount}</div>` : ''}
+        </td>
+        <td><span style="font-size:12px;">${eligMap[v.eligibility]||v.eligibility||'All'}</span></td>
+        <td><span style="font-size:12px;">${appliesToMap[v.appliesTo]||v.appliesTo||'All'}</span></td>
+        <td style="font-size:13px;">${v.minOrderValue > 0 ? `${sym}${v.minOrderValue}` : '<span style="color:var(--text-muted);">None</span>'}</td>
+        <td>${usageHTML}</td>
+        <td style="font-size:11px;line-height:1.6;white-space:nowrap;">
+          <span style="color:var(--text-muted);">From:</span> ${start}<br>
+          <span style="${isExpired?'color:#d94040;font-weight:600;':'color:var(--text-muted);'}">To: ${end}</span>
+        </td>
+        <td>${statusPill}</td>
+        <td>
+          <div style="display:flex;gap:8px;">
+            <button class="act-btn" onclick="openEditModal('${v._id}')">✏️ Edit</button>
+           
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+
+  renderPagination();
+  document.getElementById('pagination').style.display = 'flex';
+}
+
+function computeStatus(v, now) {
+  if (!v.isActive) return 'inactive';
+  if (v.maxUses !== null && v.usedCount >= v.maxUses) return 'exhausted';
+  if (new Date(v.endDate) < now) return 'expired';
+  if (new Date(v.startDate) > now) return 'upcoming';
+  return 'active';
+}
+
+/* ── PAGINATION ── */
+function renderPagination() {
+  const total = filtered.length;
+  const pages = Math.ceil(total / PAGE_SIZE);
+  const start = (currentPage - 1) * PAGE_SIZE + 1;
+  const end   = Math.min(currentPage * PAGE_SIZE, total);
+  document.getElementById('pg-info').textContent = `Showing ${start}–${end} of ${total}`;
+  let btns = `<button class="pg-btn" onclick="renderPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹ Prev</button>`;
+  for (let i = 1; i <= pages; i++) {
+    if (pages<=7 || i===1 || i===pages || Math.abs(i-currentPage)<=1)
+      btns += `<button class="pg-btn ${i===currentPage?'active':''}" onclick="renderPage(${i})">${i}</button>`;
+    else if (Math.abs(i-currentPage)===2)
+      btns += `<span style="padding:0 4px;color:#bbb;">…</span>`;
+  }
+  btns += `<button class="pg-btn" onclick="renderPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>Next ›</button>`;
+  document.getElementById('pg-btns').innerHTML = btns;
+}
+
+/* ── FILTERS ── */
+function applyFilters() {
+  const q      = document.getElementById('searchInput').value.toLowerCase().trim();
+  const status = document.getElementById('statusFilter').value;
+  const now    = new Date();
+
+  filtered = allVouchers.filter(v => {
+    const matchSearch = !q ||
+      (v.code  || '').toLowerCase().includes(q) ||
+      (v.title || '').toLowerCase().includes(q);
+
+    const computedStatus = v.status || computeStatus(v, now);
+    const matchStatus = !status || computedStatus === status;
+
+    return matchSearch && matchStatus;
+  });
+  renderPage(1);
+}
+
+/* ══════════════════════════════
+   FORM HELPERS
+══════════════════════════════ */
+function onDiscountTypeChange() {
+  const type = document.getElementById('f-discountType').value;
+  document.getElementById('f-discount-label').innerHTML =
+    type === 'percentage' ? `Discount % <span class="req">*</span>` : `Flat Amount (${sym}) <span class="req">*</span>`;
+  const maxGroup = document.getElementById('max-discount-group');
+  maxGroup.style.display = type === 'percentage' ? '' : 'none';
+}
+
+function onAppliesToChange() {
+  const val = document.getElementById('f-appliesTo').value;
+  document.getElementById('categories-section').classList.toggle('show', val === 'category');
+  document.getElementById('products-section').classList.toggle('show', val === 'product');
+}
+
+function generateCode() {
+  const prefixes = ['ROBO','SAVE','DEAL','OFF','GET','AM'];
+  const chars    = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const prefix   = prefixes[Math.floor(Math.random()*prefixes.length)];
+  const suffix   = Array.from({length:4}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+  document.getElementById('f-code').value = prefix + suffix;
+}
+
+function copyCode(code) {
+  navigator.clipboard.writeText(code).then(() => showToast(`Copied: ${code}`, 'success'));
+}
+
+/* ── PRODUCT SEARCH (for appliesTo=product) ── */
+async function loadAllProducts() {
+  if (allProductsCache.length > 0) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/products`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+
+    const products =
+      data.products || (Array.isArray(data) ? data : []);
+
+    allProductsCache = products.filter(product =>
+      country === 'IN'
+        ? product.country === 'INDIA'
+        : product.country === 'US'
+    );
+
+  } catch (e) {
+    console.error(e);
+  }
+}
+async function loadCategories() {
+  try {
+    const res = await fetch(
+      `${API_BASE}/products/admin/products/categories`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.message);
+    }
+
+    categoriesCache = (data.data || []).filter(category => {
+  return country === 'IN'
+    ? category.country === 'INDIA'
+    : category.country === 'US';
+});
+
+    const select = document.getElementById(
+      "f-applicableCategories"
+    );
+
+    select.innerHTML = categoriesCache
+  .map(category => `
+    <option value="${category.name}">
+      ${category.name}
+    </option>
+  `)
+  .join("");
+
+  } catch (err) {
+    console.error("Failed to load categories", err);
+  }
+}
+
+function searchProducts(q) {
+  const dd = document.getElementById('product-dropdown');
+  if (!q.trim()) { dd.style.display = 'none'; return; }
+  const lower = q.toLowerCase();
+  const results = allProductsCache.filter(p =>
+    (p.name||'').toLowerCase().includes(lower) && !selectedProducts.find(s => s._id === p._id)
+  ).slice(0, 8);
+
+  if (!results.length) { dd.style.display = 'none'; return; }
+
+  dd.style.display = 'block';
+  dd.innerHTML = results.map(p => `
+    <div onclick="selectProduct('${p._id}','${(p.name||'').replace(/'/g,"\\'")}','${p.images?.[0]||''}')"
+      style="padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:13px;transition:.15s;"
+      onmouseover="this.style.background='#f5f3ff'" onmouseout="this.style.background=''">
+      ${p.images?.[0] ? `<img src="${p.images[0]}" style="width:28px;height:28px;border-radius:5px;object-fit:cover;">` : '<span>📦</span>'}
+      <span>${p.name}</span>
+    </div>`).join('');
+}
+
+function selectProduct(id, name, img) {
+  if (selectedProducts.find(p => p._id === id)) return;
+  selectedProducts.push({_id: id, name, img});
+  renderSelectedProducts();
+  document.getElementById('f-product-search').value = '';
+  document.getElementById('product-dropdown').style.display = 'none';
+}
+
+function removeProduct(id) {
+  selectedProducts = selectedProducts.filter(p => p._id !== id);
+  renderSelectedProducts();
+}
+
+function renderSelectedProducts() {
+  document.getElementById('selected-products-list').innerHTML = selectedProducts.map(p => `
+    <div style="display:inline-flex;align-items:center;gap:6px;background:#f3f0ff;border:1px solid #c4beff;border-radius:8px;padding:5px 10px;">
+      ${p.img ? `<img src="${p.img}" style="width:20px;height:20px;border-radius:4px;object-fit:cover;">` : ''}
+      <span style="font-size:12px;font-weight:600;color:#6c63ff;">${p.name}</span>
+      <button onclick="removeProduct('${p._id}')" style="background:none;border:none;cursor:pointer;color:#aaa;font-size:14px;line-height:1;padding:0 2px;">✕</button>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════
+   OPEN ADD MODAL
+══════════════════════════════ */
+function openAddModal() {
+  editingId        = null;
+  editingUsedCount = 0;
+  selectedProducts = [];
+  resetForm();
+  document.getElementById('modal-title').textContent  = 'Create Voucher';
+  document.getElementById('submit-label').textContent = 'Create Voucher';
+  // unlock fields
+  setLockedFields(false);
+  document.getElementById('voucher-modal').classList.add('open');
+  loadAllProducts();
+  loadCategories();
+}
+
+/* ══════════════════════════════
+   OPEN EDIT MODAL
+══════════════════════════════ */
+function openEditModal(id) {
+  const v = allVouchers.find(x => x._id === id);
+  if (!v) return;
+
+  editingId        = id;
+  editingUsedCount = v.usedCount || 0;
+  selectedProducts = [];
+
+  resetForm();
+
+  document.getElementById('f-code').value            = v.code            || '';
+  document.getElementById('f-title').value           = v.title           || '';
+  document.getElementById('f-description').value     = v.description     || '';
+  document.getElementById('f-country').value =
+  v.country || 'INDIA';
+  document.getElementById('f-discountType').value    = v.discountType     || 'percentage';
+  document.getElementById('f-discount').value        = v.discount        || '';
+  document.getElementById('f-maxDiscountAmount').value = v.maxDiscountAmount != null ? v.maxDiscountAmount : '';
+  document.getElementById('f-minOrderValue').value   = v.minOrderValue   || '';
+  document.getElementById('f-appliesTo').value       = v.appliesTo       || 'all';
+  document.getElementById('f-eligibility').value     = v.eligibility     || 'all';
+  document.getElementById('f-maxUses').value         = v.maxUses != null  ? v.maxUses : '';
+  document.getElementById('f-perUserLimit').value    = v.perUserLimit    || '';
+  document.getElementById('f-isActive').checked      = v.isActive        !== false;
+
+  if (v.startDate) document.getElementById('f-startDate').value = toLocalDatetime(v.startDate);
+  if (v.endDate)   document.getElementById('f-endDate').value   = toLocalDatetime(v.endDate);
+
+
+  // Products
+  if (v.appliesTo === 'product') {
+    const prods = v.applicableProducts || [];
+    selectedProducts = prods.map(p => ({_id: p._id || p, name: p.name || p, img: p.image || ''}));
+    renderSelectedProducts();
+  }
+
+  onDiscountTypeChange();
+  onAppliesToChange();
+
+  // Lock code/discount fields if already used
+  setLockedFields(editingUsedCount > 0);
+
+  document.getElementById('modal-title').textContent  = 'Edit Voucher';
+  document.getElementById('submit-label').textContent = 'Update Voucher';
+  document.getElementById('voucher-modal').classList.add('open');
+  loadAllProducts();
+loadCategories().then(() => {
+
+  if (
+    v.appliesTo === "category" &&
+    v.applicableCategories?.length
+  ) {
+    const select =
+      document.getElementById("f-applicableCategories");
+
+    [...select.options].forEach(option => {
+      option.selected =
+        v.applicableCategories.includes(
+          option.value
+        );
+    });
+  }
+
+});
+  
+}
+
+function setLockedFields(locked) {
+  const codeInput     = document.getElementById('f-code');
+  const typeSelect    = document.getElementById('f-discountType');
+  const discountInput = document.getElementById('f-discount');
+
+  codeInput.readOnly       = locked;
+  typeSelect.disabled      = locked;
+  discountInput.readOnly   = locked;
+
+  codeInput.style.background     = locked ? '#f8f9ff' : '';
+  typeSelect.style.background    = locked ? '#f8f9ff' : '';
+  discountInput.style.background = locked ? '#f8f9ff' : '';
+
+  document.getElementById('code-locked-note').style.display  = locked ? 'block' : 'none';
+  document.getElementById('dtype-locked-note').style.display = locked ? 'block' : 'none';
+  document.getElementById('dtype-locked-note2').style.display= locked ? 'block' : 'none';
+}
+
+function toLocalDatetime(dateStr) {
+  const d = new Date(dateStr);
+  const pad = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function closeModal() {
+  document.getElementById('voucher-modal').classList.remove('open');
+  editingId = null;
+  selectedProducts = [];
+  resetForm();
+}
+
+function resetForm() {
+  ['f-code','f-title','f-description','f-discount','f-maxDiscountAmount',
+   'f-minOrderValue','f-applicableCategories','f-maxUses','f-perUserLimit',
+   'f-startDate','f-endDate','f-product-search'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('f-discountType').value = 'percentage';
+  document.getElementById('f-appliesTo').value    = 'all';
+  document.getElementById('f-eligibility').value  = 'all';
+  document.getElementById('f-country').value = 'INDIA';
+  document.getElementById('f-isActive').checked   = true;
+  document.getElementById('selected-products-list').innerHTML = '';
+  document.getElementById('product-dropdown').style.display   = 'none';
+  document.getElementById('categories-section').classList.remove('show');
+  document.getElementById('products-section').classList.remove('show');
+  document.getElementById('max-discount-group').style.display = '';
+  onDiscountTypeChange();
+  setLockedFields(false);
+}
+
+/* ══════════════════════════════
+   SUBMIT — POST /admin/vouchers or PUT /admin/vouchers/:id
+══════════════════════════════ */
+async function submitVoucher() {
+  const code       = document.getElementById('f-code').value.trim().toUpperCase();
+  const title      = document.getElementById('f-title').value.trim();
+  const dtype      = document.getElementById('f-discountType').value;
+  
+  const discount   = document.getElementById('f-discount').value.trim();
+  const startDate  = document.getElementById('f-startDate').value;
+  const endDate    = document.getElementById('f-endDate').value;
+  const appliesTo  = document.getElementById('f-appliesTo').value;
+
+  // Validate required
+  if (!code)      { showToast('Voucher code is required', 'error'); return; }
+  if (!title)     { showToast('Title is required', 'error'); return; }
+  if (!discount)  { showToast('Discount value is required', 'error'); return; }
+  if (!startDate) { showToast('Start date is required', 'error'); return; }
+  if (!endDate)   { showToast('End date is required', 'error'); return; }
+  if (dtype === 'percentage' && (Number(discount) < 0.01 || Number(discount) > 100)) {
+    showToast('Percentage must be between 0.01 and 100', 'error'); return;
+  }
+  if (new Date(endDate) <= new Date(startDate)) {
+    showToast('End date must be after start date', 'error'); return;
+  }
+  if (appliesTo === 'category') {
+
+  const selectedCategories =
+    [...document.getElementById(
+      'f-applicableCategories'
+    ).selectedOptions]
+      .map(option => option.value);
+
+  if (!selectedCategories.length) {
+    showToast(
+      'Please select at least one category',
+      'error'
+    );
+    return;
+  }
+}
+  if (appliesTo === 'product' && selectedProducts.length === 0) {
+    showToast('Please select at least one product', 'error'); return;
+  }
+
+  // Build payload matching schema field names exactly
+  const payload = {
+    code,
+    title,
+    description:    document.getElementById('f-description').value.trim() || '',
+    country: document.getElementById('f-country').value,
+    discountType:   dtype,
+    discount:       Number(discount),
+    minOrderValue:  Number(document.getElementById('f-minOrderValue').value)    || 0,
+    eligibility:    document.getElementById('f-eligibility').value,
+    appliesTo,
+    perUserLimit:   Number(document.getElementById('f-perUserLimit').value)     || 1,
+    startDate:      new Date(startDate).toISOString(),
+    endDate:        new Date(endDate).toISOString(),
+    isActive:       document.getElementById('f-isActive').checked,
+  };
+
+  const maxDisc = document.getElementById('f-maxDiscountAmount').value.trim();
+  if (maxDisc) payload.maxDiscountAmount = Number(maxDisc);
+
+  const maxUses = document.getElementById('f-maxUses').value.trim();
+  if (maxUses) payload.maxUses = Number(maxUses);
+
+  if (appliesTo === 'category') {
+
+  payload.applicableCategories =
+    [...document.getElementById(
+      'f-applicableCategories'
+    ).selectedOptions]
+      .map(option => option.value);
+
+}
+  if (appliesTo === 'product') {
+    payload.applicableProductIds = selectedProducts.map(p => p._id);
+  }
+
+  const btn   = document.getElementById('submit-btn');
+  const label = document.getElementById('submit-label');
+  btn.disabled      = true;
+  label.textContent = editingId ? 'Updating…' : 'Creating…';
+
+  try {
+    const url    = editingId
+      ? `${API_BASE}/admin/vouchers/${editingId}`
+      : `${API_BASE}/admin/vouchers`;
+    const method = editingId ? 'PUT' : 'POST';
+
+    const res  = await fetch(url, {
+      method,
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Request failed');
+
+    showToast(editingId ? 'Voucher updated successfully!' : 'Voucher created successfully!', 'success');
+    closeModal();
+    await Promise.all([loadVouchers(), loadStats()]);
+
+  } catch (err) {
+    showToast(err.message, 'error');
+  } finally {
+    btn.disabled      = false;
+    label.textContent = editingId ? 'Update Voucher' : 'Create Voucher';
+  }
+}
+
+/* ── DELETE ── */
+function openConfirmDelete(id, code) {
+  deletingId = id;
+  document.getElementById('confirm-code').textContent = code;
+  document.getElementById('confirm-modal').classList.add('open');
+}
+function closeConfirm() {
+  document.getElementById('confirm-modal').classList.remove('open');
+  deletingId = null;
+}
+async function confirmDelete() {
+  if (!deletingId) return;
+  const btn = document.getElementById('confirm-del-btn');
+  btn.disabled = true; btn.textContent = 'Deleting…';
+  try {
+    const res = await fetch(`${API_BASE}/admin/vouchers/${deletingId}`, {
+      method:  'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Delete failed');
+    showToast('Voucher deleted successfully', 'success');
+    closeConfirm();
+    await Promise.all([loadVouchers(), loadStats()]);
+  } catch (err) {
+    showToast(err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Delete';
+  }
+}
+
+/* ── TOAST ── */
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = `toast ${type} show`;
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+/* ── LOGOUT ── */
+function openLogout()  { document.getElementById('logout-modal').classList.add('open'); }
+function closeLogout() { document.getElementById('logout-modal').classList.remove('open'); }
+function confirmLogout() {
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('user');
+  window.location.href = 'login.html';
+}
+
+/* ── EVENTS ── */
+document.getElementById('logout-modal').addEventListener('click',  function(e){ if(e.target===this) closeLogout();  });
+document.getElementById('voucher-modal').addEventListener('click', function(e){ if(e.target===this) closeModal();   });
+document.getElementById('confirm-modal').addEventListener('click', function(e){ if(e.target===this) closeConfirm(); });
+
+// close product dropdown on outside click
+document.addEventListener('click', function(e){
+  if (!e.target.closest('#products-section'))
+    document.getElementById('product-dropdown').style.display = 'none';
+  const sb = document.getElementById('sidebar');
+  if (sb.classList.contains('open') && !sb.contains(e.target) && !e.target.classList.contains('hamburger-btn'))
+    sb.classList.remove('open');
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeConfirm(); closeLogout(); }
+});
+
+/* ── INIT ── */
+Promise.all([loadVouchers(), loadStats()]);
+</script>
+</body>
+</html>

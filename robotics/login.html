@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Login - AM ROBOTICS</title>
+    <meta name="author" content="AM ROBOTICS">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.min.css">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+   <style>
+/* ===============================
+   PAGE WRAPPER
+================================ */
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #0b0b0b 0%, #0f1b2d 100%);
+}
+
+/* ===============================
+   LOGIN CARD
+================================ */
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    background: #ffffff;
+    padding: 50px;
+    border-radius: 14px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* ===============================
+   HEADER
+================================ */
+.login-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.login-header h1 {
+    font-size: 28px;
+    color: #000000;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.login-header p {
+    color: #6b7280; /* gray */
+    font-size: 14px;
+    margin: 0;
+}
+
+/* ===============================
+   FORM
+================================ */
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #374151; /* dark gray */
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 30px;
+    font-size: 14px;
+    transition: all 0.25s ease;
+    background: #ffffff;
+}
+
+/* INPUT FOCUS (BLUE ACCENT) */
+.form-group input:focus {
+    border-color: #2563eb; /* blue */
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+/* ===============================
+   PRIMARY BUTTON
+================================ */
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #111827 0%, #1e3a8a 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(30, 58, 138, 0.35);
+}
+
+.login-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+.login-footer {
+    text-align: center;
+    margin-top: 22px;
+}
+
+.login-footer p {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.login-footer a {
+    color: #1e40af; /* blue */
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ===============================
+   MESSAGES
+================================ */
+.error-message {
+    color: #1e40af; /* blue (clean, not aggressive) */
+    font-size: 13px;
+    margin-top: 6px;
+    display: none;
+}
+
+.success-message {
+    color: #047857; /* muted green */
+    font-size: 13px;
+    margin-top: 6px;
+    display: none;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* ===============================
+   BACK LINK
+================================ */
+.back-link {
+    display: inline-block;
+    margin-bottom: 30px;
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.back-link:hover {
+    color: #1e40af;
+}
+
+/* ===============================
+   MOBILE
+================================ */
+@media (max-width: 576px) {
+    .login-container {
+        padding: 36px 26px;
+    }
+
+    .login-header h1 {
+        font-size: 24px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <div class="login-header">
+                <h1>Welcome Back</h1>
+                <p>Sign in to your account</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">Sign In</button>
+                <div class="loading" id="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Signing in...
+                </div>
+                <div class="error-message" id="generalError"></div>
+                <div class="success-message" id="successMessage"></div>
+            </form>
+
+            <div class="login-footer">
+                <p>Don't have an account? <a href="register.html">Sign up here</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/vendor/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/app.min.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script>
+        //const API_BASE = 'https://paypal.variants.ecomsandbox.softpages.in/api';
+        // If already logged out, block forward navigation back to dashboard
+window.addEventListener('pageshow', function(e) {
+  if(e.persisted) {
+    window.location.replace('login.html');
+  }
+});
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            document.getElementById('generalError').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+
+            // Validation
+            if (!email) {
+                document.getElementById('emailError').textContent = 'Email is required';
+                document.getElementById('emailError').style.display = 'block';
+                return;
+            }
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Password is required';
+                document.getElementById('passwordError').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('loginBtn').disabled = true;
+            document.getElementById('loading').style.display = 'block';
+            let guestCart = [];
+  try {
+    guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+  } catch (_) {}
+
+            try {
+                const response = await fetch(`${CONFIG.API_BASE}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password, guestCart })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                // Store token and user info
+                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                localStorage.removeItem("guestCart");
+
+                document.getElementById('successMessage').textContent = 'Login successful! Redirecting...';
+                document.getElementById('successMessage').style.display = 'block';
+
+                setTimeout(() => {
+    if (data.user?.isAdmin) {
+        window.location.href = "store-selection.html";
+    } else {
+        window.location.href = "profile.html";
+    }
+}, 1500);
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('generalError').textContent = error.message || 'An error occurred. Please try again.';
+                document.getElementById('generalError').style.display = 'block';
+            } finally {
+                document.getElementById('loginBtn').disabled = false;
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify Email | AM ROBOTICS</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'DM Sans',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f4f6fb;
+    padding:20px;
+}
+
+.verify-card{
+    width:100%;
+    max-width:420px;
+    background:#fff;
+    border-radius:24px;
+    padding:40px 30px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.08);
+}
+
+.logo{
+    width:70px;
+    height:70px;
+    border-radius:18px;
+    background:#6c63ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:34px;
+    color:#fff;
+    margin:0 auto 20px;
+}
+
+.company{
+    font-size:24px;
+    font-weight:700;
+    color:#1e2235;
+}
+
+.subtitle{
+    color:#9095a5;
+    margin-top:6px;
+    margin-bottom:30px;
+    font-size:14px;
+}
+
+.loader{
+    width:60px;
+    height:60px;
+    border:5px solid #e5e7ef;
+    border-top:5px solid #6c63ff;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:0 auto 20px;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.icon{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 20px;
+    font-size:38px;
+    color:#fff;
+}
+
+.success{
+    background:#3dc47e;
+}
+
+.failed{
+    background:#f05e5e;
+}
+
+.status-title{
+    font-size:22px;
+    font-weight:700;
+    color:#1e2235;
+    margin-bottom:10px;
+}
+
+.message{
+    color:#666;
+    line-height:1.7;
+    font-size:14px;
+    margin-bottom:25px;
+}
+
+.btn{
+    width:100%;
+    border:none;
+    background:#6c63ff;
+    color:#fff;
+    padding:14px;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover{
+    background:#564fd4;
+}
+</style>
+
+</head>
+<body>
+
+<div class="verify-card">
+
+<div class="logo">🤖</div>
+
+<h1 class="company">AM ROBOTICS</h1>
+<p class="subtitle">Email Verification</p>
+
+<div id="content">
+
+    <div class="loader"></div>
+
+    <h3 class="status-title">
+        Verifying Your Email
+    </h3>
+
+    <p class="message">
+        Please wait while we verify your account...
+    </p>
+
+</div>
+
+
+</div>
+<script src="assets/js/config.js"></script>
+<script>
+
+const BASE_URL = CONFIG.API_BASE;
+
+const params = new URLSearchParams(window.location.search);
+const token = params.get("token");
+
+const content = document.getElementById("content");
+
+async function verifyEmail(){
+
+    try{
+
+        const response = await fetch(`${CONFIG.API_BASE}/user/verify/${token}`)
+
+        const data = await response.json();
+
+        if(!response.ok){
+            throw new Error(
+                data.message || "Verification failed"
+            );
+        }
+
+        content.innerHTML = `
+            <div class="icon success">
+                ✓
+            </div>
+
+            <h3 class="status-title">
+                Email Verified
+            </h3>
+
+            <p class="message">
+                Your account has been verified successfully.
+                You can now login and start shopping.
+            </p>
+
+            <button class="btn" onclick="goLogin()">
+                Login Now
+            </button>
+        `;
+
+    }
+    catch(error){
+
+        content.innerHTML = `
+            <div class="icon failed">
+                ✕
+            </div>
+
+            <h3 class="status-title">
+                Verification Failed
+            </h3>
+
+            <p class="message">
+                ${error.message}
+            </p>
+
+            <button class="btn" onclick="goLogin()">
+                Back To Login
+            </button>
+        `;
+    }
+
+}
+
+function goLogin(){
+    window.location.href = "/robotics/login.html";
+}
+
+verifyEmail();
+
+</script>
+
+</body>
+</html>

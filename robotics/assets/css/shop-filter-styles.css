@@ -1,0 +1,95 @@
+/* Sort dropdown styling with black and white theme */
+.sort-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.woocommerce-ordering .orderby {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.woocommerce-ordering .orderby:hover {
+  border-color: #0f3460;
+  background-color: #f9fafb;
+}
+
+.woocommerce-ordering .orderby:focus {
+  outline: none;
+  border-color: #0f3460;
+  box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+}
+
+/* Arrow icon styling */
+.sort-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #0f3460;
+  width: 20px;
+  height: 20px;
+}
+
+/* Filter button - black/white with blue hover */
+.filter-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #1a1a2e;
+  color: #ffffff;
+  border: 2px solid #1a1a2e;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.filter-btn:hover {
+  background-color: #0f3460;
+  border-color: #0f3460;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 52, 96, 0.3);
+}
+
+.filter-btn:active {
+  background-color: #082340;
+  border-color: #082340;
+}
+
+.filter-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .woocommerce-ordering .orderby {
+    padding: 10px 36px 10px 14px;
+    font-size: 13px;
+  }
+
+  .sort-arrow {
+    width: 18px;
+    height: 18px;
+  }
+
+  .filter-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,571 @@
+<!doctype html>
+<html class="no-js" lang="zxx" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Shopping Cart - AM ROBOTICS</title>
+    <meta name="author" content="AM ROBOTICS">
+    <meta name="description" content="Shopping Cart - AM Robotics">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/img/logo_resized.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/logo_resized.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.min.css">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Added enhanced e-commerce styles -->
+    <link rel="stylesheet" href="assets/css/ecommerce-enhancements.css">
+    <!-- Added new enhanced cart and checkout styles -->
+    <link rel="stylesheet" href="assets/css/cart-checkout-enhanced.css">
+    <style>
+
+.cart-layout{
+    display:flex;
+    gap:30px;
+    align-items:flex-start;
+}
+
+.cart-left{
+    flex:2;
+}
+
+.cart-right{
+    flex:1;
+    position:sticky;
+    top:100px;
+}
+
+.cart-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+.cart-header h2{
+    margin:0;
+    font-weight:700;
+}
+
+.cart-product-card{
+    display:flex;
+    gap:20px;
+    border:1px solid #eee;
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:20px;
+    background:#fff;
+}
+
+.cart-product-img{
+    width:120px;
+    height:120px;
+    object-fit:cover;
+    border-radius:12px;
+}
+
+.cart-product-info{
+    flex:1;
+}
+
+.cart-product-name{
+    font-size:18px;
+    font-weight:600;
+}
+
+.cart-price{
+    font-size:22px;
+    color:#dc3545;
+    font-weight:700;
+}
+
+.cart-original{
+    text-decoration:line-through;
+    color:#999;
+    margin-left:10px;
+}
+
+.discount-badge{
+    background:#e7f8ec;
+    color:#28a745;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.qty-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:15px;
+}
+
+.qty-btn{
+    width:35px;
+    height:35px;
+    border:none;
+    border-radius:50%;
+    background:#f5f5f5;
+}
+
+.summary-card{
+    border:1px solid #eee;
+    border-radius:16px;
+    padding:25px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    margin:15px 0;
+}
+
+.summary-total{
+    display:flex;
+    justify-content:space-between;
+    font-size:24px;
+    font-weight:700;
+}
+
+.summary-divider{
+    border-top:1px solid #eee;
+    margin:20px 0;
+}
+
+.checkout-btn{
+    width:100%;
+    border:none;
+    background:#198754;
+    color:white;
+    padding:15px;
+    border-radius:12px;
+    font-weight:600;
+    margin-top:20px;
+}
+
+.saving-text{
+    color:#198754;
+    font-weight:700;
+}
+
+.voucher-card{
+    border:1px solid #eee;
+    border-radius:16px;
+    padding:20px;
+    margin-top:20px;
+}
+
+.voucher-item{
+    border:1px dashed #198754;
+    border-radius:12px;
+    padding:15px;
+    margin-top:10px;
+}
+
+.voucher-code{
+    font-weight:700;
+    color:#198754;
+}
+
+@media(max-width:991px){
+
+.cart-layout{
+    flex-direction:column;
+}
+
+.cart-right{
+    width:100%;
+}
+
+}
+
+</style>
+</head>
+<body>
+   
+ <header class="th-header header-layout2">
+    <div class="sticky-wrapper">
+      <div class="container">
+        <div class="menu-area position-relative">
+          <div class="header-bg-shape" data-mask-src="assets/img/theme-img/header3-bg-shape.png"></div>
+
+          <div class="row align-items-center justify-content-between">
+            
+            <!-- 🔸 Logo -->
+            <div class="col-auto">
+              <div class="header-logo">
+                <a href="index.html">
+                  <img src="assets/img/logo_resized.png" alt="AM Robotics" style="max-height:55px;">
+                </a>
+              </div>
+            </div>
+
+            <!-- 🔸 Desktop Navigation -->
+            <div class="col-auto">
+              <nav class="main-menu d-none d-lg-inline-block">
+                <ul>
+                  <li><a href="index.html">Home</a></li>
+                  <li><a href="about.html">About Us</a></li>
+
+                  <li class="menu-item-has-children">
+                    <a href="#">Projects</a>
+                    <ul class="sub-menu">
+                      <li><a href="service9.html">Academic Projects</a></li>
+                      <li><a href="service6.html">R&D Projects</a></li>
+                    </ul>
+                  </li>
+
+                  <li class="menu-item-has-children">
+                    <a href="#">Services</a>
+                    <ul class="sub-menu">
+                      <li><a href="service-details.html">3D Printing & 3D Modeling</a></li>
+                      <li><a href="service2.html">Prototyping</a></li>
+                      <li><a href="service3.html">Proof of Concept</a></li>
+                      <li><a href="service4.html">Product Design & Development</a></li>
+                      <li><a href="service5.html">Industrial Automation & Robotics</a></li>
+                      <li><a href="service7.html">Agricultural Robots</a></li>
+                      <li><a href="service8.html">Restaurant & Warehouse Robots</a></li>
+                      <li><a href="service10.html">Custom DIY Robokits</a></li>
+                      <li><a href="service11.html">Reverse Engineering</a></li>
+                      <li><a href="service12.html">Manufacturing</a></li>
+                      <li><a href="service13.html">Sheetmetal Fabrication & Assembly</a></li>
+                      <li><a href="service15.html">PCB Design & Manufacturing</a></li>
+                      <li><a href="service16.html">Mechanical</a></li>
+                    </ul>
+                  </li>
+
+                  <li><a href="shop.html">Shop</a></li>
+                  <li><a href="blog.html">Blog</a></li>
+                  <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+              </nav>
+            </div>
+
+            <!-- 🔸 Desktop Icons -->
+            <div class="col-auto d-none d-lg-flex align-items-center gap-3">
+              <a href="cart.html" class="icon-btn position-relative" title="Shopping Cart">
+                <i class="far fa-shopping-cart"></i>
+                <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;font-size:10px;">0</span>
+              </a>
+              <a href="profile.html" class="icon-btn" title="Profile">
+                <i class="far fa-user-circle" style="font-size:20px;"></i>
+              </a>
+            </div>
+
+            <!-- 🔸 CTA Button -->
+            <div class="col-auto d-none d-xl-block">
+              <div class="header-button">
+                <a href="login.html" class="th-btn style-gradient">
+                  Log in <i class="far fa-long-arrow-right ms-2"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 🔹 Mobile Navigation Buttons -->
+          <div class="mobile-nav d-flex d-lg-none align-items-center gap-2">
+            <a href="javascript:void(0)" class="icon-btn th-menu-toggle" title="Menu">
+              <i class="far fa-bars"></i>
+            </a>
+            <a href="cart.html" class="icon-btn position-relative" title="Cart">
+              <i class="far fa-shopping-cart"></i>
+              <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;font-size:10px;">0</span>
+            </a>
+            <a href="profile.html" class="icon-btn" title="Profile">
+              <i class="far fa-user-circle"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  <style>
+#whatsapp-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25d366; /* WhatsApp green color */
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: center;
+}
+
+#whatsapp-float a {
+    color: #ebddc6;
+    text-decoration: none;
+    display: block;
+}
+
+#whatsapp-float img {
+    width: 30px; /* Adjust the size as needed */
+    height: 30px;
+}
+
+#whatsapp-float span {
+    display: block;
+    font-size: 14px;
+    margin-top: 5px;
+}
+    </style>
+    <div id="whatsapp-float">
+                <a href="https://wa.me/+919550906016" target="_blank">
+                    <img src="assets/img/wh.png" alt="WhatsApp">
+                    
+                </a>
+            </div>
+    <!-- 🔹 Mobile Menu Wrapper -->
+    <div class="th-menu-wrapper">
+      <div class="th-menu-area text-center">
+        <button class="th-menu-toggle"><i class="fal fa-times"></i></button>
+        <div class="mobile-logo">
+          <a href="index.html"><img src="assets/img/logo_resized.png" alt="AM Robotics"></a>
+        </div>
+
+        <div class="th-mobile-menu">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+
+            <li class="menu-item-has-children">
+              <a href="#">Projects</a>
+              <ul class="sub-menu">
+                <li><a href="service9.html">Academic Projects</a></li>
+                <li><a href="service6.html">R&D Projects</a></li>
+              </ul>
+            </li>
+
+            <li class="menu-item-has-children">
+              <a href="#">Services</a>
+              <ul class="sub-menu">
+                <li><a href="service-details.html">3D Printing & 3D Modeling</a></li>
+                <li><a href="service2.html">Prototyping</a></li>
+                <li><a href="service3.html">Proof of Concept</a></li>
+                <li><a href="service4.html">Product Design & Development</a></li>
+                <li><a href="service5.html">Industrial Automation & Robotics</a></li>
+                <li><a href="service7.html">Agricultural Robots</a></li>
+                <li><a href="service8.html">Restaurant & Warehouse Robots</a></li>
+                <li><a href="service10.html">Custom DIY Robokits</a></li>
+                <li><a href="service11.html">Reverse Engineering</a></li>
+                <li><a href="service12.html">Manufacturing</a></li>
+              </ul>
+            </li>
+
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 🔹 Minimal Custom Styling for Header -->
+  <style>
+       .icon-btn {
+      background: #353536;
+      color: #fff;
+      border-radius: 12px;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+    .icon-btn:hover {
+      background: linear-gradient(90deg, #ffffff, #ffffff);
+      color: #000000;
+    }
+    .mobile-nav {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      z-index: 9999;
+    }
+    .cart-badge {
+      background: red !important;
+      color: #fff !important;
+      font-size: 10px !important;
+      min-width: 16px;
+      min-height: 16px;
+    }
+    @media (max-width: 991px) {
+      .col-auto.d-none.d-lg-flex.align-items-center.gap-3 {
+        display: none !important;
+      }
+    }
+    @media (min-width: 992px) {
+      .mobile-nav {
+        display: none !important;
+      }
+    }
+  </style>
+    <div class="breadcumb-wrapper" data-bg-src="assets/img/project/project1-1.jpg" data-overlay="black" data-opacity="7">
+        <div class="container">
+            <div class="row">
+                <div class="col-xxl-12">
+                    <div class="breadcumb-content">
+                        <h1 class="breadcumb-title text-anim" data-cue="slideInUp" data-delay="100">Shopping Cart</h1>
+                        <ul class="breadcumb-menu" data-cue="slideInUp" data-delay="300">
+                            <li><a href="index.html">Home</a></li>
+                            <li>Cart</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <!-- =====================================================
+     REPLACE the entire .th-cart-wrapper section
+     in cart.html with this block.
+     (Keep everything above and below unchanged.)
+     ===================================================== -->
+
+<!-- =====================================================
+     REPLACE the entire .th-cart-wrapper section
+     in cart.html with this block.
+     (Keep everything above and below unchanged.)
+     ===================================================== -->
+
+<div class="th-cart-wrapper space-top space-extra-bottom">
+  <div class="container">
+
+    <div class="cart-layout">
+
+      <!-- ── LEFT COLUMN ─────────────────────────── -->
+      <div class="cart-left">
+
+        <div class="cart-header">
+          <a href="shop.html" class="back-link">
+            <i class="far fa-arrow-left"></i> Continue Shopping
+          </a>
+          <h2>Your Cart <span id="cartItemCount"></span></h2>
+        </div>
+
+        <!-- Product Cards injected here by cart.js -->
+        <div id="cartProducts"></div>
+
+        <!-- Voucher accordion -->
+        <div class="voucher-card">
+          <button class="voucher-header" onclick="toggleVouchers(this)" aria-expanded="false">
+            <span><i class="far fa-tag"></i> &nbsp;Apply Voucher</span>
+            <i class="far fa-chevron-down voucher-chevron"></i>
+          </button>
+          <div id="voucherContainer" class="voucher-body" style="display:none;"></div>
+        </div>
+
+      </div>
+
+      <!-- ── RIGHT COLUMN ────────────────────────── -->
+      <div class="cart-right">
+
+        <div class="summary-card">
+          <h4 class="summary-heading">ORDER SUMMARY</h4>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="subtotalAmount">₹0</span>
+          </div>
+
+          <div class="summary-row saving-row">
+            <span>MRP Savings</span>
+            <span class="saving-text" id="savingAmount">₹0</span>
+          </div>
+
+          <!-- shown only when a voucher is applied -->
+          <div class="summary-row saving-row" id="voucherDiscountRow" style="display:none;">
+            <span id="voucherDiscountLabel">Voucher</span>
+            <span class="saving-text" id="voucherDiscountAmount">₹0</span>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-total">
+            <span>Total</span>
+            <span id="totalAmount">₹0</span>
+          </div>
+
+          <button class="checkout-btn" onclick="proceedToCheckout()">
+            <i class="far fa-lock"></i>&nbsp; Proceed to Checkout
+          </button>
+
+          <div class="trust-row">
+            <div class="trust-item">
+              <i class="far fa-shield-check"></i>
+              <span>Secure</span>
+            </div>
+            <div class="trust-item">
+              <i class="far fa-truck"></i>
+              <span>Fast Delivery</span>
+            </div>
+            <div class="trust-item">
+              <i class="far fa-undo"></i>
+              <span>Easy Returns</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div><!-- /.cart-layout -->
+  </div><!-- /.container -->
+</div><!-- /.th-cart-wrapper -->
+
+
+
+
+    <footer class="footer-wrapper footer-layout1 style2 bg-black space-top">
+        <div class="container">
+            <div class="footer-top">
+                <div class="row gy-30 justify-content-lg-between">
+                    <div class="col-lg-auto">
+                        <div class="contact-info-card contact-location-info">
+                            <p class="box-title">Location</p>
+                            <h4 class="box-text">#101, Ace Ventures, Laxminagar Colony Road No 1, Kothapet, Hyderabad, 500035, Telangana, INDIA</h4>
+                        </div>
+                    </div>
+                    <div class="col-lg-auto">
+                        <div class="contact-info-card contact-phone-info">
+                            <p class="box-title">Phone Call</p>
+                            <h4 class="box-text"><a href="tel:+919550906016">+91 9550906016</a></h4>
+                        </div>
+                    </div>
+                    <div class="col-lg-auto">
+                        <div class="contact-info-card contact-mail-info">
+                            <p class="box-title">Email Address</p>
+                            <h4 class="box-text"><a href="mailto:support@amrobotics.in">support@amrobotics.in</a></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/vendor/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="assets/js/app.min.js"></script>
+    <script src="assets/js/cart-system.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/cart.js"></script>
+    <!-- <script src="assets/js/navbar.js"></script> -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/subscribe.js"></script>
+    <script>
+function toggleVouchers(btn) {
+  const body = document.getElementById("voucherContainer");
+  const expanded = btn.getAttribute("aria-expanded") === "true";
+  body.style.display = expanded ? "none" : "block";
+  btn.setAttribute("aria-expanded", !expanded);
+  btn.querySelector(".voucher-chevron").style.transform = expanded ? "" : "rotate(180deg)";
+}
+</script>
+</body>
+</html>

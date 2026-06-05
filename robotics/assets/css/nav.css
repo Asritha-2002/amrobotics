@@ -1,0 +1,122 @@
+/* ==============================
+   MOBILE SLIDING SIDEBAR MENU
+   (No impact on desktop nav)
+============================== */
+
+@media (max-width: 991px) {
+  /* Sidebar hidden by default */
+  #am-sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 270px;
+    height: 100%;
+    background: #fff;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: left 0.3s ease;
+    z-index: 2000;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #am-sidebar.active {
+    left: 0;
+  }
+
+  /* Overlay (dim background) */
+  #am-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1500;
+  }
+
+  #am-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Header inside sidebar */
+  .am-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+
+  .am-sidebar-logo {
+    height: 45px;
+  }
+
+  #am-close-sidebar {
+    background: #6c47ff;
+    border: none;
+    width: 36px;
+    height: 36px;
+    color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+  /* Sidebar menu links */
+  .am-sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .am-sidebar-menu > li {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+  }
+
+  .am-sidebar-menu a {
+    color: #111;
+    text-decoration: none;
+    display: block;
+    font-weight: 500;
+  }
+
+  /* Dropdowns */
+  .sidebar-dropdown .sidebar-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .toggle-submenu {
+    background: #f0f0f0;
+    border: none;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    font-weight: bold;
+    color: #6c47ff;
+    cursor: pointer;
+  }
+
+  .submenu {
+    display: none;
+    padding-left: 10px;
+    margin-top: 8px;
+  }
+
+  .submenu li {
+    padding: 5px 0;
+  }
+
+  .submenu a {
+    color: #444;
+    font-size: 14px;
+  }
+
+  .sidebar-dropdown.open .submenu {
+    display: block;
+  }
+}

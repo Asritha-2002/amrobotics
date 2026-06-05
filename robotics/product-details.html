@@ -1,0 +1,866 @@
+
+<!doctype html>
+<html class="no-js" lang="zxx" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Product Details – AM ROBOTICS</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/logo_resized.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.min.css">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+    /* ═══════════════════════════════════════════
+       SKELETON LOADER
+    ═══════════════════════════════════════════ */
+    .pd-skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.4s infinite;
+        border-radius: 10px;
+    }
+    @keyframes shimmer {
+        0%   { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    /* ═══════════════════════════════════════════
+       IMAGE COLUMN — main image + thumbs BELOW
+    ═══════════════════════════════════════════ */
+    .pd-image-col {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    #mainProductImage {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 20px;
+        transition: opacity 0.2s ease;
+        display: block;
+    }
+
+    /* Stock badge — top-left corner of image */
+    .pd-stock-badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        padding: 5px 13px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        z-index: 3;
+        letter-spacing: .3px;
+    }
+    .pd-stock-badge.in  { background: #dcfce7; color: #166534; }
+    .pd-stock-badge.out { background: #fee2e2; color: #991b1b; }
+
+    /* Thumbnails — horizontal row below main image */
+    #pdThumbs {
+        display: none;
+        flex-direction: row;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .pd-thumb {
+        width: 76px;
+        height: 76px;
+        object-fit: cover;
+        border-radius: 10px;
+        cursor: pointer;
+        border: 2px solid #e5e7eb;
+        transition: border-color .2s, transform .2s;
+        flex-shrink: 0;
+    }
+    .pd-thumb:hover  { transform: scale(1.06); }
+    .pd-thumb.active { border-color: #dc3545; box-shadow: 0 0 0 3px rgba(220,53,69,.15); }
+
+    /* ═══════════════════════════════════════════
+       RIGHT INFO COLUMN
+    ═══════════════════════════════════════════ */
+    .pd-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .pd-brand {
+        font-size: 11px;
+        font-weight: 700;
+        color: #dc3545;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin: 0 0 10px;
+    }
+
+    .pd-title {
+        font-size: 26px;
+        font-weight: 800;
+        line-height: 1.25;
+        color: #111;
+        margin: 0 0 14px;
+        word-break: break-word;
+    }
+
+    /* Stars */
+    .pd-stars {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 18px;
+    }
+    .pd-stars i { color: #f4b942; font-size: 14px; }
+    .pd-stars span { font-size: 13px; color: #888; }
+
+    /* Price block */
+    .pd-price-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+        padding: 14px 18px;
+        background: #fff9f9;
+        border-radius: 12px;
+        border-left: 4px solid #dc3545;
+    }
+    .pd-sell     { font-size: 30px; font-weight: 800; color: #dc3545; line-height: 1; }
+    .pd-original { font-size: 17px; color: #b0b0b0; text-decoration: line-through; }
+    .pd-discount {
+        background: #dc3545; color: #fff;
+        font-size: 11px; font-weight: 700;
+        padding: 4px 10px; border-radius: 20px;
+        display: inline-flex; align-items: center;
+    }
+
+    /* Availability pill */
+    .pd-avail {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 16px;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 18px;
+        width: fit-content;
+    }
+    .pd-avail.in  { background: #dcfce7; color: #166534; }
+    .pd-avail.out { background: #fee2e2; color: #991b1b; }
+
+    /* Short description — word wrap fix */
+    #pdShortDesc {
+        font-size: 14px;
+        line-height: 1.8;
+        color: #555;
+        margin-bottom: 18px;
+        word-break: break-word;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* Highlights box */
+    .pd-highlights {
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 18px;
+        border: 1px solid #f0f0f0;
+    }
+    .pd-highlights-title {
+        font-size: 12px;
+        font-weight: 800;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: .8px;
+        margin: 0 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+    .pd-highlights-title i { color: #dc3545; }
+    #pdHighlightsList {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+    #pdHighlightsList li {
+        font-size: 14px;
+        color: #444;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    #pdHighlightsList li::before {
+        content: "✓";
+        color: #dc3545;
+        font-weight: 800;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    /* Meta pills */
+    .pd-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 22px;
+    }
+    .pd-meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #f5f5f5;
+        padding: 6px 13px;
+        border-radius: 20px;
+        font-size: 13px;
+        color: #555;
+        border: 1px solid #ececec;
+    }
+    .pd-meta-pill strong { color: #222222; }
+    .pd-meta-pill a { color: #dc3545; text-decoration: none; font-weight: 600; }
+    .pd-meta-pill a:hover { text-decoration: underline; }
+
+    /* Qty + Cart row */
+    .pd-actions {
+        display: flex;
+        align-items: stretch;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .pd-qty {
+        display: flex;
+        align-items: center;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+    .pd-qty button {
+        width: 40px;
+        height: 50px;
+        background: #f8f8f8;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        color: #444;
+        transition: background .2s, color .2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .pd-qty button:hover { background: #dc3545; color: #fff; }
+    .pd-qty input {
+        width: 56px;
+        text-align: center;
+        border: none;
+        border-left: 1px solid #e5e7eb;
+        border-right: 1px solid #e5e7eb;
+        outline: none;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 0;
+        height: 50px;
+        background: #fff;
+        color: #111;
+    }
+    /* Remove number input arrows */
+    .pd-qty input::-webkit-inner-spin-button,
+    .pd-qty input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    .pd-qty input[type=number] { -moz-appearance: textfield; }
+
+    .pd-btn-cart {
+        flex: 1;
+        background: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 0 28px;
+        height: 50px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all .2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-width: 160px;
+        letter-spacing: .3px;
+    }
+    .pd-btn-cart:hover:not(:disabled) {
+        background: #b91c1c;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(220,53,69,.35);
+    }
+    .pd-btn-cart:disabled {
+        background: #d0d0d0;
+        color: #999;
+        cursor: not-allowed;
+    }
+    .pd-btn-bn {
+        flex: 1;
+        background: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 0 28px;
+        height: 50px;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all .2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-width: 160px;
+        letter-spacing: .3px;
+    }
+    .pd-btn-bn:hover:not(:disabled) {
+        background: #b91c1c;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(220,53,69,.35);
+    }
+    .pd-btn-bn:disabled {
+        background: #d0d0d0;
+        color: #999;
+        cursor: not-allowed;
+    }
+
+    /* ═══════════════════════════════════════════
+       DESCRIPTION TAB
+    ═══════════════════════════════════════════ */
+    .pd-tab-nav { border-bottom: 2px solid #f0f0f0; margin-bottom: 0; }
+    .pd-tab-nav .nav-link {
+        border-radius: 8px 8px 0 0 !important;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .pd-tab-body {
+        padding: 28px 24px;
+        background: #fafafa;
+        border: 1px solid #f0f0f0;
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+        font-size: 15px;
+        line-height: 1.9;
+        color: #555;
+        min-height: 80px;
+        word-break: break-word;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* ═══════════════════════════════════════════
+       RELATED PRODUCT CARDS
+    ═══════════════════════════════════════════ */
+    .pd-related-card {
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #eee;
+        background: #fff;
+        transition: transform .25s, box-shadow .25s;
+    }
+    .pd-related-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0,0,0,.09);
+    }
+    .pd-related-card .img-wrap {
+        height: 190px;
+        overflow: hidden;
+        background: #f8f8f8;
+    }
+    .pd-related-card .img-wrap img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        transition: transform .3s;
+    }
+    .pd-related-card:hover .img-wrap img { transform: scale(1.04); }
+    .pd-related-card .card-body { padding: 14px; }
+    .pd-related-card .card-name {
+        font-weight: 700; font-size: 14px;
+        color: #1a1a1a; margin-bottom: 6px;
+        overflow: hidden; text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .pd-related-card .card-price { color: #dc3545; font-weight: 800; font-size: 16px; margin-bottom: 10px; }
+    .pd-related-card .card-price del { color: #bbb; font-size: 12px; margin-left: 6px; font-weight: 400; }
+    .pd-related-card .card-actions { display: flex; gap: 7px; }
+    .pd-related-card .card-actions a,
+    .pd-related-card .card-actions button {
+        flex: 1; padding: 8px 6px; border-radius: 8px;
+        font-size: 12px; font-weight: 600; text-align: center;
+        text-decoration: none; border: none; cursor: pointer;
+        transition: all .2s;
+    }
+    .btn-view { background: #fff; border: 1.5px solid #dc3545 !important; color: #dc3545; }
+    .btn-view:hover { background: #dc3545; color: #fff; }
+    .btn-cart { background: #dc3545; color: #fff; }
+    .btn-cart:hover { background: #b91c1c; }
+
+    /* ═══════════════════════════════════════════
+       HEADER / COMMON
+    ═══════════════════════════════════════════ */
+    .icon-btn {
+        background: #353536; color: #fff;
+        border-radius: 12px; width: 42px; height: 42px;
+        display: flex; justify-content: center; align-items: center;
+        font-size: 18px; transition: all .3s;
+    }
+    .icon-btn:hover { background: #fff; color: #000; }
+    .mobile-nav { position: absolute; top: 18px; right: 20px; z-index: 9999; }
+    @media(max-width:991px) { .col-auto.d-none.d-lg-flex { display:none !important; } }
+    @media(min-width:992px) { .mobile-nav { display:none !important; } }
+    #whatsapp-float {
+        position: fixed; bottom: 20px; right: 20px;
+        background: #25d366; padding: 10px; border-radius: 50%;
+        box-shadow: 0 0 10px rgba(0,0,0,.2); z-index: 1000;
+    }
+    #whatsapp-float img { width: 30px; height: 30px; display: block; }
+
+    @media (max-width: 991px) {
+        .pd-title { font-size: 22px; }
+        .pd-sell  { font-size: 24px; }
+        .pd-btn-cart { min-width: 0; flex: 1; }
+        .pd-btn-bn { min-width: 0; flex: 1; }
+    }
+    /* Tighten the two-column product layout */
+@media (min-width: 992px) {
+  .row.gx-lg-5 { --bs-gutter-x: 2.5rem; }
+}
+    
+    </style>
+</head>
+
+<body class="">
+    <!-- Preloader -->
+    <div class="preloader">
+        <button class="th-btn preloaderCls">Cancel Preloader</button>
+        <div class="preloader-inner">
+            <div class="bounce"><img src="assets/img/logo_resized.png" alt="AM Robotics"></div>
+            <span class="loader"><span class="loading-text">AM Robotics</span></span>
+        </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="th-menu-wrapper">
+        <div class="th-menu-area text-center">
+            <button class="th-menu-toggle"><i class="fal fa-times"></i></button>
+            <div class="mobile-logo"><a href="index.html"><img src="assets/img/logo_resized.png" alt="AM Robotics"></a></div>
+            <div class="th-mobile-menu">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li class="menu-item-has-children"><a href="#">Projects</a>
+                        <ul class="sub-menu">
+                            <li><a href="service9.html">Academic Projects</a></li>
+                            <li><a href="service6.html">R&D Projects</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item-has-children"><a href="#">Services</a>
+                        <ul class="sub-menu">
+                            <li><a href="service-details.html">3D Printing & 3D Modeling</a></li>
+                            <li><a href="service2.html">Prototyping</a></li>
+                            <li><a href="service3.html">Proof of Concept</a></li>
+                            <li><a href="service4.html">Product Design & Development</a></li>
+                            <li><a href="service5.html">Industrial Automation & Robotics</a></li>
+                            <li><a href="service7.html">Agricultural Robots</a></li>
+                            <li><a href="service8.html">Restaurant & Warehouse Robots</a></li>
+                            <li><a href="service10.html">Custom DIY Robokits</a></li>
+                            <li><a href="service11.html">Reverse Engineering</a></li>
+                            <li><a href="service12.html">Manufacturing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="th-header header-layout2">
+        <div class="sticky-wrapper">
+            <div class="container">
+                <div class="menu-area position-relative">
+                    <div class="header-bg-shape" data-mask-src="assets/img/theme-img/header3-bg-shape.png"></div>
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-auto">
+                            <div class="header-logo">
+                                <a href="index.html"><img src="assets/img/logo_resized.png" alt="AM Robotics" style="max-height:55px;"></a>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <nav class="main-menu d-none d-lg-inline-block">
+                                <ul>
+                                    <li><a href="index.html">Home</a></li>
+                                    <li><a href="about.html">About Us</a></li>
+                                    <li class="menu-item-has-children"><a href="#">Projects</a>
+                                        <ul class="sub-menu">
+                                            <li><a href="service9.html">Academic Projects</a></li>
+                                            <li><a href="service6.html">R&D Projects</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="menu-item-has-children"><a href="#">Services</a>
+                                        <ul class="sub-menu">
+                                            <li><a href="service-details.html">3D Printing & 3D Modeling</a></li>
+                                            <li><a href="service2.html">Prototyping</a></li>
+                                            <li><a href="service3.html">Proof of Concept</a></li>
+                                            <li><a href="service4.html">Product Design & Development</a></li>
+                                            <li><a href="service5.html">Industrial Automation & Robotics</a></li>
+                                            <li><a href="service7.html">Agricultural Robots</a></li>
+                                            <li><a href="service8.html">Restaurant & Warehouse Robots</a></li>
+                                            <li><a href="service10.html">Custom DIY Robokits</a></li>
+                                            <li><a href="service11.html">Reverse Engineering</a></li>
+                                            <li><a href="service12.html">Manufacturing</a></li>
+                                            <li><a href="service13.html">Sheetmetal Fabrication & Assembly</a></li>
+                                            <li><a href="service15.html">PCB Design & Manufacturing</a></li>
+                                            <li><a href="service16.html">Mechanical</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="shop.html">Shop</a></li>
+                                    <li><a href="blog.html">Blog</a></li>
+                                    <li><a href="contact.html">Contact Us</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="col-auto d-none d-lg-flex align-items-center gap-3">
+                            <a href="cart.html" class="icon-btn position-relative" title="Cart">
+                                <i class="far fa-shopping-cart"></i>
+                                <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;font-size:10px;">0</span>
+                            </a>
+                            <a href="profile.html" class="icon-btn" title="Profile">
+                                <i class="far fa-user-circle" style="font-size:20px;"></i>
+                            </a>
+                        </div>
+                        <div class="col-auto d-none d-xl-block">
+                            <div class="header-button">
+                                <a href="login.html" class="th-btn style-gradient">Log in <i class="far fa-long-arrow-right ms-2"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mobile-nav d-flex d-lg-none align-items-center gap-2">
+                        <a href="javascript:void(0)" class="icon-btn th-menu-toggle"><i class="far fa-bars"></i></a>
+                        <a href="cart.html" class="icon-btn position-relative">
+                            <i class="far fa-shopping-cart"></i>
+                            <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;font-size:10px;">0</span>
+                        </a>
+                        <a href="profile.html" class="icon-btn"><i class="far fa-user-circle"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- WhatsApp -->
+    <div id="whatsapp-float">
+        <a href="https://wa.me/+919550906016" target="_blank">
+            <img src="assets/img/wh.png" alt="WhatsApp">
+        </a>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="breadcumb-wrapper" data-bg-src="assets/img/bg/breadcumb-bg.png" data-overlay="black" data-opacity="7">
+        <div class="container">
+            <div class="breadcumb-content">
+                <h1 class="breadcumb-title" id="pdBreadcrumbTitle">Product Details</h1>
+                <ul class="breadcumb-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li id="pdBreadcrumbProduct">Loading…</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         MAIN PRODUCT SECTION
+    ═══════════════════════════════════════════ -->
+    <section class="space-top space-extra-bottom">
+        <div class="container">
+
+            <!-- Skeleton -->
+            <div id="pdSkeleton" class="row gx-50 gy-4">
+                <div class="col-lg-6">
+                    <div class="pd-skeleton" style="width:100%;aspect-ratio:1/1;max-height:460px;"></div>
+                    <div class="d-flex gap-2 mt-3">
+                        <div class="pd-skeleton" style="width:76px;height:76px;border-radius:10px;"></div>
+                        <div class="pd-skeleton" style="width:76px;height:76px;border-radius:10px;"></div>
+                        <div class="pd-skeleton" style="width:76px;height:76px;border-radius:10px;"></div>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-flex flex-column gap-3 pt-2">
+                    <div class="pd-skeleton" style="height:14px;width:90px;"></div>
+                    <div class="pd-skeleton" style="height:32px;width:65%;"></div>
+                    <div class="pd-skeleton" style="height:18px;width:150px;"></div>
+                    <div class="pd-skeleton" style="height:68px;border-radius:12px;"></div>
+                    <div class="pd-skeleton" style="height:32px;width:120px;border-radius:25px;"></div>
+                    <div class="pd-skeleton" style="height:90px;border-radius:10px;"></div>
+                    <div class="pd-skeleton" style="height:50px;border-radius:12px;"></div>
+                </div>
+            </div>
+
+            <!-- Real content -->
+            <div id="pdContent" style="display:none;">
+                <div class="row gx-lg-5 gx-3 gy-4 align-items-start">
+
+                    <!-- LEFT: image + thumbnails below -->
+                    <div class="col-lg-6">
+                        <div class="pd-image-col">
+
+                            <!-- Main image -->
+                            <div  id="pdImageWrap" class="pd-image-wrap" style="position:relative;">
+                                <span id="pdStockBadge" class="pd-stock-badge"></span>
+                                <img id="mainProductImage" src="" alt="Product">
+                            </div>
+
+                            <!-- Thumbnails (horizontal, below) -->
+                            <div id="pdThumbs"></div>
+
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: info -->
+                    <div class="col-lg-6">
+                        <div class="pd-info">
+
+                            <p id="pdBrand" class="pd-brand"></p>
+                            <h1 id="pdTitle" class="pd-title"></h1>
+
+                            <div class="pd-stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                <span id="pdBrandLabel"></span>
+                            </div>
+
+                            <div class="pd-price-row">
+                                <span id="pdSellPrice"     class="pd-sell"></span>
+                                <span id="pdOriginalPrice" class="pd-original" style="display:none;"></span>
+                                <span id="pdDiscount"      class="pd-discount" style="display:none;"></span>
+                            </div>
+
+                            <div id="pdAvail" class="pd-avail"></div>
+
+                            <p id="pdShortDesc"></p>
+
+                            <div id="pdHighlights" class="pd-highlights" style="display:none;">
+                                <p class="pd-highlights-title">
+                                    <i class="fas fa-check-circle"></i> HIGHLIGHTS
+                                </p>
+                                <ul id="pdHighlightsList"></ul>
+                            </div>
+
+                            <div class="pd-meta">
+                                <span class="pd-meta-pill">
+                                    <strong>SKU:</strong>&nbsp;<span id="pdSku">—</span>
+                                </span>
+                                <span class="pd-meta-pill">
+                                    <strong>Category:</strong>&nbsp;<a id="pdCategory" href="shop.html"></a>
+                                </span>
+                                <span id="pdTagsPill" class="pd-meta-pill" style="display:none;">
+                                    <strong>Tags:</strong>&nbsp;<span id="pdTags"></span>
+                                </span>
+                            </div>
+
+                            <div class="pd-actions">
+                                <div id="pdQtyBox" class="pd-qty">
+                                    <button id="pdQtyMinus" type="button">−</button>
+                                    <input  id="pdQtyInput" type="number" value="1" min="1" max="100">
+                                    <button id="pdQtyPlus"  type="button">+</button>
+                                </div>
+                                <button id="pdCartBtn" class="pd-btn-cart">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                                <button id="pdBuyBtn" class="pd-btn-bn"> Buy Now
+</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description tab -->
+                <div style="margin-top:56px;">
+                    <ul class="nav product-tab-style1 pd-tab-nav" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link th-btn style3 active"
+                               data-bs-toggle="tab" href="#pdDescTab" role="tab">
+                                Product Description
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="pdDescTab" role="tabpanel">
+                            <div class="pd-tab-body">
+                                <p id="pdFullDesc" style="margin:0;"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related products -->
+                <div id="pdRelatedSection" style="display:none; margin-top:64px;">
+                    <div class="row justify-content-between align-items-center mb-4">
+                        <div class="col-auto">
+                            <h2 class="sec-title">Related Products</h2>
+                        </div>
+                        <div class="col d-none d-sm-block"><hr class="title-line"></div>
+                        <div class="col-auto d-none d-md-block">
+                            <div class="icon-box">
+                                <button data-slider-prev="#productSlider1" class="slider-arrow style-border4 default"><i class="far fa-arrow-left"></i></button>
+                                <button data-slider-next="#productSlider1" class="slider-arrow style-border4 default"><i class="far fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper th-slider" id="productSlider1"
+                         data-slider-options='{"breakpoints":{"0":{"slidesPerView":1},"576":{"slidesPerView":2},"992":{"slidesPerView":3}}}'>
+                        <div id="pdRelatedWrapper" class="swiper-wrapper"></div>
+                    </div>
+                </div>
+
+            </div><!-- /pdContent -->
+
+            <!-- Error state -->
+            <div id="pdError" style="display:none; text-align:center; padding:80px 20px;">
+                <i class="far fa-exclamation-circle" style="font-size:60px;color:#dc3545;"></i>
+                <h3 id="pdErrorMsg" style="margin-top:20px; color:#333;">Product not found.</h3>
+                <a href="shop.html" style="display:inline-block;margin-top:20px;background:#dc3545;color:#fff;padding:12px 30px;border-radius:8px;text-decoration:none;font-weight:600;">
+                    ← Back to Shop
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-wrapper footer-layout1 style2 bg-black space-top">
+        <div class="shape-mockup footer-bg-shape1-1" data-left="50%" data-bottom="-50%"><img src="assets/img/shape/footer-bg-shape2.png" alt="img"></div>
+        <div class="container">
+            <div class="footer-top">
+                <div class="shadow-text text-lg-center text-white" data-cue="slideInUp">Let's Talk</div>
+                <div class="row gy-30 justify-content-lg-between">
+                    <div class="col-lg-auto" data-cue="slideInUp">
+                        <div class="contact-info-card contact-location-info">
+                            <p class="box-title">Location</p>
+                            <h4 class="box-text">#101, Ace Ventures, Laxminagar Colony Road No 1, Kothapet, Hyderabad, 500035, Telangana, INDIA</h4>
+                            <p class="box-title">Authorized Distributor</p>
+                            <h4 class="box-text">Agarwal Electronics, Gujrati School Lane, Sultan Bazar, Koti, Hyderabad, Telangana 500095</h4>
+                        </div>
+                    </div>
+                    <div class="col-lg-auto" data-cue="slideInUp">
+                        <div class="contact-info-card contact-phone-info">
+                            <p class="box-title">Phone Call</p>
+                            <h4 class="box-text"><a href="tel:+919550906016">+91 9550906016</a></h4>
+                            <h4 class="box-text"><a href="tel:+918074702016">+91 8074702016</a></h4>
+                        </div>
+                    </div>
+                    <div class="col-lg-auto" data-cue="slideInUp">
+                        <div class="contact-info-card contact-mail-info">
+                            <p class="box-title">Email Address</p>
+                            <h4 class="box-text"><a href="mailto:support@amrobotics.in">support@amrobotics.in</a></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="widget-area">
+                    <div class="row justify-content-between">
+                        <div class="col-md-6 col-xl-auto" data-cue="slideInUp">
+                            <div class="widget th-newsletter-widget style2 footer-widget">
+                                <h3 class="widget_title">Subscribe to Newsletter</h3>
+                                <p class="footer-text mb-4">Get Monthly insights from founders around the globe. No spam - promise.</p>
+                                <form class="newsletter-form">
+                                    <div class="form-group style-dark"><input class="form-control" type="email" placeholder="Enter your email" required></div>
+                                    <button type="submit" class="th-btn style-gradient2">Subscribe</button>
+                                </form>
+                                <div class="th-social style10 mt-30">
+                                    <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a>
+                                    <a href="https://www.youtube.com/"><i class="fab fa-youtube"></i></a>
+                                    <a href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xl-auto" data-cue="slideInUp">
+                            <div class="widget widget_nav_menu footer-widget">
+                                <h3 class="widget_title">Useful Links</h3>
+                                <ul class="menu">
+                                    <li><a href="index.html">Home</a></li>
+                                    <li><a href="about.html">About Us</a></li>
+                                    <li><a href="contact.html">Help Center</a></li>
+                                    <li><a href="blog.html">Blog</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xl-auto" data-cue="slideInUp">
+                            <div class="widget widget_nav_menu footer-widget">
+                                <h3 class="widget_title">Company</h3>
+                                <ul class="menu">
+                                    <li><a href="about.html">Our Story</a></li>
+                                    <li><a href="blog.html">Latest Posts</a></li>
+                                    <li><a href="contact.html">Help Center</a></li>
+                                    <li><a href="about.html">Our Partners</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xl-auto" data-cue="slideInUp">
+                            <div class="widget th-widget-instagram footer-widget">
+                                <h3 class="widget_title">Instagram</h3>
+                                <div class="instagram-feeds">
+                                    <div class="insta-thumb"><img src="assets/img/show/sho1.png" alt=""><a href="https://www.instagram.com/amroboticworks" class="insta-btn" target="_blank"><i class="fab fa-instagram"></i></a></div>
+                                    <div class="insta-thumb"><img src="assets/img/show/sho2.png" alt=""><a href="https://www.instagram.com/amroboticworks" class="insta-btn" target="_blank"><i class="fab fa-instagram"></i></a></div>
+                                    <div class="insta-thumb"><img src="assets/img/show/sho3.png" alt=""><a href="https://www.instagram.com/amroboticworks" class="insta-btn" target="_blank"><i class="fab fa-instagram"></i></a></div>
+                                    <div class="insta-thumb"><img src="assets/img/show/sho4.png" alt=""><a href="https://www.instagram.com/amroboticworks" class="insta-btn" target="_blank"><i class="fab fa-instagram"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright-wrap bg-gradient">
+                <div class="container">
+                    <div class="row gy-2">
+                        <div class="col-lg-6"><p class="copyright-text">Copyright 2025 <a href="index.html">AM Robotics</a> All Rights Reserved.</p></div>
+                        <div class="col-lg-6 text-center text-lg-end">
+                            <div class="footer-links"><ul>
+                                <li><a href="privacy.html">Privacy Policy</a></li>
+                                <li><a href="refund.html">Shipping and Refund policy</a></li>
+                                <li><a href="terms.html">Terms and Conditions</a></li>
+                                <li><a href="careers.html">Careers</a></li>
+                            </ul></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="scroll-top"><svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102"><path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition:stroke-dashoffset 10ms linear;stroke-dasharray:307.919,307.919;stroke-dashoffset:307.919;"></path></svg></div>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/vendor/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="assets/js/app.min.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/cart-system.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/shop-details.js"></script>
+    <script src="assets/js/subscribe.js"></script>
+</body>
+</html>

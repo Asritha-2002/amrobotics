@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - AM ROBOTICS Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;}
+:root{
+  --sidebar-bg:#1e2235;
+  --sidebar-w:260px;
+  --topbar-h:70px;
+  --accent:#6c63ff;
+  --text-muted:#9095a5;
+  --main-bg:#f3f4f8;
+  --white:#ffffff;
+  --border:#e5e7ef;
+}
+body{display:flex;min-height:100vh;background:var(--main-bg);}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);height:100vh;background:var(--sidebar-bg);
+  display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:200;overflow-y:auto;
+}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:#444b6e;border-radius:4px;}
+.sidebar-logo{
+  padding:22px 20px 18px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.logo-icon-box{
+  width:40px;height:40px;background:var(--accent);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+}
+.logo-text-wrap .logo-title{font-size:16px;font-weight:700;color:#fff;line-height:1.2;}
+.logo-text-wrap .logo-sub{font-size:11px;color:var(--text-muted);}
+.store-pill{
+  margin:14px 16px 4px;padding:8px 14px;
+  background:rgba(108,99,255,.18);border:1px solid rgba(108,99,255,.3);
+  border-radius:8px;font-size:12px;font-weight:600;color:#a89fff;
+  display:flex;align-items:center;gap:8px;
+}
+.nav-group-label{
+  padding:14px 20px 6px;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,.25);
+}
+.nav-item{
+  display:flex;align-items:center;gap:12px;padding:11px 16px;margin:1px 8px;
+  border-radius:10px;cursor:pointer;text-decoration:none;transition:.18s ease;
+  color:rgba(255,255,255,.6);font-size:14px;font-weight:500;
+}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.12);color:#fff;}
+.nav-icon{
+  width:34px;height:34px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:#fff;
+}
+.ic-blue{background:#4f8ef7;}.ic-red{background:#f05e5e;}
+.ic-green{background:#3dc47e;}.ic-orange{background:#f5923e;}
+.ic-purple{background:#9b67f5;}.ic-teal{background:#2bbfbf;}
+.ic-pink{background:#e94f8b;}.ic-yellow{background:#e8a838;}
+.sidebar-footer{margin-top:auto;padding:14px 12px;border-top:1px solid rgba(255,255,255,.07);}
+.logout-nav{
+  display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;
+  cursor:pointer;color:rgba(255,100,100,.8);font-size:14px;font-weight:500;
+  transition:.18s;background:none;border:none;width:100%;
+}
+.logout-nav:hover{background:rgba(239,68,68,.1);color:#f87171;}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{
+  height:var(--topbar-h);background:var(--white);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 28px;gap:16px;position:sticky;top:0;z-index:100;
+}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.admin-pill{
+  display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;
+  border:1px solid var(--border);border-radius:30px;cursor:pointer;background:var(--white);
+}
+.admin-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#4f8ef7,#9b67f5);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;
+}
+.admin-info .admin-name{font-size:13px;font-weight:600;color:#222;}
+.admin-info .admin-role{font-size:11px;color:var(--text-muted);}
+.tb-logout-btn{
+  width:38px;height:38px;border-radius:9px;border:1px solid var(--border);
+  background:var(--white);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:17px;color:#999;transition:.18s;
+}
+.tb-logout-btn:hover{color:#f05e5e;border-color:#f05e5e;background:#fff5f5;}
+
+/* ── PAGE CONTENT ── */
+.page-content{padding:28px;display:flex;flex-direction:column;gap:24px;animation:fadeUp .25s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── PAGE HEADER ── */
+.page-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.page-header-left h2{font-size:20px;font-weight:700;color:#1a1d2e;}
+.page-header-left p{font-size:13px;color:var(--text-muted);margin-top:2px;}
+
+/* ── CARD ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.card-header{
+  padding:18px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{font-size:15px;font-weight:600;color:#1a1d2e;}
+.card-body{padding:28px;}
+
+/* two col layout */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:1024px){.two-col{grid-template-columns:1fr;}}
+
+/* ── SETTING ROWS ── */
+.setting-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 0;border-bottom:1px solid #f0f1f5;gap:20px;
+}
+.setting-row:last-child{border-bottom:none;}
+.setting-info h4{font-size:14px;font-weight:600;color:#1a1d2e;margin-bottom:3px;}
+.setting-info p{font-size:12px;color:var(--text-muted);}
+
+/* store display */
+.store-display{text-align:center;padding:10px 0;}
+.store-flag{font-size:52px;margin-bottom:14px;}
+.store-name{font-size:17px;font-weight:700;color:#1a1d2e;margin-bottom:6px;}
+.store-sub{font-size:12px;color:var(--text-muted);margin-bottom:24px;}
+
+/* ── BUTTONS ── */
+.btn{
+  padding:10px 20px;border-radius:9px;font-size:13px;font-weight:600;
+  cursor:pointer;border:none;transition:.18s;display:inline-flex;align-items:center;gap:7px;
+}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:#574fd6;}
+.btn-outline{background:transparent;border:1px solid var(--border);color:#555;}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.btn-danger-soft{background:#fff0f0;color:#d94040;border:1px solid #ffd6d6;}
+.btn-danger-soft:hover{background:#ffe0e0;}
+.btn-full{width:100%;justify-content:center;}
+.btn-sm{padding:7px 16px;font-size:12px;}
+
+/* toggle switch */
+.toggle{
+  position:relative;width:44px;height:24px;flex-shrink:0;
+}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{
+  position:absolute;inset:0;background:#ddd;border-radius:24px;
+  cursor:pointer;transition:.2s;
+}
+.toggle-slider:before{
+  content:'';position:absolute;
+  width:18px;height:18px;left:3px;bottom:3px;
+  background:#fff;border-radius:50%;transition:.2s;
+}
+.toggle input:checked + .toggle-slider{background:var(--accent);}
+.toggle input:checked + .toggle-slider:before{transform:translateX(20px);}
+.tb-icon-btn{
+  width:38px;height:38px;border-radius:9px;
+  border:1px solid var(--border);background:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:17px;color:#555;
+  transition:.18s;position:relative;
+}
+.tb-icon-btn:hover{background:var(--main-bg);}
+/* info row */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.info-cell{
+  padding:14px 18px;border-bottom:1px solid #f0f1f5;
+}
+.info-cell:nth-child(odd){border-right:1px solid #f0f1f5;}
+.info-cell:last-child,:nth-last-child(2):nth-child(odd){border-bottom:none;}
+.info-cell label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;}
+.info-cell span{font-size:13px;font-weight:600;color:#1a1d2e;}
+
+/* danger zone */
+.danger-zone{border:1px solid #ffd6d6;border-radius:14px;overflow:hidden;}
+.danger-zone-header{padding:16px 22px;background:#fff5f5;border-bottom:1px solid #ffd6d6;}
+.danger-zone-header h3{font-size:14px;font-weight:700;color:#d94040;}
+.danger-zone-header p{font-size:12px;color:#e87070;margin-top:2px;}
+.danger-zone-body{padding:20px 22px;display:flex;flex-direction:column;gap:14px;}
+.danger-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px;background:#fff;border:1px solid #ffd6d6;border-radius:10px;gap:16px;
+}
+.danger-row-info h4{font-size:13px;font-weight:600;color:#d94040;margin-bottom:2px;}
+.danger-row-info p{font-size:12px;color:#e87070;}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;z-index:999;
+}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:#fff;border-radius:18px;padding:36px;max-width:400px;width:90%;text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.18);animation:fadeUp .2s ease;
+}
+.modal-icon-wrap{
+  width:60px;height:60px;border-radius:50%;background:#fff0f0;border:2px solid #ffd6d6;
+  display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 18px;
+}
+.modal-box h3{font-size:18px;font-weight:700;color:#1a1d2e;margin-bottom:8px;}
+.modal-box p{font-size:13px;color:#888;line-height:1.6;margin-bottom:26px;}
+.modal-btns{display:flex;gap:10px;justify-content:center;}
+.modal-btns .btn{flex:1;max-width:150px;justify-content:center;}
+
+/* ── HAMBURGER ── */
+.hamburger-btn{
+  display:none;width:36px;height:36px;border-radius:8px;
+  border:1px solid var(--border);background:#fff;
+  align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:#555;margin-right:4px;
+}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .hamburger-btn{display:flex;}
+  .topbar{padding:0 16px;}
+  .page-content{padding:16px;}
+  .admin-info{display:none;}
+  .two-col{grid-template-columns:1fr;}
+  .info-grid{grid-template-columns:1fr;}
+  .info-cell:nth-child(odd){border-right:none;}
+}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:#dde;border-radius:4px;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon-box">🤖</div>
+    <div class="logo-text-wrap">
+      <div class="logo-title">AM ROBOTICS</div>
+      <div class="logo-sub">Admin Panel</div>
+    </div>
+  </div>
+
+  <div class="store-pill" id="store-pill">🇮🇳 <span>India Store · INR</span></div>
+
+  <div class="nav-group-label">Main</div>
+  <a class="nav-item" href="dashboard.html">
+    <div class="nav-icon ic-blue">🏠</div>Dashboard
+  </a>
+
+  <div class="nav-group-label">Catalog</div>
+  <a class="nav-item" href="admin-products.html">
+    <div class="nav-icon ic-green">📦</div>Products
+  </a>
+
+  <div class="nav-group-label">Sales</div>
+  <a class="nav-item" href="dashboard.html">
+    <div class="nav-icon ic-orange">🛒</div>Orders
+  </a>
+  <a class="nav-item" href="admin-customers.html">
+    <div class="nav-icon ic-red">👥</div>Customers
+  </a>
+  <a class="nav-item" href="admin-vouchers.html">
+    <div class="nav-icon ic-purple">🏷️</div>Vouchers
+  </a>
+
+  <div class="nav-group-label">Content</div>
+  <a class="nav-item" href="admin-shop-details.html">
+    <div class="nav-icon ic-pink">🏪</div>Shop Details
+  </a>
+
+  <div class="nav-group-label">Settings</div>
+  <a class="nav-item active">
+    <div class="nav-icon ic-yellow">⚙️</div>Settings
+  </a>
+
+  <div class="sidebar-footer">
+    <button class="logout-nav" onclick="openLogout()">
+      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;">🚪</div>
+      Logout
+    </button>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <button class="hamburger-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+    <div class="topbar-right">
+      <div class="tb-icon-btn" title="Settings" onclick="window.location.href='admin-settings.html'">⚙️</div>
+
+      <div class="admin-pill">
+        <div class="admin-avatar">A</div>
+        <div class="admin-info">
+          <div class="admin-name">Admin</div>
+          <div class="admin-role">Administrator</div>
+        </div>
+      </div>
+
+      <div class="tb-logout-btn" title="Logout" onclick="openLogout()">↪</div>
+    </div>
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-content">
+
+    <div class="page-header">
+      <div class="page-header-left">
+        <h2>Settings</h2>
+        <p>Store configuration and preferences</p>
+      </div>
+    </div>
+
+    <div class="two-col">
+
+      <!-- ── ACTIVE STORE ── -->
+      <div class="card">
+        <div class="card-header"><span class="card-title">🌐 Active Store</span></div>
+        <div class="card-body">
+          <div class="store-display">
+            <div class="store-flag" id="settings-flag">🇮🇳</div>
+            <div class="store-name" id="settings-store">India Store</div>
+            <div class="store-sub" id="settings-currency">INR · Indian Rupee</div>
+            <button class="btn btn-outline btn-full" onclick="window.location.href='store-selection.html'">
+              🔄 Switch Store
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+</div>
+
+<!-- ═══ LOGOUT MODAL ═══ -->
+<div class="modal-overlay" id="logout-modal">
+  <div class="modal-box">
+    <div class="modal-icon-wrap">🚪</div>
+    <h3>Confirm Logout</h3>
+    <p>Are you sure you want to log out of the AM Robotics Admin panel?</p>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeLogout()">Cancel</button>
+      <button class="btn btn-danger-soft" onclick="confirmLogout()">Yes, Logout</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const token = localStorage.getItem('authToken');
+if (!token) window.location.replace('login.html');
+
+/* ── STORE INIT ── */
+const country = localStorage.getItem('selectedCountry') || 'IN';
+const isIN    = country === 'IN';
+
+document.getElementById('store-pill').innerHTML = isIN
+  ? '🇮🇳 <span>India Store · INR</span>'
+  : '🇺🇸 <span>USA Store · USD</span>';
+
+document.getElementById('settings-flag').textContent    = isIN ? '🇮🇳' : '🇺🇸';
+document.getElementById('settings-store').textContent   = isIN ? 'India Store' : 'USA Store';
+document.getElementById('settings-currency').textContent= isIN ? 'INR · Indian Rupee' : 'USD · US Dollar';
+document.getElementById('info-country').textContent     = isIN ? 'India' : 'USA';
+document.getElementById('info-currency').textContent    = isIN ? 'INR (₹)' : 'USD ($)';
+
+
+
+/* ── LOGOUT ── */
+function openLogout()  { document.getElementById('logout-modal').classList.add('open'); }
+function closeLogout() { document.getElementById('logout-modal').classList.remove('open'); }
+function confirmLogout() {
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('user');
+  localStorage.removeItem('selectedCountry');
+  window.location.href = 'login.html';
+}
+document.getElementById('logout-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeLogout();
+});
+
+/* ── MOBILE SIDEBAR ── */
+document.addEventListener('click', function(e) {
+  const sb = document.getElementById('sidebar');
+  if (sb.classList.contains('open') && !sb.contains(e.target) && !e.target.classList.contains('hamburger-btn')) {
+    sb.classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>

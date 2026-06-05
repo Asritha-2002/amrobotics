@@ -1,0 +1,216 @@
+/* CHANGE: New CSS for product card styling fixes */
+
+/* Product Card Container - Equal sizing for all products */
+.service-card3 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 500px;
+}
+
+.service-card3 .box-thumb {
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  flex-shrink: 0;
+}
+
+.service-card3 .box-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.service-card3 .box-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+.service-card3 .box-title {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.service-card3 .product-price {
+  margin: 12px 0;
+}
+
+.service-card3 .add-to-cart-btn {
+  margin-top: auto;
+  width: 100%;
+  padding: 12px 20px;
+}
+
+/* Tablet view - 2 columns */
+@media (max-width: 1199px) {
+  .service-card3 {
+    min-height: 480px;
+  }
+
+  .service-card3 .box-thumb {
+    height: 260px;
+  }
+}
+
+/* Mobile view - 1 column */
+@media (max-width: 767px) {
+  .service-card3 {
+    min-height: 450px;
+  }
+
+  .service-card3 .box-thumb {
+    height: 240px;
+  }
+
+  .service-card3 .box-content {
+    padding: 20px;
+  }
+}
+
+/* Small mobile - extra small */
+@media (max-width: 575px) {
+  .service-card3 {
+    min-height: 420px;
+  }
+
+  .service-card3 .box-thumb {
+    height: 200px;
+  }
+
+  .service-card3 .box-title {
+    min-height: 70px;
+    font-size: 16px;
+  }
+}
+
+/* Header mobile buttons styling */
+.header-button .icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--theme-color);
+  color: white;
+  border-radius: 12px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.header-button .icon-btn:hover {
+  background: var(--theme-color2);
+  transform: scale(1.05);
+}
+
+.header-button .icon-btn.position-relative {
+  position: relative;
+}
+
+/* Cart badge styling */
+.header-button .icon-btn .badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff4444;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  border: 2px solid white;
+}
+
+/* Mobile header buttons gap */
+@media (max-width: 1199px) {
+  .header-button {
+    gap: 8px !important;
+  }
+
+  .header-button .icon-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 767px) {
+  .header-button {
+    gap: 6px !important;
+  }
+
+  .header-button .icon-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+}
+
+/* Blog card equal sizing */
+.blog-card3 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 450px;
+}
+
+.blog-card3 .blog-img {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border-radius: 16px;
+  background: #f5f5f5;
+}
+
+.blog-card3 .blog-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.blog-card3 .blog-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+@media (max-width: 767px) {
+  .blog-card3 {
+    min-height: 420px;
+  }
+
+  .blog-card3 .blog-img {
+    height: 180px;
+  }
+}
+
+/* Swiper slider responsive adjustments */
+.slider-area .swiper-wrapper {
+  align-items: stretch;
+}
+
+.slider-area .swiper-slide {
+  display: flex;
+  align-items: stretch;
+}

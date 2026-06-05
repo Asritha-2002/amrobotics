@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - AM ROBOTICS</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/logo_resized.png">
+    <link rel="stylesheet" href="assets/css/app.min.css">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .confirmation-container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 30px;
+        }
+        .success-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #d4edda;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+        }
+        .success-icon {
+            font-size: 60px;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+        .confirmation-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        @media (max-width: 768px) {
+            .confirmation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .info-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .info-card h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+        .order-items {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .item-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        .item-row:last-child {
+            border-bottom: none;
+        }
+        .summary-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .summary-row.total {
+            border-bottom: 2px solid #333;
+            font-weight: 600;
+            font-size: 18px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            margin-top: 15px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="th-header header-layout2">
+        <div class="sticky-wrapper">
+            <div class="container">
+                <div class="menu-area">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-auto">
+                            <div class="header-logo"><a href="index.html"><img src="assets/img/logo_resized.png" alt="AM Robotics"></a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcumb-wrapper" data-overlay="black" data-opacity="7">
+        <div class="container">
+            <div class="breadcumb-content">
+                <h1 class="breadcumb-title">Order Confirmation</h1>
+                <ul class="breadcumb-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li>Order Confirmation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="th-checkout-wrapper space-top space-extra-bottom">
+        <div class="container">
+            <div class="success-header">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h1>Thank You for Your Order!</h1>
+                <p>Your order has been successfully placed. We'll send you a confirmation email shortly.</p>
+            </div>
+
+            <div class="confirmation-grid">
+                <!-- Left Column -->
+                <div>
+                    <!-- Order Info -->
+                    <div class="info-card">
+                        <h3>Order Information</h3>
+                        <div class="info-row">
+                            <span class="info-label">Order ID</span>
+                            <strong id="orderId"></strong>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Date</span>
+                            <span id="orderDate"></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Status</span>
+                            <span class="status-badge status-confirmed" id="orderStatus">Confirmed</span>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Address -->
+                    <div class="info-card">
+                        <h3>Delivery Address</h3>
+                        <div id="deliveryAddress" style="line-height: 1.8;"></div>
+                    </div>
+
+                    <!-- Order Items -->
+                    <div class="order-items">
+                        <div style="background: #f9f9f9; padding: 15px; font-weight: 600; border-bottom: 1px solid #eee;">
+                            Order Items
+                        </div>
+                        <div id="orderItems"></div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Summary -->
+                <div>
+                    <div class="summary-box">
+                        <h3 style="margin-top: 0;">Order Summary</h3>
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tax</span>
+                            <span id="tax">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Delivery</span>
+                            <span id="deliveryCharge">$0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Payment Charge</span>
+                            <span id="paymentCharge">$0.00</span>
+                        </div>
+                        <div id="discountRow" class="summary-row" style="display: none; color: green;">
+                            <span>Discount</span>
+                            <span id="discount">-$0.00</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="total">$0.00</span>
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="btn btn-primary" onclick="window.print()">
+                                <i class="fas fa-print"></i> Print Order
+                            </button>
+                            <a href="shop.html" class="btn btn-secondary">Continue Shopping</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-wrapper footer-layout1 style2 bg-black space-top">
+        <div class="container">
+            <div class="footer-top">
+                <div class="row gy-30 justify-content-lg-between">
+                    <div class="col-lg-auto">
+                        <div class="contact-info-card contact-location-info">
+                            <p class="box-title">Location</p>
+                            <h4 class="box-text">#101, Ace Ventures, Hyderabad, 500035, Telangana, INDIA</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/order-confirmation.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Store - AM ROBOTICS</title>
+<link rel="stylesheet" href="assets/css/fontawesome.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;}
+body{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;background:linear-gradient(135deg,#0b0b0b 0%,#0f1b2d 100%);}
+.selection-container{width:100%;max-width:700px;background:#fff;border-radius:16px;padding:50px;box-shadow:0 20px 50px rgba(0,0,0,.15);}
+.header{text-align:center;margin-bottom:40px;}
+.header h1{font-size:30px;color:#111827;margin-bottom:10px;}
+.header p{color:#6b7280;font-size:15px;}
+.store-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+.store-card{border:1px solid #e5e7eb;border-radius:14px;padding:30px;text-align:center;cursor:pointer;transition:.3s ease;}
+.store-card:hover{transform:translateY(-5px);border-color:#2563eb;box-shadow:0 15px 30px rgba(37,99,235,.15);}
+.flag{font-size:60px;margin-bottom:15px;}
+.store-card h3{font-size:24px;color:#111827;margin-bottom:10px;}
+.store-card p{color:#6b7280;font-size:14px;line-height:1.6;}
+.badge{display:inline-block;margin-top:15px;padding:8px 14px;border-radius:30px;background:#eff6ff;color:#2563eb;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.logout-btn{width:100%;margin-top:30px;padding:12px;border:none;border-radius:30px;cursor:pointer;background:#111827;color:#fff;font-size:15px;font-weight:600;transition:.3s;}
+.logout-btn:hover{background:#1e3a8a;}
+@media(max-width:576px){.selection-container{padding:30px 20px;}.header h1{font-size:24px;}}
+</style>
+</head>
+<body>
+
+<div class="selection-container">
+  <div class="header">
+    <h1>Select Store</h1>
+    <p>Please choose which store you want to manage</p>
+  </div>
+
+  <div class="store-grid">
+    <div class="store-card" onclick="selectStore('IN')">
+      <div class="flag">🇮🇳</div>
+      <h3>India Store</h3>
+      <p>Manage Indian products, orders, shipping, GST, customers and analytics.</p>
+      <span class="badge">INR Store</span>
+    </div>
+
+    <div class="store-card" onclick="selectStore('US')">
+      <div class="flag">🇺🇸</div>
+      <h3>USA Store</h3>
+      <p>Manage US products, orders, shipping, taxes, customers and analytics.</p>
+      <span class="badge">USD Store</span>
+    </div>
+  </div>
+
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<script>
+// ── 1. AUTH GUARD: redirect to login if no token ──
+(function(){
+  if(!localStorage.getItem('authToken')){
+    window.location.replace('login.html');
+  }
+})();
+
+// ── 2. HISTORY LOCK: back button can't go back after logout ──
+history.replaceState(null, '', window.location.href);
+window.addEventListener('popstate', function(){
+  history.pushState(null, '', window.location.href);
+});
+
+// ── 3. CACHE BUST: handles browser back from bfcache ──
+window.addEventListener('pageshow', function(e){
+  if(e.persisted){
+    if(!localStorage.getItem('authToken')){
+      window.location.replace('login.html');
+    }
+  }
+});
+
+function selectStore(country){
+  localStorage.setItem('selectedCountry', country);
+  window.location.href = 'dashboard.html';
+}
+
+function logout(){
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('user');
+  localStorage.removeItem('selectedCountry');
+  window.location.replace('login.html');  // replace() so forward button won't return here
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>My Profile - AM ROBOTICS</title>
+    <meta name="author" content="AM ROBOTICS">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/img/logo_resized.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/app.min.css">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/ecommerce-enhancements.css">
+    <style>
+        .tracking-updates-box {
+    background: #f8f8f8;
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.tracking-update {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.tracking-update:last-child {
+    border-bottom: none;
+}
+
+.update-time {
+    font-size: 13px;
+    color: #555;
+}
+
+        /* Added navbar wrapper styles */
+        .th-menu-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 100%;
+            z-index: 1000;
+            background: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .th-menu-wrapper.active {
+            transform: translateX(0);
+        }
+
+        .th-menu-area {
+            padding: 30px 20px;
+        }
+
+        .th-menu-toggle {
+            background: none;
+            border: none;
+            color: #111;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .mobile-logo {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .mobile-logo img {
+            max-width: 150px;
+        }
+
+        .th-mobile-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .th-mobile-menu ul li {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .th-mobile-menu ul li a {
+            display: block;
+            padding: 12px 0;
+            color: #111;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .th-mobile-menu ul li a:hover {
+            color: #7c3aed;
+        }
+
+        /* <MERGED_STYLES_START> */
+        .profile-wrapper {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 30px 20px;
+            padding-top: 100px;
+        }
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #0f3460;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            color: #1a1a2e;
+            margin-left: -5px;
+        }
+        .profile-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+        .profile-sidebar {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px 20px;
+            height: fit-content;
+            box-shadow: 0 4px 12px rgba(15, 52, 96, 0.08);
+            position: sticky;
+            top: 20px;
+            border-left: 4px solid #0f3460;
+        }
+        .profile-sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            color: #1a1a2e;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .profile-sidebar-item i {
+            margin-right: 12px;
+            width: 20px;
+            font-size: 16px;
+        }
+        .profile-sidebar-item:hover,
+        .profile-sidebar-item.active {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            color: #ffffff;
+            transform: translateX(5px);
+        }
+        .profile-main {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(15, 52, 96, 0.08);
+        }
+        .profile-main h2 {
+            font-size: 28px;
+            margin: 0 0 30px 0;
+            color: #1a1a2e;
+            font-weight: 700;
+            border-bottom: 3px solid #0f3460;
+            padding-bottom: 15px;
+        }
+        .profile-main h3 {
+            font-size: 20px;
+            margin: 0 0 20px 0;
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+        .profile-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            margin-bottom: 8px;
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .form-group input,
+        .form-group textarea {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #1a1a2e;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #0f3460;
+            outline: none;
+            box-shadow: 0 0 12px rgba(15, 52, 96, 0.15);
+            background: #f8f9fa;
+        }
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+        .profile-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .save-btn, .cancel-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        /* Updated button colors to match black/white/blue theme */
+        .save-btn {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            color: #ffffff;
+        }
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(15, 52, 96, 0.25);
+        }
+        .cancel-btn {
+            background: #ffffff;
+            color: #0f3460;
+            border: 2px solid #0f3460;
+        }
+        .cancel-btn:hover {
+            background: #0f3460;
+            color: #ffffff;
+        }
+        .addresses-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+        .address-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            cursor: pointer;
+            border-left: 4px solid #0f3460;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(15, 52, 96, 0.05);
+        }
+        .address-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(15, 52, 96, 0.12);
+        }
+        .address-card h4 {
+            margin: 0 0 8px 0;
+            color: #1a1a2e;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .address-card p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .order-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-left: 4px solid #0f3460;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(15, 52, 96, 0.05);
+        }
+        .order-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(15, 52, 96, 0.12);
+        }
+        .order-info h4 {
+            margin: 0 0 5px 0;
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+        .order-info p {
+            margin: 3px 0;
+            color: #666;
+            font-size: 13px;
+        }
+        .order-status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .order-status.completed {
+            background: #d4edda;
+            color: #1a5e20;
+        }
+        .order-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .loading-message {
+            text-align: center;
+            color: #0f3460;
+            font-size: 16px;
+            padding: 40px;
+        }
+        .success-message {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 1px solid #0f3460;
+            color: #1a5e20;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .error-message {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 1px solid #721c24;
+            color: #721c24;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .no-data {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed #0f3460;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 26, 46, 0.7);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(15, 52, 96, 0.3);
+            animation: slideUp 0.3s ease;
+            border-top: 4px solid #0f3460;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #0f3460;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #0f3460;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: #1a1a2e;
+            transform: rotate(90deg);
+        }
+
+        .order-detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+            color: #555;
+        }
+
+        .order-detail-item strong {
+            color: #1a1a2e;
+            font-weight: 700;
+        }
+
+        .order-detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-detail-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f3460;
+            border-top: 2px solid #1a1a2e;
+            margin-top: 15px;
+        }
+
+        .order-items-list {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #0f3460;
+        }
+
+        .order-item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .order-item-row:last-child {
+            border-bottom: none;
+        }
+        /* </MERGED_STYLES_END> */
+
+
+        /* Enhanced mobile responsive styles */
+        @media (max-width: 575px) {
+            .profile-wrapper {
+                padding: 15px 10px;
+                padding-top: 80px;
+            }
+            .profile-container {
+                padding: 0;
+            }
+            .back-link {
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+            .profile-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .profile-sidebar {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                padding: 10px;
+                position: static;
+                border-left: none;
+                border-top: 4px solid #0f3460;
+            }
+            .profile-sidebar-item {
+                padding: 10px;
+                margin-bottom: 0;
+                font-size: 11px;
+                justify-content: center;
+                text-align: center;
+                border-radius: 6px;
+            }
+            .profile-sidebar-item i {
+                margin-right: 0;
+                display: block;
+                margin-bottom: 5px;
+                font-size: 18px;
+            }
+            .profile-main {
+                padding: 15px;
+                border-radius: 8px;
+            }
+            .profile-main h2 {
+                font-size: 18px;
+                margin-bottom: 20px;
+                border-bottom: 2px solid #0f3460;
+            }
+            .profile-form {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .form-group input,
+            .form-group textarea {
+                height: 40px;
+                padding: 0 12px;
+                font-size: 13px;
+            }
+            .profile-actions {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 20px;
+            }
+            .save-btn,
+            .cancel-btn {
+                width: 100%;
+                padding: 12px 15px;
+            }
+            .address-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 15px;
+            }
+            .address-card h4 {
+                font-size: 14px;
+            }
+            .address-card p {
+                font-size: 12px;
+            }
+            .order-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .order-info h4 {
+                font-size: 14px;
+            }
+            .order-info p {
+                font-size: 12px;
+            }
+            .order-status {
+                width: 100%;
+                text-align: center;
+                padding: 8px 10px;
+            }
+            .modal-content {
+                padding: 20px;
+                width: 95%;
+            }
+            .modal-header h2 {
+                font-size: 20px;
+            }
+            .order-detail-item {
+                font-size: 13px;
+            }
+            .order-detail-total {
+                font-size: 16px;
+            }
+        }
+
+        @media (min-width: 576px) and (max-width: 767px) {
+            .profile-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .profile-sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+                padding: 20px;
+                border-left: none;
+                border-top: 4px solid #0f3460;
+            }
+            .profile-main {
+                padding: 25px;
+            }
+            .profile-form {
+                grid-template-columns: 1fr;
+            }
+            .address-card {
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 991px) {
+            .profile-content {
+                grid-template-columns: 200px 1fr;
+                gap: 20px;
+            }
+            .profile-sidebar {
+                padding: 20px;
+            }
+            .profile-main {
+                padding: 30px;
+            }
+            .profile-form {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+/* =====================================================
+   ORDERS MODULE – PROFESSIONAL REDESIGN
+===================================================== */
+
+.orders-section {
+    animation: fadeIn 0.3s ease;
+}
+
+.order-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 18px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    border-left: 5px solid #0f3460;
+    box-shadow: 0 4px 18px rgba(15, 52, 96, 0.08);
+    transition: all 0.3s ease;
+}
+
+.order-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(15, 52, 96, 0.15);
+}
+
+/* LEFT CONTENT */
+.order-info h4 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #1a1a2e;
+}
+
+.order-info p {
+    font-size: 13px;
+    color: #555;
+    margin: 4px 0;
+}
+
+/* STATUS BADGES */
+.order-status {
+    align-self: center;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+}
+
+.order-status.completed,
+.order-status.delivered {
+    background: #e6f7ec;
+    color: #137333;
+}
+
+.order-status.pending {
+    background: #fff7e6;
+    color: #9a6700;
+}
+
+.order-status.failed {
+    background: #fdecea;
+    color: #b42318;
+}
+
+/* ACTIONS ROW */
+.order-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    border-top: 1px dashed #e5e7eb;
+    padding-top: 15px;
+}
+
+/* INVOICE BUTTON */
+.invoice-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f3460;
+    border: 2px solid #0f3460;
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.invoice-btn i {
+    font-size: 14px;
+}
+
+.invoice-btn:hover {
+    background: #0f3460;
+    color: #ffffff;
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width: 575px) {
+    .order-card {
+        grid-template-columns: 1fr;
+    }
+
+    .order-status {
+        width: 100%;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .order-actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .invoice-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+.invoice-logo {
+    max-width: 160px;
+    margin-bottom: 15px;
+}
+/* =========================================
+   ORDER DETAILS – ITEM IMAGE SHOWCASE
+========================================= */
+
+.order-items-list {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.order-item-row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: 15px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.order-item-row:last-child {
+    border-bottom: none;
+}
+
+/* Product image */
+.order-item-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+}
+
+/* Item details */
+.order-item-details strong {
+    display: block;
+    font-size: 14px;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+}
+
+.order-item-details span {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.4;
+}
+
+/* Price */
+.order-item-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f3460;
+    white-space: nowrap;
+}
+
+/* Mobile */
+@media (max-width: 575px) {
+    .order-item-row {
+        grid-template-columns: 50px 1fr;
+    }
+
+    .order-item-price {
+        grid-column: 1 / -1;
+        text-align: right;
+        margin-top: 5px;
+    }
+}
+
+.order-item-image {
+    width: 55px;
+    height: 55px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+}
+/* Logout Modal */
+
+#logoutModal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+}
+
+#logoutModal.active {
+    display: flex;
+}
+
+.logout-modal-content {
+    width: 90%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 30px;
+    text-align: center;
+    animation: fadeInScale 0.25s ease;
+}
+
+.logout-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: rgba(220,53,69,.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-icon i {
+    font-size: 30px;
+    color: #dc3545;
+}
+
+.logout-modal-content h3 {
+    margin-bottom: 10px;
+    color: #000;
+    font-weight: 700;
+}
+
+.logout-modal-content p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.logout-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.logout-actions button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.cancel-logout-btn {
+    background: #f1f1f1;
+    color: #333;
+}
+
+.confirm-logout-btn {
+    background: #dc3545;
+    color: #fff;
+}
+
+.confirm-logout-btn:hover {
+    background: #c82333;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+    </style>
+    <style>
+  /* Hide body until auth check passes — prevents flash */
+  body { visibility: hidden; }
+</style>
+<script>
+  (function(){
+    if(!localStorage.getItem('authToken') || !localStorage.getItem('user')){
+      window.location.replace('login.html');
+    } else {
+      document.addEventListener('DOMContentLoaded', function(){
+        document.body.style.visibility = 'visible';
+      });
+    }
+  })();
+</script>
+</head>
+
+<body class="bg-black">
+    <!-- Updated mobile menu wrapper to match working about.html structure -->
+          <!-- 🔹 FULL HEADER (Desktop + Mobile Included) -->
+  <header class="th-header header-layout2">
+    <div class="sticky-wrapper">
+      <div class="container">
+        <div class="menu-area position-relative">
+          <div class="header-bg-shape" data-mask-src="assets/img/theme-img/header3-bg-shape.png"></div>
+
+          <div class="row align-items-center justify-content-between">
+            
+            <!-- 🔸 Logo -->
+            <div class="col-auto">
+              <div class="header-logo">
+                <a href="index.html">
+                  <img src="assets/img/logo_resized.png" alt="AM Robotics" style="max-height:55px;">
+                </a>
+              </div>
+            </div>
+
+            <!-- 🔸 Desktop Navigation -->
+            <div class="col-auto">
+              <nav class="main-menu d-none d-lg-inline-block">
+                <ul>
+                  <li><a href="index.html">Home</a></li>
+                  <li><a href="about.html">About Us</a></li>
+
+                  <li class="menu-item-has-children">
+                    <a href="#">Projects</a>
+                    <ul class="sub-menu">
+                      <li><a href="service9.html">Academic Projects</a></li>
+                      <li><a href="service6.html">R&D Projects</a></li>
+                    </ul>
+                  </li>
+
+                  <li class="menu-item-has-children">
+                    <a href="#">Services</a>
+                    <ul class="sub-menu">
+                      <li><a href="service-details.html">3D Printing & 3D Modeling</a></li>
+                      <li><a href="service2.html">Prototyping</a></li>
+                      <li><a href="service3.html">Proof of Concept</a></li>
+                      <li><a href="service4.html">Product Design & Development</a></li>
+                      <li><a href="service5.html">Industrial Automation & Robotics</a></li>
+                      <li><a href="service7.html">Agricultural Robots</a></li>
+                      <li><a href="service8.html">Restaurant & Warehouse Robots</a></li>
+                      <li><a href="service10.html">Custom DIY Robokits</a></li>
+                      <li><a href="service11.html">Reverse Engineering</a></li>
+                      <li><a href="service12.html">Manufacturing</a></li>
+                      <li><a href="service13.html">Sheetmetal Fabrication & Assembly</a></li>
+                      <li><a href="service15.html">PCB Design & Manufacturing</a></li>
+                      <li><a href="service16.html">Mechanical</a></li>
+                    </ul>
+                  </li>
+
+                  <li><a href="shop.html">Shop</a></li>
+                  <li><a href="blog.html">Blog</a></li>
+                  <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+              </nav>
+            </div>
+
+            <!-- 🔸 Desktop Icons -->
+            <div class="col-auto d-none d-lg-flex align-items-center gap-3">
+              <a href="cart.html" class="icon-btn position-relative" title="Shopping Cart">
+                <i class="far fa-shopping-cart"></i>
+                <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;font-size:10px;">0</span>
+              </a>
+              <a href="profile.html" class="icon-btn" title="Profile">
+                <i class="far fa-user-circle" style="font-size:20px;"></i>
+              </a>
+            </div>
+
+            <!-- 🔸 CTA Button -->
+            <div class="col-auto d-none d-xl-block">
+              <div class="header-button">
+                <a href="login.html" class="th-btn style-gradient">
+                  Log in <i class="far fa-long-arrow-right ms-2"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 🔹 Mobile Navigation Buttons -->
+          <div class="mobile-nav d-flex d-lg-none align-items-center gap-2">
+            <a href="javascript:void(0)" class="icon-btn th-menu-toggle" title="Menu">
+              <i class="far fa-bars"></i>
+            </a>
+            <a href="cart.html" class="icon-btn position-relative" title="Cart">
+              <i class="far fa-shopping-cart"></i>
+              <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;font-size:10px;">0</span>
+            </a>
+            <a href="profile.html" class="icon-btn" title="Profile">
+              <i class="far fa-user-circle"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔹 Mobile Menu Wrapper -->
+    <div class="th-menu-wrapper">
+      <div class="th-menu-area text-center">
+        <button class="th-menu-toggle"><i class="fal fa-times"></i></button>
+        <div class="mobile-logo">
+          <a href="index.html"><img src="assets/img/logo_resized.png" alt="AM Robotics"></a>
+        </div>
+
+        <div class="th-mobile-menu">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About Us</a></li>
+
+            <li class="menu-item-has-children">
+              <a href="#">Projects</a>
+              <ul class="sub-menu">
+                <li><a href="service9.html">Academic Projects</a></li>
+                <li><a href="service6.html">R&D Projects</a></li>
+              </ul>
+            </li>
+
+            <li class="menu-item-has-children">
+              <a href="#">Services</a>
+              <ul class="sub-menu">
+                <li><a href="service-details.html">3D Printing & 3D Modeling</a></li>
+                <li><a href="service2.html">Prototyping</a></li>
+                <li><a href="service3.html">Proof of Concept</a></li>
+                <li><a href="service4.html">Product Design & Development</a></li>
+                <li><a href="service5.html">Industrial Automation & Robotics</a></li>
+                <li><a href="service7.html">Agricultural Robots</a></li>
+                <li><a href="service8.html">Restaurant & Warehouse Robots</a></li>
+                <li><a href="service10.html">Custom DIY Robokits</a></li>
+                <li><a href="service11.html">Reverse Engineering</a></li>
+                <li><a href="service12.html">Manufacturing</a></li>
+              </ul>
+            </li>
+
+            <li><a href="shop.html">Shop</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+  <style>
+#whatsapp-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #25d366; /* WhatsApp green color */
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: center;
+}
+
+#whatsapp-float a {
+    color: #ebddc6;
+    text-decoration: none;
+    display: block;
+}
+
+#whatsapp-float img {
+    width: 30px; /* Adjust the size as needed */
+    height: 30px;
+}
+
+#whatsapp-float span {
+    display: block;
+    font-size: 14px;
+    margin-top: 5px;
+}
+    </style>
+    <div id="whatsapp-float">
+                <a href="https://wa.me/+919550906016" target="_blank">
+                    <img src="assets/img/wh.png" alt="WhatsApp">
+                    
+                </a>
+            </div>
+   <!-- 🔹 Minimal Custom Styling for Header -->
+  <style>
+       .icon-btn {
+      background: #353536;
+      color: #fff;
+      border-radius: 12px;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+    .icon-btn:hover {
+      background: linear-gradient(90deg, #ffffff, #ffffff);
+      color: #000000;
+    }
+    .mobile-nav {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      z-index: 9999;
+    }
+    .cart-badge {
+      background: red !important;
+      color: #fff !important;
+      font-size: 10px !important;
+      min-width: 16px;
+      min-height: 16px;
+    }
+    @media (max-width: 991px) {
+      .col-auto.d-none.d-lg-flex.align-items-center.gap-3 {
+        display: none !important;
+      }
+    }
+    @media (min-width: 992px) {
+      .mobile-nav {
+        display: none !important;
+      }
+    }
+
+    .order-item-image {
+    width: 58px;
+    height: 58px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-item-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+  </style>
+
+  <!-- 🔹 Scripts -->
+ 
+    <div class="profile-wrapper bg-white" style="border-radius:16px;box-shadow:0 2px 16px rgba(0,0,0,0.08);margin-top:24px;">
+        <div class="profile-container">
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            
+            <div class="profile-content">
+                <!-- Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="profile-sidebar-item active" id="profileTab">
+                        <i class="fas fa-user"></i> Profile
+                    </div>
+                    <div class="profile-sidebar-item" id="ordersTab">
+                        <i class="fas fa-box"></i> Orders
+                    </div>
+                   
+                    <div class="profile-sidebar-item" id="logoutBtn" style="color: #dc3545; margin-top: 20px;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="profile-main">
+                    <div class="success-message" id="successMessage"></div>
+                    <div class="error-message" id="errorMessage"></div>
+
+                    <!-- Profile Section -->
+                    <div id="profileSection" class="profile-section">
+                        <h2>My Profile</h2>
+                        <form id="profileForm">
+                            <div class="profile-form">
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input type="text" id="profileName" placeholder="Your name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" id="profileEmail" placeholder="Your email">
+                                </div>
+                                <div class="form-group full">
+                                    <label>Street Address</label>
+                                    <input type="text" id="profileStreet" placeholder="Street address">
+                                </div>
+                                <div class="form-group">
+                                    <label>City</label>
+                                    <input type="text" id="profileCity" placeholder="City">
+                                </div>
+                                <div class="form-group">
+                                    <label>State/Province</label>
+                                    <input type="text" id="profileState" placeholder="State">
+                                </div>
+                                <div class="form-group">
+                                    <label>Postal Code</label>
+                                    <input type="text" id="profilePostalCode" placeholder="Postal code">
+                                </div>
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <input type="text" id="profileCountry" placeholder="Country">
+                                </div>
+                                <div class="form-group">
+                                    <label>Contact Number</label>
+                                    <input type="tel" id="profilePhone" placeholder="Phone number">
+                                </div>
+                            </div>
+                            <div class="profile-actions">
+                                <button type="submit" class="save-btn">Save Changes</button>
+                                <button type="button" class="cancel-btn" onclick="location.reload()">Cancel</button>
+                            </div>
+                        </form>
+
+                        <div class="addresses-section" style="margin-top: 40px; padding-top: 30px; border-top: 1px solid #e0e0e0;">
+                            <h3 style="font-size: 20px; margin: 0 0 20px 0; color: #000; font-weight: 700;">Saved Addresses</h3>
+                            <div id="addressesList"></div>
+                            <button type="button" id="addAddressBtn" class="th-btn" style="margin-top: 15px;">
+                                <i class="fas fa-plus"></i> Add New Address
+                            </button>
+                        </div>
+
+                        <div id="addressModal" style="display: none; margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                            <h4 style="margin-bottom: 15px;">Add/Edit Address</h4>
+                            <form id="addressForm">
+                                <div class="profile-form">
+                                    <div class="form-group full">
+                                        <label>Label (e.g., Home, Office)</label>
+                                        <input type="text" id="addressLabel" placeholder="Address label">
+                                    </div>
+                                    <div class="form-group full">
+                                        <label>First Name</label>
+                                        <input type="text" id="newAddressFirstName" placeholder="First name" required>
+                                    </div>
+                                    <div class="form-group full">
+                                        <label>Last Name</label>
+                                        <input type="text" id="newAddressLastName" placeholder="Last name" required>
+                                    </div>
+                                    <div class="form-group full">
+                                        <label>Street Address</label>
+                                        <input type="text" id="newAddressStreet" placeholder="Street address" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>City</label>
+                                        <input type="text" id="newAddressCity" placeholder="City" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>State/Province</label>
+                                        <input type="text" id="newAddressState" placeholder="State" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Postal Code</label>
+                                        <input type="text" id="newAddressZipCode" placeholder="Postal code" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Country</label>
+                                        <input type="text" id="newAddressCountry" placeholder="Country" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Number</label>
+                                        <input type="tel" id="newAddressContactNumber" placeholder="Contact number" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="display: flex; align-items: center; cursor: pointer;">
+                                            <input type="checkbox" id="isDefault" style="margin-right: 8px; width: auto;">
+                                            <span>Set as default address</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="profile-actions">
+                                    <button type="submit" class="save-btn">Save Address</button>
+                                    <button type="button" class="cancel-btn" onclick="closeAddressModal()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Orders Section -->
+                    <div id="ordersSection" class="orders-section" style="display: none;">
+                        <h3>My Orders</h3>
+                        <div id="ordersList" class="loading-message">
+                            <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #0f3460; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; margin-bottom: 10px;"></div>
+                            <p>Loading your orders...</p>
+                        </div>
+                    </div>
+
+                    <!-- Settings Section -->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Order Details</h2>
+                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <div id="modalOrderContent">
+                <!-- Order details populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/vendor/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/app.min.js"></script>
+    <!-- <script src="assets/js/navbar-fixed.js"></script> -->
+    <!-- Added toast notification system for consistent notifications -->
+    <script src="assets/js/toast-notification.js"></script>
+    <script>
+        const API_BASE = CONFIG.API_BASE;
+        let currentEditingAddressId = null;
+
+     
+
+        function checkAuth() {
+            const token = localStorage.getItem('authToken');
+            const user = localStorage.getItem('user');
+            
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+        }
+        function openLogoutModal() {
+    document.getElementById("logoutModal").classList.add("active");
+}
+
+function closeLogoutModal() {
+    document.getElementById("logoutModal").classList.remove("active");
+}
+
+function logoutUser() {
+    localStorage.clear();
+
+    if (typeof window.showToast === 'function') {
+        window.showToast('Logged out successfully!', 'success');
+    }
+
+    setTimeout(() => {
+        window.location.href = "login.html";
+    }, 800);
+}
+
+        async function loadProfile() {
+    const token = localStorage.getItem('authToken');
+    
+    try {
+        const response = await fetch(`${API_BASE}/profile`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) throw new Error(data.message || 'Failed to load profile');
+
+        // Fill basic fields
+        document.getElementById('profileName').value  = data.name  || '';
+        document.getElementById('profileEmail').value = data.email || '';
+        document.getElementById('profilePhone').value = data.phone || '';  // ← was missing!
+
+        // Fill address fields using MAPPED field names (what backend actually returns)
+        if (data.addresses && data.addresses.length > 0) {
+            const addr = data.addresses.find(a => a.isDefault) || data.addresses[0];
+
+            document.getElementById('profileStreet').value     = addr.street        || '';  // was addr.addl1
+            document.getElementById('profileCity').value       = addr.city          || '';
+            document.getElementById('profileState').value      = addr.state         || '';
+            document.getElementById('profilePostalCode').value = addr.zipCode       || '';  // was addr.pincode
+            document.getElementById('profileCountry').value    = addr.country       || '';
+            // phone shown in address card but profile phone field filled above from data.phone
+        }
+
+        displayAddresses(data.addresses);
+        console.log(data.addresses)
+
+    } catch (error) {
+        console.error('Error loading profile:', error);
+        if (typeof window.showToast === 'function') {
+            window.showToast(error.message, 'error');
+        }
+    }
+}
+        function displayAddresses(addresses) {
+            const addressesList = document.getElementById('addressesList');
+            
+            if (!addresses || addresses.length === 0) {
+                addressesList.innerHTML = '<div class="no-data">No addresses saved yet</div>';
+                return;
+            }
+
+            addressesList.innerHTML = addresses.map((addr) => `
+                <div class="address-card" style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                    <h4 style="margin: 0 0 10px 0; color: #000; font-weight: 600;">
+                        ${addr.label || 'Saved Address'}
+                        ${addr.isDefault ? '<span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 10px;">DEFAULT</span>' : ''}
+                    </h4>
+                    <p><i class="fas fa-user" style="margin-right: 8px; color: #dc3545;"></i>${addr.name || ''}</p>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right: 8px; color: #dc3545;"></i>${addr.addl1 || ''}, ${addr.city || ''}, ${addr.state || ''}, ${addr.pincode || ''}, ${addr.country || ''}</p>
+                    <p><i class="fas fa-phone-alt" style="margin-right: 8px; color: #dc3545;"></i>${addr.contactNumber || ''}</p>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="th-btn" onclick="editAddress('${addr._id}', ${JSON.stringify(addr).replace(/'/g, '&quot;')})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="th-btn" onclick="deleteAddress('${addr._id}')" style="background: #dc3545;">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function editAddress(addressId, address) {
+            currentEditingAddressId = addressId;
+            document.getElementById('addressLabel').value = address.label || '';
+            document.getElementById('newAddressFirstName').value = address.firstName || '';
+            document.getElementById('newAddressLastName').value = address.lastName || '';
+            document.getElementById('newAddressStreet').value = address.street || '';
+            document.getElementById('newAddressCity').value = address.city || '';
+            document.getElementById('newAddressState').value = address.state || '';
+            document.getElementById('newAddressZipCode').value = address.zipCode || '';
+            document.getElementById('newAddressCountry').value = address.country || '';
+            if (document.getElementById('newAddressContactNumber')) {
+                document.getElementById('newAddressContactNumber').value = address.contactNumber || '';
+            }
+            document.getElementById('isDefault').checked = address.isDefault || false;
+            
+            document.getElementById('addressModal').style.display = 'block';
+            document.querySelector('#addressForm button[type="submit"]').textContent = 'Update Address';
+        }
+
+        async function deleteAddress(addressId) {
+            if (!confirm('Are you sure you want to delete this address?')) {
+                return;
+            }
+
+            const token = localStorage.getItem('authToken');
+            
+            try {
+                const response = await fetch(`${API_BASE}/addresses/${addressId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Failed to delete address');
+                }
+
+                if (typeof window.showToast === 'function') {
+                    window.showToast('Address deleted successfully!', 'success');
+                }
+                
+                await loadProfile();
+            } catch (error) {
+                console.error('Error deleting address:', error);
+                if (typeof window.showToast === 'function') {
+                    window.showToast('Failed to delete address: ' + error.message, 'error');
+                }
+            }
+        }
+
+        function closeAddressModal() {
+            document.getElementById('addressModal').style.display = 'none';
+            document.getElementById('addressForm').reset();
+            currentEditingAddressId = null;
+            document.querySelector('#addressForm button[type="submit"]').textContent = 'Save Address';
+        }
+
+        document.getElementById('profileTab').addEventListener('click', () => {
+            document.querySelectorAll('.profile-section, [id$="Section"]').forEach(el => el.style.display = 'none');
+            document.getElementById('profileSection').style.display = 'block';
+            document.querySelectorAll('.profile-sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('profileTab').classList.add('active');
+        });
+
+        document.getElementById('ordersTab').addEventListener('click', () => {
+            document.querySelectorAll('.profile-section, [id$="Section"]').forEach(el => el.style.display = 'none');
+            document.getElementById('ordersSection').style.display = 'block';
+            document.querySelectorAll('.profile-sidebar-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('ordersTab').classList.add('active');
+            loadOrders();
+        });
+
+        
+        async function loadOrders() {
+            
+            const token = localStorage.getItem('authToken');
+
+if (!token) {
+    window.location.href = "login.html";
+    return;
+}
+            const ordersList = document.getElementById('ordersList');
+            
+            try {
+                ordersList.innerHTML = '<div class="loading-message"><div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #0f3460; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; margin-bottom: 10px;"></div><p>Loading your orders...</p></div>';
+                
+                const response = await fetch(`${API_BASE}/orders`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+                console.log('[v0] Orders API Response:', data);
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to load orders');
+                }
+
+                const orders = Array.isArray(data) ? data : (data.orders || data.data || []);
+
+                if (!orders || orders.length === 0) {
+                    ordersList.innerHTML = '<div class="no-data"><i class="fas fa-box-open" style="font-size: 48px; color: #0f3460; margin-bottom: 15px;"></i><p>No orders yet</p><a href="shop.html" class="th-btn" style="margin-top: 20px; display: inline-block; background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px;">Continue Shopping</a></div>';
+                    return;
+                }
+
+                ordersList.innerHTML = orders.map(order => {
+                    const orderId = (order._id || order.id || 'Unknown').toString().slice(-8);
+                    const orderDate = new Date(order.createdAt || order.date || Date.now()).toLocaleDateString();
+                    const orderStatus = (order.status || order.paymentStatus || 'pending').toLowerCase();
+                    const totalAmount = order.charges?.totalAmount || order.total || order.amount || 0;
+                    const itemCount = (order.items || order.cartItems || []).length || 1;
+
+                    return `
+                      <div class="order-card" onclick="handleOrderCardClick('${order._id || order.id}', event)">
+    <div class="order-info">
+        <h4>Order #${orderId}</h4>
+        <p><i class="fas fa-calendar"></i> ${orderDate}</p>
+        <p><i class="fas fa-box"></i> Items: <strong>${itemCount}</strong></p>
+        <p><i class="fas fa-rupee-sign"></i> Total: <strong>₹${parseFloat(totalAmount).toFixed(2)}</strong></p>
+    </div>
+
+    <div class="order-status ${orderStatus}">
+        ${orderStatus}
+    </div>
+
+    <div class="order-actions">
+        <span style="font-size:12px;color:#666;">
+            Order ID: ${order._id || order.id}
+        </span>
+
+        <!-- INVOICE DOWNLOAD BUTTON -->
+        <button class="invoice-btn"
+        onclick="event.stopPropagation(); downloadInvoicePDF('${order._id || order.id}')">
+    <i class="fas fa-file-invoice"></i> Download Invoice
+</button>
+
+    </div>
+</div>
+
+                    `;
+                }).join('');
+
+                attachOrderClickHandlers(orders);
+
+            } catch (error) {
+                console.error('[v0] Error loading orders:', error);
+                ordersList.innerHTML = `
+                    <div class="no-data">
+                        <i class="fas fa-exclamation-circle" style="font-size: 48px; color: #1a1a2e; margin-bottom: 15px;"></i>
+                        <p>Unable to load orders</p>
+                        <p style="font-size: 12px; color: #999; margin-top: 10px;">${error.message}</p>
+                        <button onclick="loadOrders()" class="th-btn" style="margin-top: 20px; background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">Try Again</button>
+                    </div>
+                `;
+                if (typeof window.showToast === 'function') {
+                    window.showToast('Failed to load orders: ' + error.message, 'error');
+                }
+            }
+        }
+
+        function handleOrderCardClick(orderId, event) {
+            event.preventDefault();
+            event.stopPropagation();
+            console.log('[v0] Order card clicked:', orderId);
+            
+            fetchOrderDetails(orderId);
+        }
+
+        async function fetchOrderDetails(orderId) {
+            const token = localStorage.getItem('authToken');
+            
+            try {
+                const response = await fetch(`${API_BASE}/orders/${orderId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const order = await response.json();
+                console.log('[v0] Order details fetched:', order);
+
+                if (!response.ok) {
+                    throw new Error(order.message || 'Failed to load order details');
+                }
+
+                openOrderModal(orderId, order);
+            } catch (error) {
+                console.error('[v0] Error fetching order:', error);
+                if (typeof window.showToast === 'function') {
+                    window.showToast('Failed to load order details: ' + error.message, 'error');
+                }
+            }
+        }
+
+        function attachOrderClickHandlers(orders) {
+            document.querySelectorAll('.order-card').forEach((card, index) => {
+                card.addEventListener('click', () => {
+                    const orderId = orders[index]._id || orders[index].id;
+                    handleOrderCardClick(orderId, { preventDefault: () => {}, stopPropagation: () => {} });
+                });
+            });
+        }
+function resolveProductImageFromShop(item) {
+    const productId =
+        item.productId ||
+        item.product?._id ||
+        item.product?.id ||
+        item._id;
+
+    if (!productId) {
+        return "assets/img/placeholder-product.png";
+    }
+
+    return `${PRODUCT_IMAGE_BASE}${productId}.jpg`;
+}
+
+
+function openOrderModal(orderId, order) {
+    const modal = document.getElementById('orderModal');
+    const modalContent = document.getElementById('modalOrderContent');
+
+    const createdDate = new Date(order.createdAt).toLocaleString();
+    const updatedDate = new Date(order.updatedAt).toLocaleString();
+
+    const formatPrice = (v) => (Number(v || 0)).toFixed(2);
+    const formatDate = (d) => d ? new Date(d).toLocaleString() : "N/A";
+
+    // ORDER ITEMS
+   const itemsHTML = (order.items || []).map(item => {
+    const imageSrc = getOrderProductImage(item);
+    const productName = item.name || item.product?.name || "Product";
+    const productId = item.product?._id || item.productId || "";
+
+    return `
+        <div class="order-item-row" style="display:flex;align-items:center;gap:14px;">
+
+            ${
+                imageSrc
+                ? `
+                <a href="shop.html?productId=${productId}" title="View product">
+                    <img 
+                        src="${imageSrc}" 
+                        alt="${productName}"
+                        class="order-item-image"
+                    />
+                </a>
+                `
+                : ""
+            }
+
+            <div style="flex:1;">
+                <strong>${productName}</strong><br>
+                Qty: ${item.quantity}<br>
+                Price: Rs. ${formatPrice(item.price)}
+            </div>
+
+            <strong>Rs. ${formatPrice(item.quantity * item.price)}</strong>
+        </div>
+    `;
+}).join('');
+
+
+
+    // VOUCHER SECTION (HIDE IF DISCOUNT = 0)
+    const voucherHTML = order.appliedVoucher &&
+                        Number(order.appliedVoucher.discount) > 0
+        ? `
+        <h3 style="margin-top:20px;">Voucher Applied</h3>
+        <div class="order-detail-item"><strong>Code:</strong><span>${order.appliedVoucher.code}</span></div>
+        <div class="order-detail-item"><strong>Discount:</strong><span>₹${formatPrice(order.appliedVoucher.discount)}</span></div>
+        `
+        : "";
+
+    // DELIVERY PARTNER SECTION (SHOWN ONLY IF STATUS IS SHIPPED/DELIVERED)
+   // DELIVERY PARTNER SECTION (dynamic fields)
+let deliveryHTML = "";
+
+if (order.status === "shipped" || order.status === "delivered") {
+    const dp = order.shipping?.deliveryPartner;
+
+    if (dp) {
+        const trackingUpdatesHTML = (dp.trackingUpdates || [])
+            .map(update => `
+                <div class="tracking-update">
+                    <strong>${update.status}</strong><br>
+                    ${update.description}<br>
+                    <span class="update-time">${formatDate(update.timestamp)}</span>
+                </div>
+            `).join("");
+
+        deliveryHTML = `
+            <h3 style="margin-top:20px;">Delivery Details</h3>
+
+            ${dp.name ? `
+            <div class="order-detail-item"><strong>Partner:</strong><span>${dp.name}</span></div>` : ""}
+
+            ${dp.trackingId ? `
+            <div class="order-detail-item"><strong>Tracking ID:</strong><span>${dp.trackingId}</span></div>` : ""}
+
+            <div class="order-detail-item">
+                <strong>Service:</strong><span>${dp.serviceType || "Standard"}</span>
+            </div>
+
+            ${dp.estimatedDelivery ? `
+            <div class="order-detail-item">
+                <strong>Est. Delivery:</strong><span>${formatDate(dp.estimatedDelivery)}</span>
+            </div>` : ""}
+
+            <h3 style="margin-top:20px;">Tracking Updates</h3>
+            <div class="tracking-updates-box">
+                ${trackingUpdatesHTML || `<p>No tracking updates yet.</p>`}
+            </div>
+        `;
+    }
+}
+
+    modalContent.innerHTML = `
+        <div class="order-detail-item"><strong>Order ID:</strong><span>${order._id}</span></div>
+        <div class="order-detail-item"><strong>Status:</strong><span>${order.status}</span></div>
+        <div class="order-detail-item"><strong>Created:</strong><span>${createdDate}</span></div>
+        <div class="order-detail-item"><strong>Updated:</strong><span>${updatedDate}</span></div>
+
+        <h3 style="margin-top:20px;">Payment</h3>
+        <div class="order-detail-item"><strong>Method:</strong><span>${order.payment?.method}</span></div>
+        <div class="order-detail-item"><strong>Status:</strong><span>${order.payment?.status}</span></div>
+        <div class="order-detail-item"><strong>Notes:</strong><span>${order.payment?.notes || "N/A"}</span></div>
+
+        <h3 style="margin-top:20px;">Charges</h3>
+        <div class="order-detail-item"><strong>Subtotal:</strong><span>₹${formatPrice(order.charges?.subtotal)}</span></div>
+        <div class="order-detail-item"><strong>GST:</strong><span>₹${formatPrice(order.charges?.gst)}</span></div>
+        <div class="order-detail-item"><strong>Delivery:</strong><span>₹${formatPrice(order.charges?.deliveryCharge)}</span></div>
+        <div class="order-detail-item"><strong>Payment Fee:</strong><span>₹${formatPrice(order.charges?.paymentCharge)}</span></div>
+        <div class="order-detail-total"><strong>Total:</strong><span>₹${formatPrice(order.totalAmount)}</span></div>
+
+        <h3 style="margin-top:20px;">Shipping Address</h3>
+        <div class="order-detail-item">
+            <strong>Address:</strong>
+            <span>
+                ${order.shipping.address.street}<br>
+                ${order.shipping.address.city}, ${order.shipping.address.state}<br>
+                ${order.shipping.address.zipCode}, ${order.shipping.address.country}
+            </span>
+        </div>
+
+        ${voucherHTML}
+
+        ${deliveryHTML}
+
+        <h3 style="margin-top:20px;">Items</h3>
+        <div class="order-items-list">${itemsHTML}</div>
+    `;
+
+    modal.classList.add('active');
+}
+    function closeOrderModal() {
+            const modal = document.getElementById('orderModal');
+            modal.classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('orderModal').addEventListener('click', (e) => {
+    if (e.target.id === 'orderModal') {
+        closeOrderModal();
+    }
+});
+
+
+       // ── INSTANT AUTH GUARD (runs before page renders) ──
+(function(){
+    const token = localStorage.getItem('authToken');
+    const user  = localStorage.getItem('user');
+    if(!token || !user){
+        window.location.replace('login.html');
+    }
+})();
+
+// ── CACHE BUST: blocks browser back-button restore ──
+window.addEventListener('pageshow', function(e){
+    if(e.persisted){
+        const token = localStorage.getItem('authToken');
+        if(!token) window.location.replace('login.html');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    loadProfile();
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+        openLogoutModal();
+    });
+
+    document.getElementById('profileTab').addEventListener('click', () => {
+        document.querySelectorAll('.profile-section, [id$="Section"]').forEach(el => el.style.display = 'none');
+        document.getElementById('profileSection').style.display = 'block';
+        document.querySelectorAll('.profile-sidebar-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('profileTab').classList.add('active');
+    });
+
+    document.getElementById('ordersTab').addEventListener('click', () => {
+        document.querySelectorAll('.profile-section, [id$="Section"]').forEach(el => el.style.display = 'none');
+        document.getElementById('ordersSection').style.display = 'block';
+        document.querySelectorAll('.profile-sidebar-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('ordersTab').classList.add('active');
+        loadOrders();
+    });
+
+    document.getElementById('orderModal').addEventListener('click', (e) => {
+        if (e.target.id === 'orderModal') closeOrderModal();
+    });
+
+    document.getElementById('logoutModal').addEventListener('click', (e) => {
+        if (e.target.id === 'logoutModal') closeLogoutModal();
+    });
+
+    document.getElementById('addAddressBtn').addEventListener('click', () => {
+        currentEditingAddressId = null;
+        document.getElementById('addressForm').reset();
+        document.getElementById('addressModal').style.display = 'block';
+        document.querySelector('#addressForm button[type="submit"]').textContent = 'Save Address';
+    });
+
+    document.getElementById('addressForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('authToken');
+        const addressData = {
+            firstName: document.getElementById('newAddressFirstName').value,
+            lastName: document.getElementById('newAddressLastName').value,
+            street: document.getElementById('newAddressStreet').value,
+            city: document.getElementById('newAddressCity').value,
+            state: document.getElementById('newAddressState').value,
+            zipCode: document.getElementById('newAddressZipCode').value,
+            country: document.getElementById('newAddressCountry').value,
+            contactNumber: document.getElementById('newAddressContactNumber').value,
+            label: document.getElementById('addressLabel').value || 'Home',
+            isDefault: document.getElementById('isDefault').checked
+        };
+        try {
+            const url = currentEditingAddressId
+                ? `${API_BASE}/addresses/${currentEditingAddressId}`
+                : `${API_BASE}/addresses`;
+            const method = currentEditingAddressId ? 'PUT' : 'POST';
+            const response = await fetch(url, {
+                method,
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(addressData)
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message || 'Failed to save address');
+            if (typeof window.showToast === 'function')
+                window.showToast(currentEditingAddressId ? 'Address updated!' : 'Address added!', 'success');
+            closeAddressModal();
+            await loadProfile();
+        } catch (error) {
+            if (typeof window.showToast === 'function')
+                window.showToast('Failed to save address: ' + error.message, 'error');
+        }
+    });
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('authToken');
+        const userData = {
+            name: document.getElementById('profileName').value,
+            phone: document.getElementById('profilePhone').value,
+            email: document.getElementById('profileEmail').value,
+            address: {
+                addl1: document.getElementById('profileStreet').value,
+                city: document.getElementById('profileCity').value,
+                state: document.getElementById('profileState').value,
+                pincode: document.getElementById('profilePostalCode').value,
+                country: document.getElementById('profileCountry').value
+            }
+        };
+        try {
+            const response = await fetch(`${API_BASE}/profile`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Failed to update profile');
+            }
+            if (typeof window.showToast === 'function')
+                window.showToast('Profile updated successfully!', 'success');
+        } catch (error) {
+            if (typeof window.showToast === 'function')
+                window.showToast('Failed to update profile: ' + error.message, 'error');
+        }
+    });
+
+});
+       
+       
+
+       
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+<script>
+    const productCache = {};
+
+async function getProduct(productId) {
+    if (!productId) return null;
+
+    if (productCache[productId]) {
+        return productCache[productId];
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/products/${productId}`);
+        if (!res.ok) return null;
+
+        const product = await res.json();
+        productCache[productId] = product;
+        return product;
+    } catch (e) {
+        console.error("Product fetch failed", e);
+        return null;
+    }
+}
+
+function getProductImage(product) {
+    return product?.image || product?.thumbnail || product?.images?.[0] || null;
+}
+
+    const PRODUCT_IMAGE_BASE = "assets/img/products/";
+const PRODUCT_PAGE_URL = "shop.html?productId=";
+function getOrderProductImage(item) {
+    // Most common real-world cases
+    if (item?.product?.image) return item.product.image;
+    if (item?.product?.thumbnail) return item.product.thumbnail;
+    if (Array.isArray(item?.product?.images) && item.product.images.length > 0)
+        return item.product.images[0];
+
+    if (item?.image) return item.image;
+    if (item?.imageUrl) return item.imageUrl;
+
+    // If nothing exists → return null (NOT placeholder)
+    return null;
+}
+
+async function downloadInvoicePDF(orderId) {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        alert("Session expired. Please login again.");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/orders/${orderId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        const order = await res.json();
+        if (!res.ok) throw new Error(order.message || "Failed to load order");
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF("p", "mm", "a4");
+
+        /* ---------- LOGO ---------- */
+        const logo = new Image();
+        logo.src = "assets/img/logo_resized.png";
+
+        logo.onload = () => {
+            doc.addImage(logo, "PNG", 14, 10, 40, 18);
+
+            /* ---------- HEADER ---------- */
+            doc.setFontSize(18);
+            doc.text("INVOICE", 150, 20);
+
+            doc.setFontSize(10);
+            doc.text("AM ROBOTICS", 14, 38);
+            doc.text("Hyderabad, Telangana, India", 14, 44);
+            doc.text("Email: support@amrobotics.in", 14, 50);
+
+            /* ---------- ORDER INFO ---------- */
+            doc.text(`Invoice No : ${order._id}`, 14, 62);
+            doc.text(`Order Date : ${new Date(order.createdAt).toLocaleDateString()}`, 14, 68);
+            doc.text(`Order Status : ${order.status.toUpperCase()}`, 14, 74);
+
+            /* ---------- CUSTOMER ---------- */
+            const addr = order.shipping.address;
+            doc.text("Bill To:", 120, 62);
+            doc.text(`${addr.street}`, 120, 68);
+            doc.text(`${addr.city}, ${addr.state}`, 120, 74);
+            doc.text(`${addr.zipCode}, ${addr.country}`, 120, 80);
+
+            /* ---------- ITEMS TABLE ---------- */
+            const items = (order.items || []).map(item => [
+                item.name,
+                item.quantity.toString(),
+                `Rs. ${Number(item.price).toFixed(2)}`,
+                `Rs. ${(item.quantity * item.price).toFixed(2)}`
+            ]);
+
+            doc.autoTable({
+                startY: 92,
+                head: [["Item", "Qty", "Price", "Total"]],
+                body: items,
+                theme: "grid",
+                styles: {
+                    fontSize: 10,
+                    halign: "center"
+                },
+                columnStyles: {
+                    0: { halign: "left" }
+                },
+                headStyles: {
+                    fillColor: [15, 52, 96],
+                    textColor: 255
+                }
+            });
+
+            const finalY = doc.lastAutoTable.finalY + 8;
+
+            /* ---------- TOTALS ---------- */
+            doc.setFontSize(11);
+            doc.text(`Subtotal : Rs. ${Number(order.charges?.subtotal || 0).toFixed(2)}`, 140, finalY);
+            doc.text(`GST : Rs. ${Number(order.charges?.gst || 0).toFixed(2)}`, 140, finalY + 6);
+            doc.text(`Delivery : Rs. ${Number(order.charges?.deliveryCharge || 0).toFixed(2)}`, 140, finalY + 12);
+
+            doc.setFontSize(12);
+            doc.text(`TOTAL : Rs. ${Number(order.totalAmount || 0).toFixed(2)}`, 140, finalY + 22);
+
+            /* ---------- FOOTER ---------- */
+            doc.setFontSize(9);
+            doc.text(
+                "This is a system-generated invoice. No signature is required.",
+                14,
+                285
+            );
+
+            doc.save(`AM_Robotics_Invoice_${order._id}.pdf`);
+        };
+
+    } catch (error) {
+        console.error(error);
+        alert("Failed to generate invoice. Please try again.");
+    }
+}
+</script>
+
+
+    <script src="assets/js/subscribe.js"></script>
+    <!-- Logout Confirmation Modal -->
+<div class="modal-overlay" id="logoutModal">
+    <div class="logout-modal-content">
+        <div class="logout-icon">
+            <i class="fas fa-sign-out-alt"></i>
+        </div>
+
+        <h3>Logout</h3>
+
+        <p>
+            Are you sure you want to logout from your account?
+        </p>
+
+        <div class="logout-actions">
+            <button class="cancel-logout-btn" onclick="closeLogoutModal()">
+                Cancel
+            </button>
+
+            <button class="confirm-logout-btn" onclick="logoutUser()">
+                Logout
+            </button>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
