@@ -117,9 +117,9 @@ const sendOrderConfirmationEmail = async (userEmail, adminEmail, order) => {
           Qty: ${item.quantity}
         </div>
       </td>
-      <td style="text-align:right;">$${(item.price?.sellingPrice || 0).toFixed(2)}</td>
+      <td style="text-align:right;">$${(item.sellingPrice || 0).toFixed(2)}</td>
       <td style="text-align:center;">${item.quantity}</td>
-      <td style="text-align:right;">$${((item.price?.sellingPrice || 0) * item.quantity).toFixed(2)}</td>
+      <td style="text-align:right;">$${((item.lineTotal || 0)).toFixed(2)}</td>
     </tr>`;
   }).join('');
 
@@ -162,208 +162,221 @@ const sendOrderConfirmationEmail = async (userEmail, adminEmail, order) => {
 
 const sendOrderStatusEmail = async (userEmail, order, status) => {
 
+  // ❌ Skip unwanted email statuses
+  const excludedStatuses = [
+    "out_for_delivery",
+    "return_request",
+    "returned",
+    "return_initiated",
+  ];
+
+  if (excludedStatuses.includes(status)) {
+    console.log(`Skipping email for status: ${status}`);
+    return;
+  }
+
+  // ---------------- STATUS CONFIG ----------------
   const statusConfig = {
     shipped: {
-      subject:  `Your Order Has Been Shipped! 🚚 - #${order._id.toString().slice(-6)}`,
-      heading:  "Your Order is On Its Way!",
-      subtext:  "Great news! Your order has been shipped and is heading to you.",
-      color:    "#7c3aed",
-      emoji:    "🚚",
-      extraHtml: order.deliveryPartner ? `
+      subject: `Your Order Has Been Shipped! 🚚 - #${order._id.toString().slice(-6)}`,
+      heading: "Your Order is On Its Way!",
+      subtext: "Great news! Your order has been shipped and is heading to you.",
+      color: "#7c3aed",
+      emoji: "🚚",
+      extraHtml: order.deliveryPartner
+        ? `
         <div style="background:#f5f3ff; border:1px solid #ddd6fe; border-radius:8px; padding:16px; margin-top:16px;">
           <h3 style="margin:0 0 12px; color:#6d28d9;">Shipping Details</h3>
           <table style="width:100%;">
             <tr>
-              <td style="color:#6b7280; padding:4px 0;">Courier Partner</td>
-              <td style="font-weight:bold; text-align:right;">${order.deliveryPartner.name}</td>
+              <td>Courier Partner</td>
+              <td style="text-align:right;font-weight:bold;">${order.deliveryPartner.name}</td>
             </tr>
             <tr>
-              <td style="color:#6b7280; padding:4px 0;">Tracking ID</td>
-              <td style="font-weight:bold; text-align:right; font-family:monospace;">${order.deliveryPartner.trackingId}</td>
+              <td>Tracking ID</td>
+              <td style="text-align:right;font-weight:bold;font-family:monospace;">
+                ${order.deliveryPartner.trackingId}
+              </td>
             </tr>
-            ${order.deliveryPartner.estimatedDelivery ? `
-            <tr>
-              <td style="color:#6b7280; padding:4px 0;">Estimated Delivery</td>
-              <td style="font-weight:bold; text-align:right;">${new Date(order.deliveryPartner.estimatedDelivery).toLocaleDateString("en-AU", { weekday:"long", year:"numeric", month:"long", day:"numeric" })}</td>
-            </tr>` : ""}
           </table>
-        </div>` : "",
+        </div>`
+        : "",
     },
 
     cancelled: {
-      subject:  `Order Cancelled - #${order._id.toString().slice(-6)}`,
-      heading:  "Your Order Has Been Cancelled",
-      subtext:  "We're sorry to inform you that your order has been cancelled.",
-      color:    "#dc2626",
-      emoji:    "❌",
-      extraHtml: order.cancellationDetails ? `
-        <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:16px; margin-top:16px;">
-          <h3 style="margin:0 0 12px; color:#dc2626;">Cancellation Details</h3>
-          <table style="width:100%;">
-            <tr>
-              <td style="color:#6b7280; padding:4px 0;">Reason</td>
-              <td style="font-weight:bold; text-align:right; text-transform:capitalize;">${(order.cancellationDetails.reason || "").replaceAll("-", " ")}</td>
-            </tr>
-            ${order.cancellationDetails.notes ? `
-            <tr>
-              <td style="color:#6b7280; padding:4px 0;">Notes</td>
-              <td style="font-weight:bold; text-align:right;">${order.cancellationDetails.notes}</td>
-            </tr>` : ""}
-            <tr>
-              <td style="color:#6b7280; padding:4px 0;">Refund Method</td>
-              <td style="font-weight:bold; text-align:right; text-transform:capitalize;">${(order.cancellationDetails.refundMethod || "no_refund").replaceAll("_", " ")}</td>
-            </tr>
-          </table>
-        </div>` : "",
+      subject: `Order Cancelled - #${order._id.toString().slice(-6)}`,
+      heading: "Order Cancelled",
+      subtext: "Your order has been cancelled.",
+      color: "#dc2626",
+      emoji: "❌",
+      extraHtml: "",
     },
 
     refund_completed: {
-      subject:  `Refund Processed - #${order._id.toString().slice(-6)}`,
-      heading:  "Your Refund Has Been Processed",
-      subtext:  "Good news! Your refund has been successfully processed.",
-      color:    "#d97706",
-      emoji:    "💰",
-      extraHtml: order.refundDetails ? `
-        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:16px; margin-top:16px;">
-          <h3 style="margin:0 0 12px; color:#d97706;">Refund Details</h3>
-          <table style="width:100%;">
-            <tr>
-              <td style="color:#6b7280; padding:4px 0;">Refund Amount</td>
-              <td style="font-weight:bold; text-align:right; color:#059669; font-size:18px;">$${(order.refundDetails.refundAmount || 0).toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td style="color:#6b7280; padding:4px 0;">Refund Method</td>
-              <td style="font-weight:bold; text-align:right; text-transform:capitalize;">${(order.refundDetails.refundMethod || "").replaceAll("_", " ")}</td>
-            </tr>
-            ${order.refundDetails.referenceId ? `
-            <tr>
-              <td style="color:#6b7280; padding:4px 0;">Reference ID</td>
-              <td style="font-weight:bold; text-align:right; font-family:monospace;">${order.refundDetails.referenceId}</td>
-            </tr>` : ""}
-            ${order.refundDetails.reason ? `
-            <tr>
-              <td style="color:#6b7280; padding:4px 0;">Reason</td>
-              <td style="font-weight:bold; text-align:right; text-transform:capitalize;">${(order.refundDetails.reason || "").replaceAll("-", " ")}</td>
-            </tr>` : ""}
-            <tr>
-              <td style="color:#6b7280; padding:4px 0;">Processed At</td>
-              <td style="font-weight:bold; text-align:right;">${new Date(order.refundDetails.processedAt || Date.now()).toLocaleString()}</td>
-            </tr>
-          </table>
-        </div>` : "",
+      subject: `Refund Processed - #${order._id.toString().slice(-6)}`,
+      heading: "Refund Completed",
+      subtext: "Your refund has been processed successfully.",
+      color: "#d97706",
+      emoji: "💰",
+      extraHtml: "",
     },
 
     confirmed: {
-      subject:  `Order Confirmed ✅ - #${order._id.toString().slice(-6)}`,
-      heading:  "Order Confirmed!",
-      subtext:  "Your order has been confirmed and is being prepared.",
-      color:    "#059669",
-      emoji:    "✅",
+      subject: `Order Confirmed ✅ - #${order._id.toString().slice(-6)}`,
+      heading: "Order Confirmed!",
+      subtext: "We are preparing your order.",
+      color: "#059669",
+      emoji: "✅",
       extraHtml: "",
     },
 
     delivered: {
-      subject:  `Order Delivered 🎉 - #${order._id.toString().slice(-6)}`,
-      heading:  "Your Order Has Been Delivered!",
-      subtext:  "We hope you love your N-Organics products!",
-      color:    "#0d9488",
-      emoji:    "🎉",
+      subject: `Order Delivered 🎉 - #${order._id.toString().slice(-6)}`,
+      heading: "Order Delivered!",
+      subtext: "Hope you enjoy your products!",
+      color: "#0d9488",
+      emoji: "🎉",
       extraHtml: "",
     },
   };
 
   const cfg = statusConfig[status] || {
-    subject:  `Order Update - #${order._id.toString().slice(-6)}`,
-    heading:  "Order Status Updated",
-    subtext:  `Your order status has been updated to: ${status}`,
-    color:    "#457358",
-    emoji:    "📦",
+    subject: `Order Update - #${order._id.toString().slice(-6)}`,
+    heading: "Order Update",
+    subtext: `Status changed to ${status}`,
+    color: "#374151",
+    emoji: "📦",
     extraHtml: "",
   };
 
-  const itemsList = (order.items || []).map(item => `
-    <tr>
-      <td style="padding:12px; border-bottom:1px solid #eee;">
-        <strong>${item.name}</strong><br/>
-        <span style="color:#6b7280; font-size:12px;">SKU: ${item.variantSku || "—"} | Qty: ${item.quantity}</span>
-      </td>
-      <td style="text-align:right; padding:12px; border-bottom:1px solid #eee;">$${(item.price?.sellingPrice || 0).toFixed(2)}</td>
-      <td style="text-align:center; padding:12px; border-bottom:1px solid #eee;">${item.quantity}</td>
-      <td style="text-align:right; padding:12px; border-bottom:1px solid #eee;">$${((item.price?.sellingPrice || 0) * item.quantity).toFixed(2)}</td>
-    </tr>
-  `).join("");
+  // ---------------- CURRENCY ----------------
+  const currency = order.payment?.currency || "AUD";
 
+  const formatCurrency = (amount) =>
+    new Intl.NumberFormat("en-AU", {
+      style: "currency",
+      currency,
+    }).format(amount || 0);
+
+  // ---------------- ITEMS TABLE ----------------
+  const itemsList = (order.items || [])
+    .map(
+      (item) => `
+      <tr>
+        <td style="padding:10px;border-bottom:1px solid #eee;">
+          <strong>${item.name}</strong><br/>
+          <span style="font-size:12px;color:#6b7280;">
+            SKU: ${item.sku || "—"} | Qty: ${item.quantity}
+          </span>
+        </td>
+        <td style="text-align:right;padding:10px;border-bottom:1px solid #eee;">
+          ${formatCurrency(item.pricing?.pricePerUnit || item.sellingPrice)}
+        </td>
+        <td style="text-align:center;padding:10px;border-bottom:1px solid #eee;">
+          ${item.quantity}
+        </td>
+        <td style="text-align:right;padding:10px;border-bottom:1px solid #eee;">
+          ${formatCurrency(item.lineTotal || 0)}
+        </td>
+      </tr>
+    `
+    )
+    .join("");
+
+  // ---------------- PAYMENT BREAKDOWN ----------------
+  const pricing = order.pricing || {};
+
+  const pricingBreakdown = `
+    <div style="margin-top:20px;padding-top:16px;border-top:2px dashed #e5e7eb;">
+
+      <h3 style="font-size:16px;margin-bottom:10px;">Payment Summary</h3>
+
+      <table style="width:100%;font-size:14px;color:#374151;">
+
+        <tr>
+          <td>Subtotal</td>
+          <td style="text-align:right;">${formatCurrency(pricing.subtotal)}</td>
+        </tr>
+
+        ${
+          pricing.voucherDiscount > 0
+            ? `
+        <tr>
+          <td style="color:#dc2626;">Voucher Discount</td>
+          <td style="text-align:right;color:#dc2626;">
+            -${formatCurrency(pricing.voucherDiscount)}
+          </td>
+        </tr>`
+            : ""
+        }
+
+        <tr>
+          <td>Delivery Charge</td>
+          <td style="text-align:right;">
+            ${
+              pricing.deliveryCharge > 0
+                ? formatCurrency(pricing.deliveryCharge)
+                : "<span style='color:#16a34a;'>Free</span>"
+            }
+          </td>
+        </tr>
+
+        <tr>
+          <td style="border-top:1px solid #e5e7eb;padding-top:8px;font-weight:bold;">
+            Total Paid
+          </td>
+          <td style="text-align:right;border-top:1px solid #e5e7eb;padding-top:8px;font-weight:bold;color:#059669;font-size:16px;">
+            ${formatCurrency(pricing.total)}
+          </td>
+        </tr>
+
+      </table>
+    </div>
+  `;
+
+  // ---------------- EMAIL ----------------
   const mailOptions = {
-    from:    `"${process.env.COMPANY_NAME}" <${process.env.EMAIL_USER}>`,
-    to:      userEmail,
+    from: `"${process.env.COMPANY_NAME}" <${process.env.EMAIL_USER}>`,
+    to: userEmail,
     subject: cfg.subject,
     html: `
-      <div style="font-family:Arial,sans-serif; max-width:600px; margin:auto; padding:20px; background:#f9fafb;">
+      <div style="font-family:Arial;background:#f9fafb;padding:20px;max-width:600px;margin:auto;">
 
-        <!-- Header -->
-        <div style="text-align:center; margin-bottom:24px;">
-          ${process.env.COMPANY_LOGO ? `<img src="${process.env.COMPANY_LOGO}" style="width:150px; margin-bottom:12px;" />` : ""}
-          <div style="font-size:48px;">${cfg.emoji}</div>
-          <h1 style="color:${cfg.color}; margin:8px 0;">${cfg.heading}</h1>
+        <!-- HEADER -->
+        <div style="text-align:center;">
+          <div style="font-size:40px;">${cfg.emoji}</div>
+          <h2 style="color:${cfg.color};margin:10px 0;">${cfg.heading}</h2>
           <p style="color:#6b7280;">${cfg.subtext}</p>
         </div>
 
-        <!-- Order Info -->
-        <div style="background:white; padding:20px; border-radius:8px; margin-bottom:16px; border:1px solid #e5e7eb;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-            <span style="color:#6b7280;">Order ID</span>
-            <strong style="font-family:monospace;">#${order._id.toString().slice(-6).toUpperCase()}</strong>
-          </div>
-          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-            <span style="color:#6b7280;">Order Date</span>
-            <strong>${new Date(order.createdAt).toLocaleDateString("en-AU", { year:"numeric", month:"long", day:"numeric" })}</strong>
-          </div>
-          <div style="display:flex; justify-content:space-between;">
-            <span style="color:#6b7280;">Status</span>
-            <strong style="color:${cfg.color}; text-transform:capitalize;">${status.replaceAll("_", " ")}</strong>
-          </div>
-        </div>
-
-        <!-- Status-specific extra content -->
+        <!-- STATUS EXTRA -->
         ${cfg.extraHtml}
 
-        <!-- Items -->
-        <div style="background:white; padding:20px; border-radius:8px; margin-top:16px; border:1px solid #e5e7eb;">
-          <h3 style="margin:0 0 12px;">Order Items</h3>
-          <table style="width:100%; border-collapse:collapse;">
+        <!-- ITEMS -->
+        <div style="background:#fff;padding:16px;border-radius:8px;margin-top:16px;">
+          <h3>Order Items</h3>
+
+          <table style="width:100%;border-collapse:collapse;">
             <thead>
               <tr style="background:#f3f4f6;">
-                <th align="left" style="padding:8px;">Item</th>
-                <th align="right" style="padding:8px;">Price</th>
-                <th align="center" style="padding:8px;">Qty</th>
-                <th align="right" style="padding:8px;">Total</th>
+                <th align="left">Item</th>
+                <th align="right">Price</th>
+                <th align="center">Qty</th>
+                <th align="right">Total</th>
               </tr>
             </thead>
-            <tbody>${itemsList}</tbody>
+            <tbody>
+              ${itemsList}
+            </tbody>
           </table>
-          <hr style="margin:12px 0; border:none; border-top:1px solid #e5e7eb;" />
-          <div style="display:flex; justify-content:space-between;">
-            <strong>Order Total</strong>
-            <strong style="color:#059669; font-size:18px;">$${(order.pricing?.total || 0).toFixed(2)} AUD</strong>
-          </div>
+
+          ${pricingBreakdown}
+
         </div>
 
-        <!-- Shipping Address -->
-        ${order.shippingAddress ? `
-        <div style="background:white; padding:20px; border-radius:8px; margin-top:16px; border:1px solid #e5e7eb;">
-          <h3 style="margin:0 0 12px;">Delivering To</h3>
-          <p style="margin:0; color:#374151;">
-            <strong>${order.shippingAddress.fullName}</strong><br/>
-            ${order.shippingAddress.addl1}<br/>
-            ${order.shippingAddress.city}, ${order.shippingAddress.state} - ${order.shippingAddress.pincode}<br/>
-            ${order.shippingAddress.country}
-          </p>
-        </div>` : ""}
-
-        <!-- Footer -->
-        <div style="text-align:center; margin-top:24px; color:#9ca3af; font-size:12px;">
-          <p>Questions? Reply to this email or contact our support team.</p>
-          <p>© ${new Date().getFullYear()} ${process.env.COMPANY_NAME}. All rights reserved.</p>
+        <!-- FOOTER -->
+        <div style="text-align:center;font-size:12px;color:#9ca3af;margin-top:20px;">
+          © ${new Date().getFullYear()} ${process.env.COMPANY_NAME}
         </div>
 
       </div>
@@ -373,8 +386,8 @@ const sendOrderStatusEmail = async (userEmail, order, status) => {
   try {
     return await sendEmailViaAPI(mailOptions);
   } catch (error) {
-    console.error("Send order status email error:", error.message);
-    throw new Error("Failed to send order status email");
+    console.error("Email send error:", error.message);
+    throw new Error("Failed to send order email");
   }
 };
 

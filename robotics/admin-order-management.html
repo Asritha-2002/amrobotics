@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Orders Management - AM ROBOTICS Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sidebar-bg:#1e2235;--sidebar-w:260px;--topbar-h:70px;
+  --accent:#6c63ff;--text-muted:#9095a5;--main-bg:#f3f4f8;
+  --white:#ffffff;--border:#e5e7ef;
+  --bg:#f5f4f0;--surface:#ffffff;--surface2:#faf9f6;--border2:#d4cfc4;
+  --text:#1a1916;--text2:#5a574f;--text3:#9a9690;
+  --green:#1a6b3c;--green-light:#e8f4ed;
+  --red:#c0392b;--red-light:#fdf0ee;
+  --blue:#1a4db8;--blue-light:#eef2fc;
+  --amber:#b8720a;--amber-light:#fdf6e8;
+  --purple:#6b3db8;--purple-light:#f3eefe;
+  --orange:#c05c14;--orange-light:#fdf1e8;
+  --teal:#0d7a6b;--teal-light:#e8f6f4;
+  --gray:#4a4a4a;--gray-light:#f0efed;
+  --radius:10px;--radius-lg:14px;--radius-xl:18px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.05);
+  --shadow-lg:0 4px 16px rgba(0,0,0,.1),0 1px 4px rgba(0,0,0,.06);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--main-bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;display:flex;}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit;font-size:13px}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);height:100vh;background:var(--sidebar-bg);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:200;overflow-y:auto;transition:transform .3s ease;}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:#444b6e;border-radius:4px;}
+.sidebar-logo{padding:22px 20px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.07);}
+.logo-icon-box{width:40px;height:40px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.logo-text-wrap .logo-title{font-size:16px;font-weight:700;color:#fff;line-height:1.2;}
+.logo-text-wrap .logo-sub{font-size:11px;color:var(--text-muted);}
+.store-pill{margin:14px 16px 4px;padding:8px 14px;background:rgba(108,99,255,.18);border:1px solid rgba(108,99,255,.3);border-radius:8px;font-size:12px;font-weight:600;color:#a89fff;display:flex;align-items:center;gap:8px;}
+.nav-group-label{padding:14px 20px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.3px;color:rgba(255,255,255,.25);}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 16px;margin:1px 8px;border-radius:10px;cursor:pointer;text-decoration:none;transition:.18s ease;color:rgba(255,255,255,.6);font-size:14px;font-weight:500;}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff;}
+.nav-item.active{background:rgba(255,255,255,.12);color:#fff;}
+.nav-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:#fff;}
+.ic-blue{background:#4f8ef7;}.ic-red{background:#f05e5e;}.ic-green{background:#3dc47e;}
+.ic-orange{background:#f5923e;}.ic-purple{background:#9b67f5;}.ic-teal{background:#2bbfbf;}
+.ic-pink{background:#e94f8b;}.ic-yellow{background:#e8a838;}
+.sidebar-footer{margin-top:auto;padding:14px 12px;border-top:1px solid rgba(255,255,255,.07);}
+.logout-nav{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;cursor:pointer;color:rgba(255,100,100,.8);font-size:14px;font-weight:500;transition:.18s;background:none;border:none;width:100%;}
+.logout-nav:hover{background:rgba(239,68,68,.1);color:#f87171;}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;min-width:0;}
+
+/* ── TOPBAR ── */
+.topbar{height:var(--topbar-h);background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;position:sticky;top:0;z-index:100;}
+.topbar-title{font-size:16px;font-weight:700;color:#1a1d2e;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-icon-btn{width:38px;height:38px;border-radius:9px;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:#555;transition:.18s;}
+.tb-icon-btn:hover{background:var(--main-bg);}
+.admin-pill{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border:1px solid var(--border);border-radius:30px;cursor:pointer;background:var(--white);}
+.admin-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#4f8ef7,#9b67f5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
+.admin-info .admin-name{font-size:12px;font-weight:600;color:#222;}
+.admin-info .admin-role{font-size:10px;color:var(--text-muted);}
+.tb-logout-btn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#999;transition:.18s;}
+.tb-logout-btn:hover{color:#f05e5e;border-color:#f05e5e;background:#fff5f5;}
+.hamburger-btn{display:none;width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:#fff;align-items:center;justify-content:center;cursor:pointer;color:#555;margin-right:4px;flex-shrink:0;}
+
+/* ── PAGE ── */
+.page-content{padding:20px;display:flex;flex-direction:column;gap:16px;animation:fadeUp .25s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.page-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.page-header-left h2{font-size:18px;font-weight:700;color:#1a1d2e;}
+.page-header-left p{font-size:12px;color:var(--text-muted);margin-top:2px;}
+
+/* ── STATS — horizontal scroll on small screens ── */
+.stats-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.stats-wrap::-webkit-scrollbar{height:4px;}
+.stats-wrap::-webkit-scrollbar-thumb{background:#ccc;border-radius:4px;}
+.stats-row{display:flex;gap:10px;padding-bottom:4px;width:max-content;}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 16px;width:120px;flex-shrink:0;box-shadow:var(--shadow);}
+.stat-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.stat-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.stat-icon svg{width:16px;height:16px;}
+.stat-count{font-size:20px;font-weight:700;color:var(--text);}
+.stat-label{font-size:11px;color:var(--text-muted);font-weight:500;}
+
+/* ── SEARCH / FILTER ── */
+.search-bar{display:flex;gap:10px;flex-wrap:wrap;}
+.search-wrap{position:relative;flex:1;min-width:180px;}
+.search-wrap svg.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-muted);pointer-events:none;}
+.search-wrap input{width:100%;padding:9px 36px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--text);outline:none;transition:.2s;}
+.search-wrap input:focus{border-color:#aaa;box-shadow:0 0 0 3px rgba(0,0,0,.05);}
+.search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);width:18px;height:18px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--border);}
+.search-clear:hover{background:var(--border2);}
+.search-clear svg{width:11px;height:11px;}
+.filter-wrap{position:relative;}
+.filter-btn{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);color:var(--text);font-size:13px;font-weight:500;min-width:150px;justify-content:space-between;transition:.2s;}
+.filter-btn:hover{border-color:var(--border2);}
+.filter-dropdown{position:absolute;right:0;top:calc(100% + 4px);width:200px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);z-index:100;overflow:hidden;display:none;}
+.filter-dropdown.open{display:block;}
+.filter-option{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:13px;color:var(--text);cursor:pointer;transition:.15s;}
+.filter-option:hover{background:var(--bg);}
+.filter-option.active{background:var(--blue-light);color:var(--blue);font-weight:600;}
+.filter-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ── TABLE CARD ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow);}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.table-scroll::-webkit-scrollbar{height:5px;}
+.table-scroll::-webkit-scrollbar-thumb{background:#ccc;border-radius:4px;}
+table{width:100%;border-collapse:collapse;min-width:1400px;}
+thead{background:var(--surface2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+thead th{padding:11px 14px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--text-muted);text-align:left;white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);transition:.15s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--surface2);}
+td{padding:14px;vertical-align:top;width:300px;}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid transparent;white-space:nowrap;}
+.badge-dot{width:6px;height:6px;border-radius:50%;}
+.b-pending{background:var(--amber-light);color:var(--amber);border-color:#f0d8a0;}
+.b-confirmed{background:var(--blue-light);color:var(--blue);border-color:#bfd0f5;}
+.b-processing{background:#eef0fc;color:#3d4fbc;border-color:#c0c8f0;}
+.b-shipped{background:var(--purple-light);color:var(--purple);border-color:#d0b8f5;}
+.b-delivered{background:var(--green-light);color:var(--green);border-color:#a8d8bc;}
+.b-cancelled{background:var(--red-light);color:var(--red);border-color:#f0b8b0;}
+.b-refund_initiated{background:#e8f8fc;color:#0d7a8a;border-color:#a0dce8;}
+.b-refund_completed{background:var(--teal-light);color:var(--teal);border-color:#a0d8d0;}
+.b-pay-paid{background:var(--green-light);color:var(--green);}
+.b-pay-pending{background:var(--amber-light);color:var(--amber);}
+.b-pay-failed{background:var(--red-light);color:var(--red);}
+.b-pay-refunded{background:var(--blue-light);color:var(--blue);}
+
+/* ── SELECT ── */
+.status-select{width:100%;border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:12px;color:var(--text);background:var(--white);outline:none;margin-top:8px;cursor:pointer;transition:.2s;}
+.status-select:focus{border-color:#999;box-shadow:0 0 0 3px rgba(0,0,0,.05);}
+
+/* ── TABLE CELLS ── */
+.prod-item{display:flex;gap:8px;margin-bottom:8px;}
+.prod-item:last-child{margin-bottom:0;}
+.prod-info .prod-name{font-weight:500;font-size:12px;color:var(--text);line-height:1.3;max-width:160px;}
+.prod-info .prod-qty{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.more-items{font-size:11px;color:var(--blue);font-weight:500;margin-top:4px;}
+.addr-cell{display:flex;gap:6px;}
+.addr-cell svg{width:13px;height:13px;color:var(--text-muted);flex-shrink:0;margin-top:2px;}
+.addr-lines{font-size:11px;color:var(--text2);line-height:1.6;}
+.pay-method-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:11px;font-weight:500;text-transform:capitalize;}
+.pay-method-tag svg{width:13px;height:13px;}
+.pay-date{font-size:10px;color:var(--text-muted);margin-top:4px;}
+.total-amt{font-size:16px;font-weight:700;color:var(--green);}
+.total-saved{font-size:10px;color:var(--green);margin-top:2px;}
+.delivery-info .partner{font-weight:500;font-size:12px;}
+.delivery-info .track-id{font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-top:2px;}
+.not-assigned{font-size:11px;color:var(--text-muted);}
+.date-cell .dt-date{font-size:12px;font-weight:500;}
+.date-cell .dt-time{font-size:10px;color:var(--text-muted);margin-top:2px;}
+.cust-name{font-weight:600;font-size:12px;color:var(--text);}
+.cust-phone{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.cust-email{font-size:10px;color:var(--text-muted);margin-top:1px;word-break:break-all;max-width:140px;}
+.order-id{font-weight:700;font-size:12px;color:var(--text);font-family:'DM Mono',monospace;}
+.order-items-count{font-size:10px;color:var(--text-muted);margin-top:3px;}
+.btn-view{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;background:var(--text);color:#fff;border-radius:9px;font-size:11px;font-weight:500;transition:.2s;white-space:nowrap;}
+.btn-view:hover{background:#333;}
+.btn-view svg{width:13px;height:13px;}
+.spinner{width:18px;height:18px;border:2px solid var(--border2);border-top-color:var(--text2);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ═══════════════ MODALS ═══════════════ */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(3px);z-index:400;display:none;align-items:center;justify-content:center;padding:16px;}
+.modal-backdrop.open{display:flex;}
+.modal{background:var(--white);border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);width:100%;max-width:500px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;animation:modalIn .2s ease;}
+@keyframes modalIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.modal-header-left{display:flex;align-items:center;gap:10px;}
+.modal-header-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;}
+.modal-header-icon svg{width:18px;height:18px;}
+.modal-title{font-size:16px;font-weight:700;letter-spacing:-.2px;}
+.modal-close{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:.15s;border:1px solid var(--border);}
+.modal-close:hover{background:var(--bg);color:var(--text);}
+.modal-close svg{width:16px;height:16px;}
+.modal-body{padding:20px;overflow-y:auto;flex:1;}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;flex-shrink:0;background:var(--surface2);}
+.form-group{margin-bottom:14px;}
+.form-group:last-child{margin-bottom:0;}
+.form-label{display:block;font-size:13px;font-weight:500;margin-bottom:6px;color:var(--text);}
+.form-input,.form-select,.form-textarea{width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;font-size:13px;color:var(--text);background:var(--white);outline:none;transition:.2s;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#999;box-shadow:0 0 0 3px rgba(0,0,0,.05);}
+.form-textarea{resize:vertical;min-height:80px;}
+.form-select{cursor:pointer;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--radius);font-size:13px;font-weight:500;transition:.2s;cursor:pointer;border:1px solid transparent;}
+.btn svg{width:15px;height:15px;}
+.btn-ghost{background:none;border-color:var(--border);color:var(--text);}
+.btn-ghost:hover{background:var(--bg);}
+.btn-primary-modal{background:var(--text);color:#fff;}
+.btn-primary-modal:hover{background:#333;}
+.btn-danger{background:var(--red);color:#fff;}
+.btn-danger:hover{background:#a93226;}
+.btn-orange{background:var(--orange);color:#fff;}
+.btn-orange:hover{background:#a84d10;}
+
+/* ═══ ORDER DETAIL MODAL ═══ */
+#modalOrderDetail .modal{max-width:860px;}
+.detail-header{background:#0f2d1f;color:#fff;padding:20px 24px;display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;flex-wrap:wrap;gap:12px;}
+.detail-header-left .detail-meta{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#8aba9e;display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.detail-header-left .detail-meta svg{width:14px;height:14px;}
+.detail-header-left .detail-id{font-family:'DM Mono',monospace;font-size:16px;font-weight:700;letter-spacing:.5px;}
+.detail-header-left .detail-date{font-size:12px;color:#8aba9e;margin-top:4px;}
+.detail-header-right{display:flex;align-items:center;gap:10px;}
+.detail-close{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.6);transition:.15s;background:rgba(255,255,255,.1);}
+.detail-close:hover{background:rgba(255,255,255,.2);color:#fff;}
+.detail-close svg{width:16px;height:16px;}
+.detail-body{padding:20px;overflow-y:auto;flex:1;background:#faf9f6;}
+.quick-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
+.qs-card{background:#fff;border:1px solid #e8e4dc;border-radius:12px;padding:12px;text-align:center;}
+.qs-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:4px;}
+.qs-val{font-size:15px;font-weight:700;color:var(--text);}
+.qs-val.green{color:var(--green);}
+.qs-sub{font-size:10px;color:var(--text-muted);margin-top:2px;}
+.d-section{background:#fff;border:1px solid #e8e4dc;border-radius:14px;overflow:hidden;margin-bottom:14px;}
+.d-section-head{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #e8e4dc;background:#faf9f6;}
+.d-section-icon{width:28px;height:28px;border-radius:8px;background:rgba(26,107,60,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.d-section-icon svg{width:14px;height:14px;color:#1a6b3c;}
+.d-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#0f2d1f;}
+.d-section-body{padding:14px 16px;}
+.d-row{display:flex;align-items:flex-start;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #e8e4dc;}
+.d-row:last-child{border-bottom:none;}
+.d-row-label{font-size:12px;color:var(--text-muted);}
+.d-row-val{font-size:12px;font-weight:600;color:#0f2d1f;text-align:right;max-width:60%;word-break:break-all;}
+.d-row-val.green{color:var(--green);}
+.order-item-card{display:flex;gap:12px;padding:12px;background:#faf9f6;border:1px solid #e8e4dc;border-radius:12px;margin-bottom:8px;}
+.order-item-card:last-child{margin-bottom:0;}
+.oi-img{width:52px;height:52px;border-radius:8px;border:1px solid #e8e4dc;flex-shrink:0;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.oi-img img{width:52px;height:52px;object-fit:cover;}
+.oi-img svg{width:20px;height:20px;color:#ccc;}
+.oi-info{flex:1;min-width:0;}
+.oi-name{font-weight:600;font-size:13px;color:#0f2d1f;line-height:1.3;}
+.oi-sku{font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-top:2px;}
+.oi-qty{display:inline-block;font-size:11px;background:rgba(26,107,60,.1);color:#1a6b3c;border-radius:6px;padding:2px 7px;font-weight:600;margin-top:6px;}
+.oi-price{text-align:right;flex-shrink:0;}
+.oi-total{font-size:14px;font-weight:700;color:#1a6b3c;}
+.oi-per{font-size:10px;color:var(--text-muted);margin-top:3px;}
+.oi-mrp{font-size:10px;color:var(--text-muted);text-decoration:line-through;}
+.d-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* ═══ LOGOUT MODAL ═══ */
+.logout-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000;}
+.logout-modal-overlay.open{display:flex;}
+.logout-modal-box{background:#fff;border-radius:18px;padding:36px;max-width:400px;width:90%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.18);}
+.modal-icon-wrap{width:60px;height:60px;border-radius:50%;background:#fff0f0;border:2px solid #ffd6d6;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+.modal-icon-wrap svg{width:26px;height:26px;color:#f05e5e;}
+.logout-modal-box h3{font-size:18px;font-weight:700;color:#1a1d2e;margin-bottom:8px;}
+.logout-modal-box p{font-size:13px;color:#888;line-height:1.6;margin-bottom:26px;}
+.modal-btns{display:flex;gap:10px;justify-content:center;}
+.modal-btns .btn{flex:1;max-width:150px;justify-content:center;}
+.btn-outline{background:transparent;border:1px solid var(--border);color:#555;}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+.btn-danger-soft{background:#fff0f0;color:#d94040;border:1px solid #ffd6d6;}
+.btn-danger-soft:hover{background:#ffe0e0;}
+
+/* toast */
+.toast{position:fixed;bottom:24px;right:24px;padding:13px 20px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:9999;transform:translateY(80px);opacity:0;transition:.3s ease;max-width:320px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{background:#1a1d2e;color:#3dc47e;border-left:4px solid #3dc47e;}
+.toast.error{background:#1a1d2e;color:#f05e5e;border-left:4px solid #f05e5e;}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-overlay.open{display:block;}
+  .main{margin-left:0;}
+  .hamburger-btn{display:flex;}
+  .admin-info{display:none;}
+}
+@media(max-width:768px){
+  .page-content{padding:14px;}
+  .quick-stats{grid-template-columns:repeat(2,1fr);}
+  .d-grid2{grid-template-columns:1fr;}
+  #modalOrderDetail .modal{max-width:100%;}
+  .topbar{padding:0 14px;}
+}
+@media(max-width:480px){
+  .quick-stats{grid-template-columns:repeat(2,1fr);}
+  .modal-footer{flex-direction:column-reverse;}
+  .modal-footer .btn{justify-content:center;}
+  .filter-btn{min-width:120px;font-size:12px;}
+  .page-header-left h2{font-size:16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon-box"><i data-lucide="bot"></i></div>
+    <div class="logo-text-wrap">
+      <div class="logo-title">AM ROBOTICS</div>
+      <div class="logo-sub">Admin Panel</div>
+    </div>
+  </div>
+  <div class="store-pill" id="store-pill">🇮🇳 <span>India Store · INR</span></div>
+  <div class="nav-group-label">Main</div>
+  <a class="nav-item" href="dashboard.html"><div class="nav-icon ic-blue"><i data-lucide="layout-dashboard"></i></div>Dashboard</a>
+  <div class="nav-group-label">Catalog</div>
+  <a class="nav-item" href="admin-products.html"><div class="nav-icon ic-green"><i data-lucide="package"></i></div>Products</a>
+  <div class="nav-group-label">Sales</div>
+  <a class="nav-item active"><div class="nav-icon ic-orange"><i data-lucide="shopping-cart"></i></div>Orders</a>
+  <a class="nav-item" href="admin-customers.html"><div class="nav-icon ic-red"><i data-lucide="users"></i></div>Customers</a>
+  <a class="nav-item" href="admin-vouchers.html"><div class="nav-icon ic-purple"><i data-lucide="badge-percent"></i></div>Vouchers</a>
+  <div class="nav-group-label">Content</div>
+  <a class="nav-item" href="admin-shop-details.html"><div class="nav-icon ic-pink"><i data-lucide="store"></i></div>Shop Details</a>
+  <div class="nav-group-label">Settings</div>
+  <a class="nav-item" href="admin-settings.html"><div class="nav-icon ic-yellow"><i data-lucide="settings"></i></div>Settings</a>
+  <div class="sidebar-footer">
+    <button class="logout-nav" onclick="openLogout()">
+      <div class="nav-icon" style="background:rgba(239,68,68,.18);color:#f05e5e;"><i data-lucide="log-out"></i></div>Logout
+    </button>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()">
+      <i data-lucide="menu"></i>
+    </button>
+    <span class="topbar-title" style="display:none" id="topbarTitle">Orders</span>
+    <div class="topbar-right">
+      <div class="tb-icon-btn" title="Settings" onclick="window.location.href='admin-settings.html'">
+        <i data-lucide="settings"></i>
+      </div>
+      <div class="admin-pill">
+        <div class="admin-avatar">A</div>
+        <div class="admin-info">
+          <div class="admin-name">Admin</div>
+          <div class="admin-role">Administrator</div>
+        </div>
+      </div>
+      <div class="tb-logout-btn" title="Logout" onclick="openLogout()">
+        <i data-lucide="log-out"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-content">
+
+    <div class="page-header">
+      <div class="page-header-left">
+        <h2>Orders Management</h2>
+        <p>Manage and track all customer orders</p>
+      </div>
+    </div>
+
+    <!-- Stats — horizontal scroll -->
+    <div class="stats-wrap">
+      <div class="stats-row" id="statsRow">
+        <div style="display:flex;align-items:center;gap:8px;padding:16px;color:var(--text-muted);">
+          <div class="spinner"></div> Loading stats…
+        </div>
+      </div>
+    </div>
+
+    <!-- Search/Filter -->
+    <div class="search-bar">
+      <div class="search-wrap">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
+        <input type="text" id="searchInput" placeholder="Search by order ID, customer, product…" oninput="onSearch(this.value)"/>
+        <button class="search-clear" id="searchClear" onclick="clearSearch()" style="display:none">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="filter-wrap">
+        <button class="filter-btn" onclick="toggleFilterDropdown()">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width:13px;height:13px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M7 8h10M11 12h2"/></svg>
+            <span id="filterLabel">All Statuses</span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" id="filterChevron" style="width:13px;height:13px;transition:.2s"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="filter-dropdown" id="filterDropdown"></div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th style="width:150px">Customer</th>
+              <th style="width:600px">Products</th>
+              <th>Shipping</th>
+              <th>Payment</th>
+              <th>Total</th>
+              <th>Order Status</th>
+              <th>Pay Status</th>
+              <th style="width:150px">Delivery</th>
+              <th>Date</th>
+              <th style="text-align:center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody">
+            <tr><td colspan="11" style="text-align:center;padding:60px;color:var(--text-muted)">Loading orders…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ SHIPPING MODAL ═══ -->
+<div class="modal-backdrop" id="modalShipping">
+  <div class="modal">
+    <div class="modal-header" style="background:linear-gradient(135deg,#c05c14,#a83210);color:#fff">
+      <div class="modal-header-left">
+        <div class="modal-header-icon" style="background:rgba(255,255,255,.2)">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="white"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10M13 16H3m10 0h2m4 0h2M13 16v-3a2 2 0 0 1 2-2h2l2 3m0 0h-6"/></svg>
+        </div>
+        <div class="modal-title" style="color:#fff">Shipping Details</div>
+      </div>
+      <button class="modal-close" style="border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8)" onclick="closeModal('modalShipping')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="shippingForm" onsubmit="submitShipping(event)">
+        <div class="form-group"><label class="form-label">Shipping Partner Name *</label><input class="form-input" id="shipName" placeholder="e.g. BlueDart, DTDC" required/></div>
+        <div class="form-group"><label class="form-label">Tracking ID *</label><input class="form-input" id="shipTrackingId" placeholder="Enter tracking number" required/></div>
+        <div class="form-group"><label class="form-label">Estimated Delivery Date</label><input type="date" class="form-input" id="shipEstimated"/></div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalShipping')">Cancel</button>
+      <button class="btn btn-orange" onclick="document.getElementById('shippingForm').requestSubmit()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        Save Details
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CANCELLATION MODAL ═══ -->
+<div class="modal-backdrop" id="modalCancel">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-header-icon" style="background:var(--red-light)">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="var(--red)"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9l-6 6M9 9l6 6"/></svg>
+        </div>
+        <div class="modal-title">Order Cancellation</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalCancel')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="cancelForm" onsubmit="submitCancel(event)">
+        <div class="form-group">
+          <label class="form-label">Cancellation Reason *</label>
+          <select class="form-select" id="cancelReason" required>
+            <option value="">Select reason</option>
+            <option value="customer_request">Customer Request</option>
+            <option value="out_of_stock">Out of Stock</option>
+            <option value="payment_issue">Payment Issue</option>
+            <option value="shipping_issue">Shipping Issue</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Additional Notes</label><textarea class="form-textarea" id="cancelNotes" placeholder="Enter details…"></textarea></div>
+        <div class="form-group">
+          <label class="form-label">Refund Method</label>
+          <select class="form-select" id="cancelRefundMethod">
+            <option value="original_payment">Original Payment Method</option>
+            <option value="bank_transfer">Bank Transfer</option>
+            <option value="store_credit">Store Credit</option>
+            <option value="no_refund">No Refund Required</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalCancel')">Cancel</button>
+      <button class="btn btn-danger" onclick="document.getElementById('cancelForm').requestSubmit()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        Confirm Cancellation
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ REFUND MODAL ═══ -->
+<div class="modal-backdrop" id="modalRefund">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-header-icon" style="background:var(--orange-light)">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="var(--orange)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg>
+        </div>
+        <div class="modal-title">Refund Details</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modalRefund')">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="refundForm" onsubmit="submitRefund(event)">
+        <div class="form-group"><label class="form-label">Refund Amount *</label><input type="number" class="form-input" id="refundAmount" placeholder="0.00" required/></div>
+        <div class="form-group">
+          <label class="form-label">Refund Method *</label>
+          <select class="form-select" id="refundMethod" required>
+            <option value="">Select method</option>
+            <option value="original-payment-method">Original Payment Method</option>
+            <option value="bank-transfer">Bank Transfer</option>
+            <option value="store-credit">Store Credit</option>
+            <option value="cash">Cash</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Reference ID</label><input class="form-input" id="refundRef" placeholder="Transaction / reference number"/></div>
+        <div class="form-group">
+          <label class="form-label">Reason</label>
+          <select class="form-select" id="refundReason">
+            <option value="">Select reason</option>
+            <option value="customer-request">Customer Request</option>
+            <option value="defective-product">Defective / Damaged Product</option>
+            <option value="wrong-item">Wrong Item Sent</option>
+            <option value="payment-failure">Payment Issue</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Notes</label><textarea class="form-textarea" id="refundNotes" placeholder="Additional notes…"></textarea></div>
+        <div class="form-group"><label class="form-label">Processing Date</label><input type="date" class="form-input" id="refundDate"/></div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modalRefund')">Cancel</button>
+      <button class="btn btn-orange" onclick="document.getElementById('refundForm').requestSubmit()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        Complete Refund
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ORDER DETAIL MODAL ═══ -->
+<div class="modal-backdrop" id="modalOrderDetail" onclick="handleDetailBackdrop(event)">
+  <div class="modal" style="max-width:860px;max-height:92vh">
+    <div class="detail-header">
+      <div class="detail-header-left">
+        <div class="detail-meta">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM16 3H8"/></svg>
+          Order Details
+        </div>
+        <div class="detail-id" id="detailOrderId">—</div>
+        <div class="detail-date" id="detailOrderDate">—</div>
+      </div>
+      <div class="detail-header-right">
+        <div id="detailStatusBadge"></div>
+        <button class="detail-close" onclick="closeModal('modalOrderDetail')">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="detail-body" id="detailBody"></div>
+    <div class="modal-footer" style="background:#fff">
+      <span style="font-size:11px;color:var(--text-muted)" id="detailUpdatedAt"></span>
+      <button class="btn btn-primary-modal" onclick="closeModal('modalOrderDetail')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LOGOUT MODAL ═══ -->
+<div class="logout-modal-overlay" id="logout-modal">
+  <div class="logout-modal-box">
+    <div class="modal-icon-wrap"><i data-lucide="log-out"></i></div>
+    <h3>Confirm Logout</h3>
+    <p>Are you sure you want to log out of the AM Robotics Admin panel?</p>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeLogout()">Cancel</button>
+      <button class="btn btn-danger-soft" onclick="confirmLogout()">Yes, Logout</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="assets/js/config.js"></script>
+<script>
+const token = localStorage.getItem('authToken');
+if (!token) window.location.replace('login.html');
+
+const BASE_URL = window.CONFIG?.API_BASE || "http://localhost:5000/api";
+const headers  = () => ({ "Content-Type":"application/json", Authorization:`Bearer ${token}` });
+
+// store pill
+const country = localStorage.getItem('selectedCountry') || 'IN';
+document.getElementById('store-pill').innerHTML = country === 'IN'
+  ? '🇮🇳 <span>India Store · INR</span>'
+  : '🇺🇸 <span>USA Store · USD</span>';
+
+// show topbar title on mobile
+if(window.innerWidth <= 1024) document.getElementById('topbarTitle').style.display = 'block';
+window.addEventListener('resize', () => {
+  document.getElementById('topbarTitle').style.display = window.innerWidth <= 1024 ? 'block' : 'none';
+});
+
+let allOrders = [], searchQuery = "", statusFilter = "", activeOrderId = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetchStats(); fetchOrders(); buildFilterDropdown();
+  document.getElementById("refundDate").value = new Date().toISOString().split("T")[0];
+});
+
+// ── SIDEBAR TOGGLE ──
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// ── STATS ──
+async function fetchStats() {
+  try {
+    const res  = await fetch(`${BASE_URL}/order-status-counts`, { headers: headers() });
+    const data = await res.json();
+    renderStats(data.counts || {});
+  } catch(e) { renderStats({}); }
+}
+
+// Removed: out_for_delivery, return_requested, returned, refund_initiated
+const STATS_CFG = [
+  { key:"totalOrders",     label:"Total",       bg:"#000",    iconColor:"#fff",   icon:'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z"/>',             cardStyle:"background:#000;border-color:#000;color:#fff" },
+  { key:"confirmed",       label:"Confirmed",   bg:"#eef2fc", iconColor:"#1a4db8",icon:'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>',         cardStyle:"" },
+  { key:"processing",      label:"Processing",  bg:"#eef0fc", iconColor:"#3d4fbc",icon:'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/>',               cardStyle:"" },
+  { key:"shipped",         label:"Shipped",     bg:"#f3eefe", iconColor:"#6b3db8",icon:'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10M13 16H3m10 0h2m4 0h2M13 16v-3a2 2 0 0 1 2-2h2l2 3"/>',cardStyle:""},
+  { key:"delivered",       label:"Delivered",   bg:"#e8f4ed", iconColor:"#1a6b3c",icon:'<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 0 0 1.946-.806 3.42 3.42 0 0 1 4.438 0 3.42 3.42 0 0 0 1.946.806 3.42 3.42 0 0 1 3.138 3.138 3.42 3.42 0 0 0 .806 1.946 3.42 3.42 0 0 1 0 4.438 3.42 3.42 0 0 0-.806 1.946 3.42 3.42 0 0 1-3.138 3.138 3.42 3.42 0 0 0-1.946.806 3.42 3.42 0 0 1-4.438 0 3.42 3.42 0 0 0-1.946-.806 3.42 3.42 0 0 1-3.138-3.138 3.42 3.42 0 0 0-.806-1.946 3.42 3.42 0 0 1 0-4.438 3.42 3.42 0 0 0 .806-1.946 3.42 3.42 0 0 1 3.138-3.138z"/>',cardStyle:""},
+  { key:"cancelled",       label:"Cancelled",   bg:"#fdf0ee", iconColor:"#c0392b",icon:'<circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9l-6 6M9 9l6 6"/>',         cardStyle:"" },
+  { key:"refund_completed",label:"Refunded",    bg:"#e8f6f4", iconColor:"#0d7a6b",icon:'<rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>',                                        cardStyle:"" },
+];
+
+function renderStats(counts) {
+  document.getElementById("statsRow").innerHTML = STATS_CFG.map(s => `
+    <div class="stat-card" style="${s.cardStyle}">
+      <div class="stat-top">
+        <div class="stat-icon" style="background:${s.bg}">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="${s.iconColor}">${s.icon}</svg>
+        </div>
+        <div class="stat-count" style="${s.key==='totalOrders'?'color:#fff':''}">${counts[s.key]||0}</div>
+      </div>
+      <div class="stat-label" style="${s.key==='totalOrders'?'color:rgba(255,255,255,.7)':''}">${s.label}</div>
+    </div>`).join("");
+}
+
+// ── FILTER — removed out_for_delivery, return_requested, returned, refund_initiated ──
+const STATUS_OPTS = [
+  { value:"",                label:"All Statuses",    color:"#888" },
+  { value:"confirmed",       label:"Confirmed",       color:"#1a4db8" },
+  { value:"processing",      label:"Processing",      color:"#3d4fbc" },
+  { value:"shipped",         label:"Shipped",         color:"#6b3db8" },
+  { value:"delivered",       label:"Delivered",       color:"#1a6b3c" },
+  { value:"cancelled",       label:"Cancelled",       color:"#c0392b" },
+  { value:"refund_completed",label:"Refund Completed",color:"#0d7a6b" },
+];
+
+function buildFilterDropdown() {
+  document.getElementById("filterDropdown").innerHTML = STATUS_OPTS.map(o => `
+    <div class="filter-option${o.value===statusFilter?" active":""}" onclick="selectFilter('${o.value}','${o.label}')">
+      <span class="filter-dot" style="background:${o.color}"></span>${o.label}
+    </div>`).join("");
+}
+function toggleFilterDropdown() {
+  const dd = document.getElementById("filterDropdown");
+  dd.classList.toggle("open");
+  document.getElementById("filterChevron").style.transform = dd.classList.contains("open")?"rotate(180deg)":"";
+}
+function selectFilter(value, label) {
+  statusFilter = value;
+  document.getElementById("filterLabel").textContent = label;
+  document.getElementById("filterDropdown").classList.remove("open");
+  document.getElementById("filterChevron").style.transform = "";
+  buildFilterDropdown(); renderTable();
+}
+document.addEventListener("click", e => {
+  const fw = document.querySelector(".filter-wrap");
+  if(fw && !fw.contains(e.target)) document.getElementById("filterDropdown").classList.remove("open");
+});
+
+// ── FETCH ORDERS ──
+async function fetchOrders() {
+  try {
+    const res  = await fetch(`${BASE_URL}/all-orders`, { headers: headers() });
+    const data = await res.json();
+    allOrders  = Array.isArray(data.orders) ? data.orders : [];
+    renderTable();
+  } catch(e) {
+    document.getElementById("ordersTableBody").innerHTML =
+      `<tr><td colspan="11" style="text-align:center;padding:60px;color:var(--text-muted)">Failed to load orders</td></tr>`;
+  }
+}
+
+// ── SEARCH ──
+let searchTimer;
+function onSearch(val) {
+  searchQuery = val;
+  document.getElementById("searchClear").style.display = val?"flex":"none";
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(renderTable, 250);
+}
+function clearSearch() { document.getElementById("searchInput").value=""; onSearch(""); }
+
+// ── RENDER TABLE ──
+function getFiltered() {
+  const q = searchQuery.toLowerCase();
+  return allOrders.filter(o => {
+    const matchSearch = !q || [o._id,o.shippingAddress?.firstName,o.shippingAddress?.lastName,
+      o.shippingAddress?.email,o.shippingAddress?.phone,String(o.pricing?.total||""),
+      ...(o.items||[]).map(i=>i.name),...(o.items||[]).map(i=>String(i.productId||""))
+    ].some(v=>String(v||"").toLowerCase().includes(q));
+    return matchSearch && (!statusFilter || o.status===statusFilter);
+  });
+}
+
+// Removed: out_for_delivery, return_requested, returned, refund_initiated from dropdowns
+const ORDER_STATUSES   = ["confirmed","processing","shipped","delivered","cancelled","refund_completed"];
+const PAYMENT_STATUSES = ["paid","pending","failed","refunded"];
+const sl = s => (s||"").replace(/_/g," ");
+function fmtDate(d){ try{const dt=new Date(d);return{date:dt.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"}),time:dt.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})};}catch{return{date:"—",time:""};}}
+function fmtCurrency(n){ return "₹"+Number(n||0).toLocaleString("en-IN"); }
+
+function renderTable() {
+  const orders = getFiltered();
+  const tbody  = document.getElementById("ordersTableBody");
+  if(!orders.length){ tbody.innerHTML=`<tr><td colspan="11" style="text-align:center;padding:60px;color:var(--text-muted)">No orders found</td></tr>`; return; }
+
+  tbody.innerHTML = orders.map(o => {
+    const dt   = fmtDate(o.createdAt);
+    const items = o.items||[], addr = o.shippingAddress||{}, pay = o.payment||{};
+    const latestTracking = o.delivery?.trackingUpdates?.length ? o.delivery.trackingUpdates[o.delivery.trackingUpdates.length-1] : null;
+
+    const itemsHtml = items.slice(0,2).map(item=>`
+      <div class="prod-item"><div class="prod-info">
+        <div class="prod-name">${item.name||"Product"}</div>
+        <div class="prod-qty">Qty: <strong>${item.quantity}</strong></div>
+      </div></div>`).join("") + (items.length>2?`<div class="more-items">+${items.length-2} more</div>`:"");
+
+    const orderOpts   = ORDER_STATUSES.map(s=>`<option value="${s}"${o.status===s?" selected":""}>${sl(s)}</option>`).join("");
+    const payOpts     = PAYMENT_STATUSES.map(s=>`<option value="${s}"${pay.status===s?" selected":""}>${sl(s)}</option>`).join("");
+    const deliveryHtml = o.delivery?.trackingId||o.delivery?.partnerName
+      ? `<div class="delivery-info"><div class="partner">${o.delivery.partnerName||"—"}</div><div class="track-id">${o.delivery.trackingId||"—"}</div></div>`
+      : `<span class="not-assigned">Not assigned</span>`;
+
+    return `<tr>
+      <td><div class="order-id">#${String(o._id).slice(-8).toUpperCase()}</div><div class="order-items-count">${items.length} item(s)</div></td>
+      <td><div class="cust-name">${addr.firstName||""} ${addr.lastName||""}</div><div class="cust-phone">${addr.phone||"—"}</div><div class="cust-email">${o.user?.email||addr.email||"—"}</div></td>
+      <td>${itemsHtml}</td>
+      <td><div class="addr-cell"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg><div class="addr-lines"><div>${addr.address1||"—"}</div><div>${addr.city||""}${addr.state?", "+addr.state:""}</div></div></div></td>
+      <td><div class="pay-method-tag"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>${pay.method||"—"}</div>${pay.paidAt?`<div class="pay-date">${fmtDate(pay.paidAt).date}</div>`:""}</td>
+      <td><div class="total-amt">${fmtCurrency(o.pricing?.total)}</div>${o.pricing?.mrpSavings>0?`<div class="total-saved">Saved ${fmtCurrency(o.pricing.mrpSavings)}</div>`:""}</td>
+      <td><div style="margin-bottom:6px"><span class="badge b-${o.status||'pending'}"><span class="badge-dot" style="background:currentColor;opacity:.5"></span>${sl(o.status||"pending")}</span></div><select class="status-select" onchange="handleStatusChange('${o._id}',this.value,this)">${orderOpts}</select></td>
+      <td><div style="margin-bottom:6px"><span class="badge b-pay-${pay.status||'pending'}">${sl(pay.status||"pending")}</span></div><select class="status-select" onchange="handlePaymentStatus('${o._id}',this.value)">${payOpts}</select></td>
+      <td>${deliveryHtml}</td>
+      <td><div class="date-cell"><div class="dt-date">${dt.date}</div><div class="dt-time">${dt.time}</div></div></td>
+      <td style="text-align:center"><button class="btn-view" onclick="viewOrder('${o._id}')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>View</button></td>
+    </tr>`;
+  }).join("");
+}
+
+// ── STATUS CHANGE ──
+function handleStatusChange(orderId, newStatus, selectEl) {
+  activeOrderId = orderId;
+  const order = allOrders.find(o=>o._id===orderId);
+  if(newStatus==="shipped")          { if(order&&selectEl) selectEl.value=order.status; openModal("modalShipping"); return; }
+  if(newStatus==="cancelled")        { if(order&&selectEl) selectEl.value=order.status; openModal("modalCancel"); return; }
+  if(newStatus==="refund_completed") { if(order&&selectEl) selectEl.value=order.status; openModal("modalRefund"); return; }
+  patchStatus(orderId, { status: newStatus });
+}
+async function handlePaymentStatus(orderId, paymentStatus) {
+  try { await fetch(`${BASE_URL}/${orderId}/payment-status`,{method:"PATCH",headers:headers(),body:JSON.stringify({paymentStatus})}); await fetchOrders(); await fetchStats(); showToast("Payment status updated","success"); }
+  catch(e) { showToast("Failed to update payment status","error"); }
+}
+async function patchStatus(orderId, body) {
+  try { await fetch(`${BASE_URL}/${orderId}/status`,{method:"PATCH",headers:headers(),body:JSON.stringify(body)}); await fetchOrders(); await fetchStats(); showToast("Order status updated","success"); }
+  catch(e) { showToast("Failed to update order status","error"); }
+}
+
+// ── MODAL SUBMISSIONS ──
+function submitShipping(e) {
+  e.preventDefault();
+  patchStatus(activeOrderId,{status:"shipped",shippingDetails:{name:document.getElementById("shipName").value,trackingId:document.getElementById("shipTrackingId").value,estimatedDelivery:document.getElementById("shipEstimated").value}});
+  closeModal("modalShipping"); document.getElementById("shippingForm").reset();
+}
+function submitCancel(e) {
+  e.preventDefault();
+  patchStatus(activeOrderId,{status:"cancelled",cancellationDetails:{reason:document.getElementById("cancelReason").value,notes:document.getElementById("cancelNotes").value,refundMethod:document.getElementById("cancelRefundMethod").value,cancelledAt:new Date().toISOString()}});
+  closeModal("modalCancel"); document.getElementById("cancelForm").reset();
+}
+function submitRefund(e) {
+  e.preventDefault();
+  patchStatus(activeOrderId,{status:"refund_completed",refundDetails:{refundAmount:Number(document.getElementById("refundAmount").value),refundMethod:document.getElementById("refundMethod").value,referenceId:document.getElementById("refundRef").value,reason:document.getElementById("refundReason").value,notes:document.getElementById("refundNotes").value,processedDate:document.getElementById("refundDate").value}});
+  closeModal("modalRefund"); document.getElementById("refundForm").reset();
+  document.getElementById("refundDate").value = new Date().toISOString().split("T")[0];
+}
+
+// ── VIEW ORDER DETAIL ──
+function viewOrder(orderId) {
+  const order = allOrders.find(o=>o._id===orderId);
+  if(!order) return;
+  const dt=fmtDate(order.createdAt), pay=order.payment||{}, addr=order.shippingAddress||{};
+  const pricing=order.pricing||{}, voucher=order.appliedVoucher||{}, delivery=order.delivery||{};
+  const refund=order.refund||{}, cancel=order.cancellation||{};
+
+  document.getElementById("detailOrderId").textContent = "#"+String(order._id).slice(-12).toUpperCase();
+  document.getElementById("detailOrderDate").textContent = dt.date+" • "+dt.time;
+  document.getElementById("detailStatusBadge").innerHTML = `<span class="badge b-${order.status||'pending'}" style="font-size:12px;padding:5px 12px">${sl(order.status||"pending")}</span>`;
+
+  const itemsHtml=(order.items||[]).map(item=>`
+    <div class="order-item-card">
+      <div class="oi-img">${item.image?`<img src="${item.image}" alt="${item.name}">`:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z"/></svg>`}</div>
+      <div class="oi-info"><div class="oi-name">${item.name||"Product"}</div><div class="oi-sku">SKU: ${item.sku||"—"}</div>${item.brand?`<div style="font-size:11px;color:var(--text-muted)">${item.brand}</div>`:""}<div class="oi-qty">× ${item.quantity}</div></div>
+      <div class="oi-price"><div class="oi-total">${fmtCurrency(item.lineTotal)}</div><div class="oi-mrp">${fmtCurrency(item.originalPrice)}</div><div class="oi-per">${fmtCurrency(item.sellingPrice)} ea.</div></div>
+    </div>`).join("");
+
+  const refundHtml=(refund.reason||refund.refundAmount)?`<div class="d-section"><div class="d-section-head"><div class="d-section-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6m-6-6l6-6"/></svg></div><div class="d-section-title">Refund Details</div></div><div class="d-section-body">${refund.refundAmount>0?dRow("Refund Amount",fmtCurrency(refund.refundAmount),"green"):""}${refund.reason?dRow("Reason",String(refund.reason).replace(/_/g," ")):""}${refund.notes?dRow("Notes",refund.notes):""}${refund.processedAt?dRow("Processed At",fmtDate(refund.processedAt).date):""}</div></div>`:"";
+  const cancelHtml=cancel.reason?`<div class="d-section"><div class="d-section-head"><div class="d-section-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9l-6 6M9 9l6 6"/></svg></div><div class="d-section-title">Cancellation Details</div></div><div class="d-section-body">${dRow("Reason",String(cancel.reason).replace(/_/g," "))}${cancel.notes?dRow("Notes",cancel.notes):""}${cancel.cancelledAt?dRow("Cancelled At",fmtDate(cancel.cancelledAt).date):""}</div></div>`:"";
+
+  document.getElementById("detailBody").innerHTML = `
+    <div class="quick-stats">
+      <div class="qs-card"><div class="qs-label">Items</div><div class="qs-val">${(order.items||[]).length}</div><div class="qs-sub">products</div></div>
+      <div class="qs-card"><div class="qs-label">Total</div><div class="qs-val green">${fmtCurrency(pricing.total)}</div><div class="qs-sub">INR</div></div>
+      <div class="qs-card"><div class="qs-label">Paid</div><div class="qs-val">${fmtCurrency(pay.paidAmount)}</div><div class="qs-sub">${pay.currency||"INR"}</div></div>
+      <div class="qs-card"><div class="qs-label">Payment</div><div class="qs-val" style="font-size:12px;text-transform:capitalize">${pay.method||"—"}</div><div class="qs-sub">${pay.status||"—"}</div></div>
+    </div>
+    <div class="d-section"><div class="d-section-head"><div class="d-section-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z"/></svg></div><div class="d-section-title">Order Items (${(order.items||[]).length})</div></div><div class="d-section-body">${itemsHtml}</div></div>
+    <div class="d-grid2">
+      <div class="d-section"><div class="d-section-head"><div class="d-section-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg></div><div class="d-section-title">Shipping Address</div></div><div class="d-section-body"><div style="font-weight:600;color:#0f2d1f;margin-bottom:4px">${addr.firstName||""} ${addr.lastName||""}</div><div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">${addr.phone||""}</div><div style="font-size:12px;color:var(--text2);line-height:1.7">${addr.address1||""}${addr.address2?", "+addr.address2:""}<br>${addr.city||""}${addr.state?", "+addr.state:""}<br>${addr.postalCode||""} ${addr.country||""}</div></div></div>
+      <div class="d-section"><div class="d-section-head"><div class="d-section-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 0 1 0 2.828l-7 7a2 2 0 0 1-2.828 0l-7-7A1.994 1.994 0 0 1 3 12V7a4 4 0 0 1 4-4z"/></svg></div><div class="d-section-title">Pricing Breakdown</div></div><div class="d-section-body">${dRow("MRP Total",fmtCurrency(pricing.mrpTotal))}${dRow("MRP Savings","-"+fmtCurrency(pricing.mrpSavings),"green")}${pricing.voucherDiscount>0?dRow("Voucher Discount","-"+fmtCurrency(pricing.voucherDiscount),"green"):""}${dRow("Delivery",pricing.deliveryCharge>0?fmtCurrency(pricing.deliveryCharge):"Free")}${pricing.gstAmount>0?dRow("GST",fmtCurrency(pricing.gstAmount)):""}<div class="d-row" style="padding-top:8px"><span style="font-size:13px;font-weight:700;color:#0f2d1f">Total</span><span style="font-size:16px;font-weight:700;color:#1a6b3c">${fmtCurrency(pricing.total)}</span></div></div></div>
+    </div>
+    <div class="d-section"><div class="d-section-head"><div class="d-section-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><div class="d-section-title">Payment Details</div></div><div class="d-section-body"><div class="d-grid2"><div>${dRow("Method",String(pay.method||"—").toUpperCase())}${dRow("Status",`<span class="badge b-pay-${pay.status||'pending'}" style="font-size:11px">${sl(pay.status||"—")}</span>`)}${dRow("Currency",pay.currency||"INR")}${dRow("Amount Paid",fmtCurrency(pay.paidAmount))}${pay.paidAt?dRow("Paid At",fmtDate(pay.paidAt).date+" "+fmtDate(pay.paidAt).time):""}</div><div>${pay.paypalOrderId?dRow("PayPal Order ID",pay.paypalOrderId):""}${pay.paypalPayerId?dRow("PayPal Payer ID",pay.paypalPayerId):""}${pay.paypalCaptureId?dRow("Capture ID",pay.paypalCaptureId):""}</div></div></div></div>
+    ${voucher.code?`<div class="d-section"><div class="d-section-head"><div class="d-section-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 0 1 0 2.828l-7 7a2 2 0 0 1-2.828 0l-7-7A1.994 1.994 0 0 1 3 12V7a4 4 0 0 1 4-4z"/></svg></div><div class="d-section-title">Applied Voucher</div></div><div class="d-section-body">${dRow("Code",voucher.code)}${dRow("Discount",fmtCurrency(voucher.discountAmount),"green")}</div></div>`:""}
+    ${delivery.partnerName||delivery.trackingId?`<div class="d-section"><div class="d-section-head"><div class="d-section-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10M13 16H3m10 0h2m4 0h2M13 16v-3a2 2 0 0 1 2-2h2l2 3"/></svg></div><div class="d-section-title">Delivery Info</div></div><div class="d-section-body">${dRow("Partner",delivery.partnerName||"—")}${dRow("Tracking ID",delivery.trackingId||"—")}${delivery.estimatedDelivery?dRow("Est. Delivery",fmtDate(delivery.estimatedDelivery).date):""}</div></div>`:""}
+    ${refundHtml}${cancelHtml}`;
+
+  document.getElementById("detailUpdatedAt").textContent = "Last updated: "+fmtDate(order.updatedAt).date+" "+fmtDate(order.updatedAt).time;
+  openModal("modalOrderDetail");
+}
+function dRow(label,value,cls=""){ return `<div class="d-row"><span class="d-row-label">${label}</span><span class="d-row-val ${cls}">${value||"—"}</span></div>`; }
+
+// ── MODAL HELPERS ──
+function openModal(id)  { document.getElementById(id).classList.add("open"); document.body.style.overflow="hidden"; }
+function closeModal(id) { document.getElementById(id).classList.remove("open"); document.body.style.overflow=""; }
+function handleDetailBackdrop(e) { if(e.target===document.getElementById("modalOrderDetail")) closeModal("modalOrderDetail"); }
+["modalShipping","modalCancel","modalRefund"].forEach(id=>{
+  document.getElementById(id).addEventListener("click",function(e){ if(e.target===this) closeModal(id); });
+});
+
+// ── LOGOUT ──
+function openLogout()  { document.getElementById("logout-modal").classList.add("open"); }
+function closeLogout() { document.getElementById("logout-modal").classList.remove("open"); }
+function confirmLogout() { localStorage.removeItem("authToken"); localStorage.removeItem("user"); window.location.href="login.html"; }
+document.getElementById("logout-modal").addEventListener("click",function(e){ if(e.target===this) closeLogout(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ closeModal("modalShipping"); closeModal("modalCancel"); closeModal("modalRefund"); closeModal("modalOrderDetail"); closeSidebar(); } });
+
+// ── TOAST ──
+function showToast(msg,type="success"){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.className=`toast ${type} show`;
+  clearTimeout(t._timer); t._timer=setTimeout(()=>t.classList.remove("show"),3500);
+}
+</script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

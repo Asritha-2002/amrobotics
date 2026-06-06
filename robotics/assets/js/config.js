@@ -1,3 +1,3 @@
 const CONFIG = {
-  API_BASE: "https://amrobotics.vercel.app/api",
+  API_BASE: "http://localhost:5000/api",
 };

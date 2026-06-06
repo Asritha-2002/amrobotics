@@ -2,7 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
-
+const Order    = require("../models/Order");
 const Cart = require("../models/Cart");
 const { auth } = require('../middleware/auth');
 const BuyNow = require('../models/BuyNow')
@@ -164,7 +164,7 @@ const buyNowData = {
     });
 
     const availableVouchers = [];
-
+const currentUserId = String(req.user.id);
     for (const voucher of vouchers) {
       let applicable = false;
 
@@ -416,9 +416,11 @@ router.get("/checkout-from-cart", auth, async (req, res) => {
    
     for (const voucher of vouchers) {
         if (voucher.perUserLimit) {
-    const userUsageCount = voucher.usageLog.filter(
-      log => log.userId.toString() === currentUserId
-    ).length;
+    const userUsageCount = await Order.countDocuments({
+  userId: currentUserId,
+  "payment.status": "paid",
+  "appliedVoucher.voucherId": voucher._id
+});
 
     console.log("Voucher:", voucher.code);
     console.log("currentUserId:", currentUserId);
