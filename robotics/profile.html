@@ -1548,96 +1548,210 @@ function logoutUser() {
         });
 
         
-        async function loadOrders() {
-            
-            const token = localStorage.getItem('authToken');
+    async function loadOrders() {
+  const token = localStorage.getItem('authToken');
+  if (!token) { window.location.href = "login.html"; return; }
 
-if (!token) {
-    window.location.href = "login.html";
-    return;
+  const ordersList = document.getElementById('ordersList');
+  ordersList.innerHTML = `
+    <div class="loading-message">
+      <div class="spinner" style="border:4px solid #f3f3f3;border-top:4px solid #0f3460;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:0 auto 10px;"></div>
+      <p>Loading your orders...</p>
+    </div>`;
+
+  try {
+    const res  = await fetch(`${API_BASE}/my-orders`, {   // ← updated endpoint
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Failed to load orders');
+
+    const orders = data.orders || [];
+
+    if (!orders.length) {
+      ordersList.innerHTML = `
+        <div class="no-data">
+          <i class="fas fa-box-open" style="font-size:48px;color:#0f3460;margin-bottom:15px;"></i>
+          <p>No orders yet</p>
+          <a href="shop.html" class="th-btn" style="margin-top:20px;display:inline-block;">Continue Shopping</a>
+        </div>`;
+      return;
+    }
+
+    ordersList.innerHTML = orders.map(order => {
+      const shortId   = String(order._id).slice(-8).toUpperCase();
+      const date      = new Date(order.createdAt).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+      const status    = (order.status || 'pending').toLowerCase();
+      const total     = Number(order.totalAmount || 0).toFixed(2);
+      const itemCount = order.totalItems || order.items?.length || 0;
+
+      // preview first 2 item images
+      const previewImgs = (order.items || []).slice(0, 2).map(item =>
+        item.image
+          ? `<img src="${item.image}" alt="${item.name}" style="width:44px;height:44px;border-radius:8px;object-fit:cover;border:1px solid #e5e7eb;">`
+          : `<div style="width:44px;height:44px;border-radius:8px;background:#f3f4f8;display:flex;align-items:center;justify-content:center;font-size:18px;">📦</div>`
+      ).join("");
+
+      return `
+        <div class="order-card" onclick="openOrderModal(null, ${JSON.stringify(order).replace(/"/g, '&quot;')})">
+          <div class="order-info">
+            <h4>Order #${shortId}</h4>
+            <div style="display:flex;gap:8px;margin:8px 0;">${previewImgs}</div>
+            <p><i class="fas fa-calendar" style="margin-right:6px;color:#0f3460;"></i>${date}</p>
+            <p><i class="fas fa-box" style="margin-right:6px;color:#0f3460;"></i>${itemCount} item${itemCount !== 1 ? 's' : ''}</p>
+            <p><i class="fas fa-rupee-sign" style="margin-right:6px;color:#0f3460;"></i><strong>₹${total}</strong></p>
+          </div>
+          <div class="order-status ${status}">${status.replace(/_/g,' ')}</div>
+          <div class="order-actions">
+            <span style="font-size:12px;color:#888;font-family:monospace;">ID: ${order._id}</span>
+            <button class="invoice-btn" onclick="event.stopPropagation(); downloadInvoicePDF(${JSON.stringify(order).replace(/"/g, '&quot;')})">
+              <i class="fas fa-file-invoice"></i> Download Invoice
+            </button>
+          </div>
+        </div>`;
+    }).join("");
+
+  } catch (error) {
+    console.error('Error loading orders:', error);
+    ordersList.innerHTML = `
+      <div class="no-data">
+        <i class="fas fa-exclamation-circle" style="font-size:48px;color:#1a1a2e;margin-bottom:15px;"></i>
+        <p>${error.message}</p>
+        <button onclick="loadOrders()" class="th-btn" style="margin-top:20px;">Try Again</button>
+      </div>`;
+  }
 }
-            const ordersList = document.getElementById('ordersList');
-            
-            try {
-                ordersList.innerHTML = '<div class="loading-message"><div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #0f3460; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; margin-bottom: 10px;"></div><p>Loading your orders...</p></div>';
-                
-                const response = await fetch(`${API_BASE}/orders`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    }
-                });
 
-                const data = await response.json();
-                console.log('[v0] Orders API Response:', data);
+function openOrderModal(orderId, order) {
+  const modal   = document.getElementById('orderModal');
+  const content = document.getElementById('modalOrderContent');
+  const fmt     = n => Number(n || 0).toFixed(2);
+  const fmtDate = d => d ? new Date(d).toLocaleString('en-IN') : 'N/A';
+  const addr    = order.shippingAddress || {};
+  const pay     = order.payment || {};
+  const pricing = order.pricing || {};
 
-                if (!response.ok) {
-                    throw new Error(data.message || 'Failed to load orders');
-                }
-
-                const orders = Array.isArray(data) ? data : (data.orders || data.data || []);
-
-                if (!orders || orders.length === 0) {
-                    ordersList.innerHTML = '<div class="no-data"><i class="fas fa-box-open" style="font-size: 48px; color: #0f3460; margin-bottom: 15px;"></i><p>No orders yet</p><a href="shop.html" class="th-btn" style="margin-top: 20px; display: inline-block; background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px;">Continue Shopping</a></div>';
-                    return;
-                }
-
-                ordersList.innerHTML = orders.map(order => {
-                    const orderId = (order._id || order.id || 'Unknown').toString().slice(-8);
-                    const orderDate = new Date(order.createdAt || order.date || Date.now()).toLocaleDateString();
-                    const orderStatus = (order.status || order.paymentStatus || 'pending').toLowerCase();
-                    const totalAmount = order.charges?.totalAmount || order.total || order.amount || 0;
-                    const itemCount = (order.items || order.cartItems || []).length || 1;
-
-                    return `
-                      <div class="order-card" onclick="handleOrderCardClick('${order._id || order.id}', event)">
-    <div class="order-info">
-        <h4>Order #${orderId}</h4>
-        <p><i class="fas fa-calendar"></i> ${orderDate}</p>
-        <p><i class="fas fa-box"></i> Items: <strong>${itemCount}</strong></p>
-        <p><i class="fas fa-rupee-sign"></i> Total: <strong>₹${parseFloat(totalAmount).toFixed(2)}</strong></p>
-    </div>
-
-    <div class="order-status ${orderStatus}">
-        ${orderStatus}
-    </div>
-
-    <div class="order-actions">
-        <span style="font-size:12px;color:#666;">
-            Order ID: ${order._id || order.id}
+  // Items
+  const itemsHTML = (order.items || []).map(item => `
+    <div class="order-item-row">
+      ${item.image
+        ? `<img src="${item.image}" alt="${item.name}" class="order-item-image">`
+        : `<div style="width:55px;height:55px;border-radius:8px;background:#f3f4f8;display:flex;align-items:center;justify-content:center;font-size:22px;">📦</div>`}
+      <div class="order-item-details">
+        <strong>${item.name || 'Product'}</strong>
+        <span>${item.brand ? item.brand+' · ' : ''}${item.category || ''}</span>
+        <span>SKU: ${item.sku || '—'} &nbsp;|&nbsp; Qty: ${item.quantity}</span>
+        <span>₹${fmt(item.sellingPrice)} ea. &nbsp;
+          ${item.discountPercent > 0 ? `<span style="color:#e53e3e;font-size:11px;">-${item.discountPercent}% off</span>` : ''}
         </span>
+      </div>
+      <div class="order-item-price">₹${fmt(item.lineTotal)}</div>
+    </div>`).join('');
 
-        <!-- INVOICE DOWNLOAD BUTTON -->
-        <button class="invoice-btn"
-        onclick="event.stopPropagation(); downloadInvoicePDF('${order._id || order.id}')">
-    <i class="fas fa-file-invoice"></i> Download Invoice
-</button>
+  // Voucher
+  const voucherHTML = order.appliedVoucher
+    ? `<div class="order-detail-item"><strong>Voucher (${order.appliedVoucher.code}):</strong><span style="color:#1a6b3c;">-₹${fmt(order.appliedVoucher.discountAmount)}</span></div>`
+    : '';
 
+  // Delivery / tracking
+  const delivery = order.delivery || {};
+  const trackingHTML = (delivery.trackingUpdates || []).length
+    ? `<div class="tracking-updates-box">
+        ${delivery.trackingUpdates.map(u => `
+          <div class="tracking-update">
+            <strong>${u.status?.replace(/_/g,' ')}</strong><br>
+            ${u.description || ''}<br>
+            <span class="update-time">${fmtDate(u.timestamp)}</span>
+          </div>`).join('')}
+       </div>`
+    : `<p style="color:#999;font-size:13px;">No tracking updates yet.</p>`;
+
+  const deliveryHTML = (delivery.trackingId || delivery.partnerName)
+    ? `<h3 style="margin-top:20px;font-size:16px;font-weight:700;color:#1a1a2e;">Delivery Details</h3>
+       ${delivery.partnerName ? `<div class="order-detail-item"><strong>Partner:</strong><span>${delivery.partnerName}</span></div>` : ''}
+       ${delivery.trackingId  ? `<div class="order-detail-item"><strong>Tracking ID:</strong><span style="font-family:monospace;">${delivery.trackingId}</span></div>` : ''}
+       ${delivery.estimatedDelivery ? `<div class="order-detail-item"><strong>Est. Delivery:</strong><span>${fmtDate(delivery.estimatedDelivery)}</span></div>` : ''}
+       ${delivery.currentLocation ? `<div class="order-detail-item"><strong>Location:</strong><span>${delivery.currentLocation}</span></div>` : ''}
+       <h3 style="margin-top:16px;font-size:15px;font-weight:700;color:#1a1a2e;">Tracking</h3>
+       ${trackingHTML}`
+    : '';
+
+  // Refund
+  const refundHTML = order.refund
+    ? `<h3 style="margin-top:20px;font-size:16px;font-weight:700;color:#c0392b;">Refund Details</h3>
+       <div class="order-detail-item"><strong>Amount:</strong><span style="color:#1a6b3c;">₹${fmt(order.refund.refundAmount)}</span></div>
+       <div class="order-detail-item"><strong>Reason:</strong><span>${(order.refund.reason||'').replace(/_/g,' ')}</span></div>
+       ${order.refund.notes ? `<div class="order-detail-item"><strong>Notes:</strong><span>${order.refund.notes}</span></div>` : ''}
+       ${order.refund.referenceId ? `<div class="order-detail-item"><strong>Reference ID:</strong><span style="font-family:monospace;">${order.refund.referenceId}</span></div>` : ''}
+       ${order.refund.processedAt ? `<div class="order-detail-item"><strong>Processed At:</strong><span>${fmtDate(order.refund.processedAt)}</span></div>` : ''}`
+    : '';
+
+  // Cancellation
+  const cancelHTML = order.cancellation
+    ? `<h3 style="margin-top:20px;font-size:16px;font-weight:700;color:#c0392b;">Cancellation Details</h3>
+       <div class="order-detail-item"><strong>Reason:</strong><span>${(order.cancellation.reason||'').replace(/_/g,' ')}</span></div>
+       ${order.cancellation.notes ? `<div class="order-detail-item"><strong>Notes:</strong><span>${order.cancellation.notes}</span></div>` : ''}
+       ${order.cancellation.cancelledAt ? `<div class="order-detail-item"><strong>Cancelled At:</strong><span>${fmtDate(order.cancellation.cancelledAt)}</span></div>` : ''}`
+    : '';
+
+  content.innerHTML = `
+    <!-- ORDER META -->
+    <div class="order-detail-item"><strong>Order ID:</strong><span style="font-family:monospace;font-size:12px;">${order._id}</span></div>
+    <div class="order-detail-item"><strong>Status:</strong>
+      <span class="order-status ${(order.status||'').toLowerCase()}" style="padding:4px 12px;border-radius:20px;font-size:12px;">
+        ${(order.status||'').replace(/_/g,' ')}
+      </span>
     </div>
-</div>
+    <div class="order-detail-item"><strong>Ordered:</strong><span>${fmtDate(order.createdAt)}</span></div>
+    <div class="order-detail-item"><strong>Last Updated:</strong><span>${fmtDate(order.updatedAt)}</span></div>
 
-                    `;
-                }).join('');
+    <!-- PAYMENT -->
+    <h3 style="margin-top:20px;font-size:16px;font-weight:700;color:#1a1a2e;">Payment</h3>
+    <div class="order-detail-item"><strong>Method:</strong><span style="text-transform:capitalize;">${pay.method || '—'}</span></div>
+    <div class="order-detail-item"><strong>Status:</strong><span style="text-transform:capitalize;">${pay.status || '—'}</span></div>
+    ${pay.paypalOrderId ? `<div class="order-detail-item"><strong>PayPal Order ID:</strong><span style="font-family:monospace;font-size:12px;">${pay.paypalOrderId}</span></div>` : ''}
+    ${pay.paidAt ? `<div class="order-detail-item"><strong>Paid At:</strong><span>${fmtDate(pay.paidAt)}</span></div>` : ''}
 
-                attachOrderClickHandlers(orders);
+    <!-- PRICING -->
+    <h3 style="margin-top:20px;font-size:16px;font-weight:700;color:#1a1a2e;">Pricing</h3>
+    <div class="order-detail-item"><strong>MRP Total:</strong><span>₹${fmt(pricing.mrpTotal)}</span></div>
+    <div class="order-detail-item"><strong>MRP Savings:</strong><span style="color:#1a6b3c;">-₹${fmt(pricing.mrpSavings)}</span></div>
+    <div class="order-detail-item"><strong>Subtotal:</strong><span>₹${fmt(pricing.subtotal)}</span></div>
+    ${voucherHTML}
+    <div class="order-detail-item"><strong>Delivery:</strong><span>₹${fmt(pricing.deliveryCharge)}</span></div>
+    ${pricing.gstAmount > 0 ? `<div class="order-detail-item"><strong>GST:</strong><span>₹${fmt(pricing.gstAmount)}</span></div>` : ''}
+    <div class="order-detail-total"><strong>Total Paid:</strong><span>₹${fmt(pricing.total)}</span></div>
 
-            } catch (error) {
-                console.error('[v0] Error loading orders:', error);
-                ordersList.innerHTML = `
-                    <div class="no-data">
-                        <i class="fas fa-exclamation-circle" style="font-size: 48px; color: #1a1a2e; margin-bottom: 15px;"></i>
-                        <p>Unable to load orders</p>
-                        <p style="font-size: 12px; color: #999; margin-top: 10px;">${error.message}</p>
-                        <button onclick="loadOrders()" class="th-btn" style="margin-top: 20px; background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;">Try Again</button>
-                    </div>
-                `;
-                if (typeof window.showToast === 'function') {
-                    window.showToast('Failed to load orders: ' + error.message, 'error');
-                }
-            }
-        }
+    <!-- SHIPPING ADDRESS -->
+    <h3 style="margin-top:20px;font-size:16px;font-weight:700;color:#1a1a2e;">Shipping Address</h3>
+    <div class="order-detail-item">
+      <strong>Name:</strong><span>${addr.firstName||''} ${addr.lastName||''}</span>
+    </div>
+    <div class="order-detail-item"><strong>Phone:</strong><span>${addr.phone||'—'}</span></div>
+    <div class="order-detail-item">
+      <strong>Address:</strong>
+      <span style="text-align:right;">
+        ${addr.address1||''}${addr.address2?', '+addr.address2:''}<br>
+        ${addr.city||''}, ${addr.state||''} - ${addr.postalCode||''}<br>
+        ${addr.country||''}
+      </span>
+    </div>
 
+    <!-- DELIVERY -->
+    ${deliveryHTML}
+
+    <!-- REFUND / CANCELLATION -->
+    ${refundHTML}
+    ${cancelHTML}
+
+    <!-- ITEMS -->
+    <h3 style="margin-top:20px;font-size:16px;font-weight:700;color:#1a1a2e;">
+      Items (${order.totalItems || order.items?.length || 0})
+    </h3>
+    <div class="order-items-list">${itemsHTML}</div>`;
+
+  modal.classList.add('active');
+}
         function handleOrderCardClick(orderId, event) {
             event.preventDefault();
             event.stopPropagation();
@@ -1980,154 +2094,8 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
-<script>
-    const productCache = {};
 
-async function getProduct(productId) {
-    if (!productId) return null;
-
-    if (productCache[productId]) {
-        return productCache[productId];
-    }
-
-    try {
-        const res = await fetch(`${API_BASE}/products/${productId}`);
-        if (!res.ok) return null;
-
-        const product = await res.json();
-        productCache[productId] = product;
-        return product;
-    } catch (e) {
-        console.error("Product fetch failed", e);
-        return null;
-    }
-}
-
-function getProductImage(product) {
-    return product?.image || product?.thumbnail || product?.images?.[0] || null;
-}
-
-    const PRODUCT_IMAGE_BASE = "assets/img/products/";
-const PRODUCT_PAGE_URL = "shop.html?productId=";
-function getOrderProductImage(item) {
-    // Most common real-world cases
-    if (item?.product?.image) return item.product.image;
-    if (item?.product?.thumbnail) return item.product.thumbnail;
-    if (Array.isArray(item?.product?.images) && item.product.images.length > 0)
-        return item.product.images[0];
-
-    if (item?.image) return item.image;
-    if (item?.imageUrl) return item.imageUrl;
-
-    // If nothing exists → return null (NOT placeholder)
-    return null;
-}
-
-async function downloadInvoicePDF(orderId) {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-        alert("Session expired. Please login again.");
-        return;
-    }
-
-    try {
-        const res = await fetch(`${API_BASE}/orders/${orderId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json"
-            }
-        });
-
-        const order = await res.json();
-        if (!res.ok) throw new Error(order.message || "Failed to load order");
-
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF("p", "mm", "a4");
-
-        /* ---------- LOGO ---------- */
-        const logo = new Image();
-        logo.src = "assets/img/logo_resized.png";
-
-        logo.onload = () => {
-            doc.addImage(logo, "PNG", 14, 10, 40, 18);
-
-            /* ---------- HEADER ---------- */
-            doc.setFontSize(18);
-            doc.text("INVOICE", 150, 20);
-
-            doc.setFontSize(10);
-            doc.text("AM ROBOTICS", 14, 38);
-            doc.text("Hyderabad, Telangana, India", 14, 44);
-            doc.text("Email: support@amrobotics.in", 14, 50);
-
-            /* ---------- ORDER INFO ---------- */
-            doc.text(`Invoice No : ${order._id}`, 14, 62);
-            doc.text(`Order Date : ${new Date(order.createdAt).toLocaleDateString()}`, 14, 68);
-            doc.text(`Order Status : ${order.status.toUpperCase()}`, 14, 74);
-
-            /* ---------- CUSTOMER ---------- */
-            const addr = order.shipping.address;
-            doc.text("Bill To:", 120, 62);
-            doc.text(`${addr.street}`, 120, 68);
-            doc.text(`${addr.city}, ${addr.state}`, 120, 74);
-            doc.text(`${addr.zipCode}, ${addr.country}`, 120, 80);
-
-            /* ---------- ITEMS TABLE ---------- */
-            const items = (order.items || []).map(item => [
-                item.name,
-                item.quantity.toString(),
-                `Rs. ${Number(item.price).toFixed(2)}`,
-                `Rs. ${(item.quantity * item.price).toFixed(2)}`
-            ]);
-
-            doc.autoTable({
-                startY: 92,
-                head: [["Item", "Qty", "Price", "Total"]],
-                body: items,
-                theme: "grid",
-                styles: {
-                    fontSize: 10,
-                    halign: "center"
-                },
-                columnStyles: {
-                    0: { halign: "left" }
-                },
-                headStyles: {
-                    fillColor: [15, 52, 96],
-                    textColor: 255
-                }
-            });
-
-            const finalY = doc.lastAutoTable.finalY + 8;
-
-            /* ---------- TOTALS ---------- */
-            doc.setFontSize(11);
-            doc.text(`Subtotal : Rs. ${Number(order.charges?.subtotal || 0).toFixed(2)}`, 140, finalY);
-            doc.text(`GST : Rs. ${Number(order.charges?.gst || 0).toFixed(2)}`, 140, finalY + 6);
-            doc.text(`Delivery : Rs. ${Number(order.charges?.deliveryCharge || 0).toFixed(2)}`, 140, finalY + 12);
-
-            doc.setFontSize(12);
-            doc.text(`TOTAL : Rs. ${Number(order.totalAmount || 0).toFixed(2)}`, 140, finalY + 22);
-
-            /* ---------- FOOTER ---------- */
-            doc.setFontSize(9);
-            doc.text(
-                "This is a system-generated invoice. No signature is required.",
-                14,
-                285
-            );
-
-            doc.save(`AM_Robotics_Invoice_${order._id}.pdf`);
-        };
-
-    } catch (error) {
-        console.error(error);
-        alert("Failed to generate invoice. Please try again.");
-    }
-}
-</script>
-
-
+<script src="assets/js/invoice.js"></script>
     <script src="assets/js/subscribe.js"></script>
     <!-- Logout Confirmation Modal -->
 <div class="modal-overlay" id="logoutModal">

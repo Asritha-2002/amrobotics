@@ -4,8 +4,11 @@
    just before </body> in dashboard.html
    ===================================================== */
 
-const DASHBOARD_API = `${CONFIG.API_BASE}/admin/dashboard-stats`;
+// const DASHBOARD_API = `${CONFIG.API_BASE}/admin/dashboard-stats`;
+const countryFromLocal     = localStorage.getItem("selectedCountry") || "IN";
+const countryName = countryFromLocal === "IN" ? "India" : "US";
 
+const DASHBOARD_API = `${CONFIG.API_BASE}/admin/dashboard-stats?country=${countryName}`;
 function fmtMoney(n) {
   const country   = localStorage.getItem("selectedCountry") || "IN";
   const sym       = country === "US" ? "$" : "₹";
@@ -83,22 +86,94 @@ async function loadDashboardStats() {
     setEl("ord-cancelled", orders.cancelled);
 
     // ── Revenue chart (last 7 days) ─────────────────
-    const chartEl = document.getElementById("rev-chart");
-    if (chartEl && revenue.daily?.length) {
-      const maxRev = Math.max(...revenue.daily.map(d => d.revenue), 1);
-      chartEl.innerHTML = revenue.daily.map(d => {
-        const pct     = Math.max(8, Math.round((d.revenue / maxRev) * 100));
-        const tooltip = `${d.label}: ${fmtMoney(d.revenue)}`;
-        return `
-          <div class="mini-bar-wrap" title="${tooltip}">
-            <div class="mini-bar"
-                 style="height:${pct}%;background:${d.revenue > 0 ? 'var(--accent)' : '#e8ecff'};"
-                 title="${tooltip}">
-            </div>
-            <span class="mini-bar-lbl">${d.label}</span>
-          </div>`;
-      }).join("");
+    // ── Revenue chart (toggle daily / monthly) ──────
+let chartMode   = "monthly"; // default view
+let chartData   = { daily: revenue.daily, monthly: revenue.monthly };
+
+function renderRevenueChart(mode) {
+  const chartEl = document.getElementById("rev-chart");
+  if (!chartEl) return;
+
+  const data   = mode === "monthly" ? chartData.monthly : chartData.daily;
+  const maxRev = Math.max(...data.map(d => d.revenue), 1);
+
+  if (data.every(d => d.revenue === 0)) {
+    chartEl.innerHTML = `<div class="chart-empty">No revenue data available yet</div>`;
+    return;
+  }
+
+  // Y-axis grid lines at 0%, 25%, 50%, 75%, 100%
+  const gridLines = [25, 50, 75, 100].map(pct => {
+    const val = (maxRev * pct) / 100;
+    return `
+      <div class="chart-gridline" style="bottom:${pct}%">
+        <span class="chart-y-label">${fmtMoney(val)}</span>
+      </div>`;
+  }).join("");
+
+  const bars = data.map(d => {
+    const heightPct = d.revenue > 0
+      ? Math.max(2, Math.round((d.revenue / maxRev) * 100))
+      : 2;
+
+    const barColor = d.revenue > 0
+      ? `linear-gradient(180deg, var(--accent) 0%, #9b8ffa 100%)`
+      : `#eef0f8`;
+
+    const tooltipText = `${d.label}: ${fmtMoney(d.revenue)} · ${d.orders} order${d.orders !== 1 ? "s" : ""}`;
+
+    return `
+      <div class="mini-bar-wrap">
+        <div class="chart-tooltip">${tooltipText}</div>
+        <div class="mini-bar"
+             style="height:${heightPct}%;background:${barColor};">
+        </div>
+        <span class="mini-bar-lbl">${d.label}</span>
+      </div>`;
+  }).join("");
+
+  chartEl.className = "chart-container";
+  chartEl.innerHTML = gridLines + bars;
+}
+
+// Inject toggle buttons into chart card header
+const chartHeader = document.querySelector("#rev-chart")?.closest(".card")?.querySelector(".card-header");
+if (chartHeader && !chartHeader.querySelector(".chart-toggle")) {
+  const toggleWrap = document.createElement("div");
+  toggleWrap.className = "chart-toggle";
+  toggleWrap.style.cssText = "display:flex;gap:6px;";
+  toggleWrap.innerHTML = `
+    <button id="btn-monthly" onclick="switchChart('monthly')"
+      style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:6px;
+             border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;">
+      Monthly
+    </button>
+    <button id="btn-weekly" onclick="switchChart('weekly')"
+      style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:6px;
+             border:1px solid var(--border);background:#fff;color:#555;cursor:pointer;">
+      7 Days
+    </button>`;
+  chartHeader.appendChild(toggleWrap);
+}
+
+window.switchChart = function(mode) {
+  chartMode = mode;
+  renderRevenueChart(mode);
+  // update button styles
+  const btnM = document.getElementById("btn-monthly");
+  const btnW = document.getElementById("btn-weekly");
+  if (btnM && btnW) {
+    if (mode === "monthly") {
+      btnM.style.cssText += "background:var(--accent);color:#fff;border-color:var(--accent);";
+      btnW.style.cssText += "background:#fff;color:#555;border-color:var(--border);";
+    } else {
+      btnW.style.cssText += "background:var(--accent);color:#fff;border-color:var(--accent);";
+      btnM.style.cssText += "background:#fff;color:#555;border-color:var(--border);";
     }
+  }
+};
+
+renderRevenueChart(chartMode);
 
     // ── Activity feed ────────────────────────────────
     const actEl = document.getElementById("activity-list");
@@ -111,7 +186,7 @@ async function loadDashboardStats() {
       } else {
         actEl.innerHTML = activityFeed.map(a => `
           <div class="activity-row">
-            <div class="act-dot" style="background:${a.color};font-size:16px;">${a.icon}</div>
+            <div class="act-dot" style="background:${a.color};font-size:16px;"><i data-lucide="badge-check"></i></div>
             <div>
               <strong>${a.message}</strong>
               <span>${a.amount > 0 ? fmtMoney(a.amount) + " · " : ""}${timeAgo(a.timestamp)}</span>

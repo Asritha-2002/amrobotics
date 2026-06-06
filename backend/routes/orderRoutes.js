@@ -6,7 +6,7 @@ const BuyNow   = require("../models/BuyNow");
 const Voucher  = require("../models/Voucher");
 const { auth, adminAuth } = require("../middleware/auth");
 const Cart = require("../models/Cart");
-const { sendOrderStatusEmail } = require("../config/email");
+const { sendOrderStatusEmail,sendOrderConfirmationEmail } = require("../config/email");
 const User = require("../models/User");
 // ── POST /api/orders/create ───────────────────────────────────────────────────
 router.post("/orders/create", auth, async (req, res) => {
@@ -196,6 +196,24 @@ router.post("/orders/create", auth, async (req, res) => {
     });
 
     await order.save();
+
+    try {
+  const user = await User.findById(req.user.id).select("email").lean();
+  if (user?.email) {
+    await sendOrderConfirmationEmail(
+      user.email,                        // to: customer
+      process.env.ADMIN_EMAIL || process.env.EMAIL_USER,  // bcc: admin
+      {
+        ...order.toObject(),
+        createdAt: order.createdAt || new Date(),
+      }
+    );
+  }
+} catch (emailErr) {
+  // Log but don't block the order response
+  console.error("[orders/create] email failed:", emailErr.message);
+}
+
 
     // ── 5. Deduct stock ───────────────────────────────────────────────────────
     await Promise.all(
@@ -613,6 +631,119 @@ router.patch("/:orderId/status", auth, adminAuth, async (req, res) => {
     return res.status(500).json({
       success: false,
       message: error.message || "Failed to update order status",
+    });
+  }
+});
+
+
+router.get("/my-orders", auth, async (req, res) => {
+  try {
+    const orders = await Order.find({
+      userId: req.user.id,
+      status: { $ne: "pending" },
+    })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const formattedOrders = orders.map((order) => ({
+      _id:             order._id,
+      status:          order.status,
+      createdAt:       order.createdAt,
+      updatedAt:       order.updatedAt,
+
+      // ── Items (image already stored as string in schema) ──
+      items: (order.items || []).map((item) => ({
+        productId:      item.productId,
+        name:           item.name,
+        sku:            item.sku,
+        brand:          item.brand,
+        category:       item.category,
+        image:          item.image || "",   // ← directly on item, no populate needed
+        quantity:       item.quantity,
+        sellingPrice:   item.sellingPrice,
+        originalPrice:  item.originalPrice,
+        discountPercent: item.discountPercent,
+        lineTotal:      item.lineTotal,
+      })),
+
+      // ── Pricing ──
+      pricing: {
+        subtotal:        order.pricing?.subtotal        || 0,
+        mrpTotal:        order.pricing?.mrpTotal        || 0,
+        mrpSavings:      order.pricing?.mrpSavings      || 0,
+        voucherDiscount: order.pricing?.voucherDiscount || 0,
+        deliveryCharge:  order.pricing?.deliveryCharge  || 0,
+        gstAmount:       order.pricing?.gstAmount       || 0,
+        total:           order.pricing?.total           || 0,
+      },
+
+      // ── Shipping Address ──
+      shippingAddress: order.shippingAddress || {},
+
+      // ── Payment ──
+      payment: {
+        method:        order.payment?.method        || "—",
+        status:        order.payment?.status        || "—",
+        paypalOrderId: order.payment?.paypalOrderId || null,
+        currency:      order.payment?.currency      || "INR",
+        paidAmount:    order.payment?.paidAmount    || 0,
+        paidAt:        order.payment?.paidAt        || null,
+      },
+
+      // ── Applied Voucher ──
+      appliedVoucher: order.appliedVoucher?.voucherId
+        ? {
+            voucherId:      order.appliedVoucher.voucherId,
+            code:           order.appliedVoucher.code,
+            discountAmount: order.appliedVoucher.discountAmount,
+          }
+        : null,
+
+      // ── Delivery ──
+      delivery: {
+        partnerName:       order.delivery?.partnerName       || "",
+        trackingId:        order.delivery?.trackingId        || "",
+        estimatedDelivery: order.delivery?.estimatedDelivery || null,
+        currentLocation:   order.delivery?.currentLocation   || "",
+        trackingUpdates:   order.delivery?.trackingUpdates   || [],
+      },
+
+      // ── Cancellation ──
+      cancellation: order.cancellation?.reason
+        ? {
+            reason:      order.cancellation.reason,
+            notes:       order.cancellation.notes,
+            cancelledAt: order.cancellation.cancelledAt,
+          }
+        : null,
+
+      // ── Refund ──
+      refund: order.refund?.reason
+        ? {
+            reason:       order.refund.reason,
+            notes:        order.refund.notes,
+            refundAmount: order.refund.refundAmount,
+            referenceId:  order.refund.referenceId,
+            processedAt:  order.refund.processedAt,
+          }
+        : null,
+
+      // ── Helpers ──
+      totalItems:  (order.items || []).reduce((acc, i) => acc + (i.quantity || 0), 0),
+      totalAmount: order.pricing?.total || 0,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      count:   formattedOrders.length,
+      orders:  formattedOrders,
+    });
+
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to fetch orders",
     });
   }
 });

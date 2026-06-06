@@ -377,11 +377,92 @@ select.form-control{cursor:pointer;}
 .activity-row span{font-size:11px;color:var(--text-muted);margin-top:2px;display:block;}
 
 /* ── MINI CHART ── */
-.mini-bars{display:flex;align-items:flex-end;gap:6px;height:90px;padding-top:6px;}
-.mini-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
-.mini-bar{width:100%;border-radius:5px 5px 0 0;background:#e8ecff;transition:.2s;}
-.mini-bar:hover{background:var(--accent);}
-.mini-bar-lbl{font-size:10px;color:var(--text-muted);}
+/* ── CHART ── */
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 24px 0 32px;
+  border-bottom: 2px solid #f0f1f5;
+}
+.chart-y-label {
+  position: absolute;
+  left: 0;
+  font-size: 10px;
+  color: var(--text-muted);
+  transform: translateY(50%);
+  white-space: nowrap;
+}
+.chart-gridline {
+  position: absolute;
+  left: 0; right: 0;
+  border-top: 1px dashed #eef0f5;
+  pointer-events: none;
+}
+.mini-bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+  cursor: pointer;
+}
+.mini-bar-wrap:hover .mini-bar { filter: brightness(1.12); }
+.mini-bar-wrap:hover .chart-tooltip { display: block; }
+.mini-bar {
+  width: 100%;
+  max-width: 36px;
+  border-radius: 6px 6px 0 0;
+  transition: height .4s cubic-bezier(.4,0,.2,1), background .2s;
+  min-height: 4px;
+}
+.mini-bar-lbl {
+  position: absolute;
+  bottom: -24px;
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.chart-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e2235;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+}
+.chart-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #1e2235;
+}
+.chart-empty {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  height: 160px;
+}
 
 /* ── QUICK ACTIONS ── */
 .qa-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;}
@@ -592,10 +673,10 @@ select.form-control{cursor:pointer;}
     <div class="two-col">
       <div class="card">
         <div class="card-header">
-          <span class="card-title">Revenue (Last 7 Days)</span>
+          <span class="card-title">Revenue Overview</span>
         </div>
         <div class="card-body">
-          <div class="mini-bars" id="rev-chart"></div>
+          <div class="chart-container" id="rev-chart"></div>
         </div>
       </div>
 
@@ -674,11 +755,11 @@ select.form-control{cursor:pointer;}
         <div class="stat-value" id="ord-pending">—</div><div class="stat-label">Pending</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box sib-green">✅</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box sib-green"><i data-lucide="badge-check"></i></div></div>
         <div class="stat-value" id="ord-delivered">—</div><div class="stat-label">Delivered</div>
       </div>
       <div class="stat-card">
-        <div class="stat-card-top"><div class="stat-icon-box" style="background:#fff0f0;color:#d94040;">❌</div></div>
+        <div class="stat-card-top"><div class="stat-icon-box" style="background:#fff0f0;color:#d94040;"><i data-lucide="ban"></i></div></div>
         <div class="stat-value" id="ord-cancelled">—</div><div class="stat-label">Cancelled</div>
       </div>
     </div>
@@ -694,7 +775,7 @@ select.form-control{cursor:pointer;}
             <tr><th>Order ID</th><th>Customer</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th>Action</th></tr>
           </thead>
           <tbody id="orders-body">
-            <tr><td colspan="7"><div class="empty-state"><div class="empty-icon">🛒</div><p>No orders yet — connect your API.</p></div></td></tr>
+            <tr><td colspan="7"><div class="empty-state"><div class="empty-icon"><i data-lucide="shopping-cart"></i></div><p>No orders yet — connect your API.</p></div></td></tr>
           </tbody>
         </table>
       </div>
@@ -865,5 +946,6 @@ document.addEventListener('click', function(e){
 <script>
 lucide.createIcons();
 </script>
+<script src="assets/js/dashboard-stats.js"></script>
 </body>
 </html>
