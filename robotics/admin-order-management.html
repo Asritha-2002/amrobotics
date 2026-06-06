@@ -603,7 +603,7 @@ td{padding:14px;vertical-align:top;width:300px;}
 const token = localStorage.getItem('authToken');
 if (!token) window.location.replace('login.html');
 
-const BASE_URL = window.CONFIG?.API_BASE || "http://localhost:5000/api";
+const BASE_URL = CONFIG.API_BASE ;
 const headers  = () => ({ "Content-Type":"application/json", Authorization:`Bearer ${token}` });
 
 // store pill
