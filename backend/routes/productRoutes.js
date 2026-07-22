@@ -83,7 +83,8 @@ router.post(
         status,
         sellingPrice,
         originalPrice,
-        stock
+        stock,
+        weight, length, breadth, height 
       } = req.body;
       console.log("Original:", originalPrice);
 console.log("Selling:", sellingPrice);
@@ -94,7 +95,8 @@ console.log("Converted:", Number(sellingPrice));
       const highlights = parseArrayField(req.body.highlights);
 
       // ── Validate required ──
-      if (!name || !category || sellingPrice === undefined || originalPrice === undefined || stock === undefined || stock === "") {
+      if (!name || !category || sellingPrice === undefined || originalPrice === undefined || stock === undefined || stock === ""|| weight === undefined || length === undefined ||      // ← add
+    breadth === undefined || height === undefined) {
         return res.status(400).json({
           success: false,
           message: 'name, category, sellingPrice, originalPrice, stock are required'
@@ -175,7 +177,11 @@ console.log("Converted:", Number(sellingPrice));
         images:           imageUrls,
         sellingPrice:     Number(sellingPrice),
         originalPrice:    Number(originalPrice),
-        stock:            Number(stock)    || 0
+        stock:            Number(stock)    || 0,
+        weight:    Number(weight),    // ← add
+  length:    Number(length),    // ← add
+  breadth:   Number(breadth),   // ← add
+  height:    Number(height), 
       });
 
       await product.save();
@@ -344,6 +350,7 @@ router.patch(
         sellingPrice,
         originalPrice,
         stock,
+        weight, length, breadth, height ,
         removeImages  // array of image URLs to remove from existing
       } = req.body;
        console.log("Original:", originalPrice);
@@ -364,6 +371,10 @@ console.log("Converted:", Number(sellingPrice));
       if (status           !== undefined) product.status           = status;
       if (tags             !== undefined) product.tags             = tags;
       if (highlights       !== undefined) product.highlights       = highlights;
+      if(weight !== undefined ) product.weight =weight;    
+      if(length !== undefined ) product.length =length;   
+      if(breadth !== undefined ) product.breadth =breadth; 
+      if(height !== undefined ) product.height =height; 
 
       if (sellingPrice !== undefined) product.sellingPrice = Number(sellingPrice);
       if (originalPrice !== undefined) product.originalPrice = Number(originalPrice);

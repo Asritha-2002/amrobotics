@@ -120,7 +120,32 @@ const productSchema = new mongoose.Schema({
     required: true,
     min: 0,
     default: 0
-  }
+  },
+  // ── DIMENSIONS (required for Shiprocket) ──
+weight: {
+  type: Number,
+  required: true,
+  min: 0,
+  comment: 'in kilograms (kg)'
+},
+length: {
+  type: Number,
+  required: true,
+  min: 0,
+  comment: 'in centimetres (cm)'
+},
+breadth: {
+  type: Number,
+  required: true,
+  min: 0,
+  comment: 'in centimetres (cm)'
+},
+height: {
+  type: Number,
+  required: true,
+  min: 0,
+  comment: 'in centimetres (cm)'
+},
 
 }, { timestamps: true });
 

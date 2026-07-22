@@ -32,8 +32,9 @@ router.post("/user/checkout-addresses", auth, async (req, res) => {
 // ── PUT update an existing address ───────────────────────────────────────────
 router.put("/user/checkout-addresses/:addressId", auth, async (req, res) => {
   try {
-    const doc = await CheckoutAddress.findOne({ userId: req.user._id });
+    const doc = await CheckoutAddress.findOne({ userId: req.user.id });
     if (!doc) return res.status(404).json({ success: false, message: "No addresses found" });
+   
     await doc.updateAddress(req.params.addressId, req.body);
     res.json({ success: true, addresses: doc.addresses });
   } catch (err) {

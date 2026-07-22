@@ -297,7 +297,15 @@ if (userCart && userCart.items.length > 0) {
 router.get("/all-orders", auth, adminAuth, async (req, res) => {
   try {
 
+    // ── Country filter (same as order-status-counts) ──
+    const countryParam = req.query.country || null;
+
+    const countryMatch = countryParam
+      ? { "shippingAddress.country": { $regex: `^${countryParam}$`, $options: "i" } }
+      : {};
+
     const orders = await Order.find({
+      ...countryMatch,
       status: { $ne: "pending" }
     })
       .populate("userId", "name email profilePic mobilenum")
@@ -305,12 +313,11 @@ router.get("/all-orders", auth, adminAuth, async (req, res) => {
       .lean();
 
     const formattedOrders = orders.map(order => ({
-      _id:            order._id,
-      createdAt:      order.createdAt,
-      updatedAt:      order.updatedAt,
-      status:         order.status,
+      _id:       order._id,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+      status:    order.status,
 
-      // ── User ───────────────────────────────
       user: order.userId ? {
         _id:        order.userId._id,
         name:       order.userId.name,
@@ -319,16 +326,11 @@ router.get("/all-orders", auth, adminAuth, async (req, res) => {
         mobilenum:  order.userId.mobilenum  || "",
       } : null,
 
-      // ── Items ──────────────────────────────
-      items: order.items || [],
-      totalItems: (order.items || []).reduce(
-        (acc, item) => acc + (item.quantity || 0), 0
-      ),
+      items:      order.items || [],
+      totalItems: (order.items || []).reduce((acc, item) => acc + (item.quantity || 0), 0),
 
-      // ── Shipping Address ───────────────────
       shippingAddress: order.shippingAddress || {},
 
-      // ── Pricing ────────────────────────────
       pricing: {
         subtotal:        order.pricing?.subtotal        || 0,
         mrpTotal:        order.pricing?.mrpTotal        || 0,
@@ -338,16 +340,14 @@ router.get("/all-orders", auth, adminAuth, async (req, res) => {
         gstAmount:       order.pricing?.gstAmount       || 0,
         total:           order.pricing?.total           || 0,
       },
-      totalAmount: order.pricing?.total || 0,   // shorthand for table display
+      totalAmount: order.pricing?.total || 0,
 
-      // ── Applied Voucher ────────────────────
       appliedVoucher: {
         voucherId:      order.appliedVoucher?.voucherId      || null,
         code:           order.appliedVoucher?.code           || "",
         discountAmount: order.appliedVoucher?.discountAmount || 0,
       },
 
-      // ── Payment ────────────────────────────
       payment: {
         method:          order.payment?.method          || "paypal",
         status:          order.payment?.status          || "pending",
@@ -359,7 +359,6 @@ router.get("/all-orders", auth, adminAuth, async (req, res) => {
         paidAt:          order.payment?.paidAt          || null,
       },
 
-      // ── Delivery & Tracking ────────────────
       delivery: {
         partnerName:       order.delivery?.partnerName       || "",
         trackingId:        order.delivery?.trackingId        || "",
@@ -371,7 +370,6 @@ router.get("/all-orders", auth, adminAuth, async (req, res) => {
         ? order.delivery.trackingUpdates[order.delivery.trackingUpdates.length - 1]
         : null,
 
-      // ── Cancellation ───────────────────────
       cancellation: {
         reason:      order.cancellation?.reason      || null,
         notes:       order.cancellation?.notes       || "",
@@ -379,17 +377,15 @@ router.get("/all-orders", auth, adminAuth, async (req, res) => {
         cancelledBy: order.cancellation?.cancelledBy || null,
       },
 
-      // ── Refund ─────────────────────────────
       refund: {
-        reason:        order.refund?.reason        || null,
-        notes:         order.refund?.notes         || "",
-        refundAmount:  order.refund?.refundAmount  || 0,
-        referenceId:   order.refund?.referenceId   || "",
-        processedAt:   order.refund?.processedAt   || null,
-        processedBy:   order.refund?.processedBy   || null,
+        reason:       order.refund?.reason       || null,
+        notes:        order.refund?.notes        || "",
+        refundAmount: order.refund?.refundAmount || 0,
+        referenceId:  order.refund?.referenceId  || "",
+        processedAt:  order.refund?.processedAt  || null,
+        processedBy:  order.refund?.processedBy  || null,
       },
 
-      // ── Meta ───────────────────────────────
       meta: {
         source:     order.meta?.source     || "web",
         notes:      order.meta?.notes      || "",
@@ -406,8 +402,8 @@ router.get("/all-orders", auth, adminAuth, async (req, res) => {
   } catch (error) {
     console.error("Error fetching orders:", error);
     return res.status(500).json({
-      success:  false,
-      message:  error.message || "Failed to fetch orders",
+      success: false,
+      message: error.message || "Failed to fetch orders",
     });
   }
 });
@@ -415,34 +411,48 @@ router.get("/all-orders", auth, adminAuth, async (req, res) => {
 router.get("/order-status-counts", auth, adminAuth, async (req, res) => {
   try {
 
+    // ── Country filter ───────────────────────────
+    // Frontend sends ?country=India or ?country=US
+    const countryParam = req.query.country || null;
+
+    const countryMatch = countryParam
+      ? { "shippingAddress.country": { $regex: `^${countryParam}$`, $options: "i" } }
+      : {};
+
     const [statusAgg, revenueAgg] = await Promise.all([
 
-      // ── Status counts ──────────────────────────
-      Order.aggregate([
-        { $match: { status: { $ne: "pending" } } },
-        { $group: { _id: "$status", count: { $sum: 1 } } }
-      ]),
-
-      // ── Total revenue (paid orders only) ───────
+      // ── Status counts (country-filtered) ────────
       Order.aggregate([
         {
           $match: {
-            "payment.status": "paid",
+            ...countryMatch,
             status: { $ne: "pending" }
+          }
+        },
+        { $group: { _id: "$status", count: { $sum: 1 } } }
+      ]),
+
+      // ── Total revenue (paid orders, country-filtered) ──
+      Order.aggregate([
+        {
+          $match: {
+            ...countryMatch,
+            "payment.status": "paid",
+            status:           { $ne: "pending" }
           }
         },
         {
           $group: {
             _id:          null,
             totalRevenue: { $sum: "$pricing.total" },
-            totalOrders:  { $sum: 1 },
+            totalOrders:  { $sum: 1 }
           }
         }
       ])
 
     ]);
 
-    // ── Default counts matching your schema enum ─
+    // ── Default counts ───────────────────────────
     const statusCounts = {
       confirmed:        0,
       processing:       0,
@@ -471,16 +481,16 @@ router.get("/order-status-counts", auth, adminAuth, async (req, res) => {
       success: true,
       counts: {
         ...statusCounts,
-        totalRevenue,   // sum of pricing.total for all paid orders
-        paidOrders,     // count of paid orders
+        totalRevenue,
+        paidOrders,
       }
     });
 
   } catch (error) {
     console.error("Error fetching order status counts:", error);
     return res.status(500).json({
-      success:  false,
-      message:  error.message || "Failed to fetch order counts",
+      success: false,
+      message: error.message || "Failed to fetch order counts",
     });
   }
 });
