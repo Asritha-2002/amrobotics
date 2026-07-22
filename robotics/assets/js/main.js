@@ -11,6 +11,7 @@
       // Map to your supported stores — default to IN for anything not US
       const store = countryCode === "US" ? "US" : "IN";
       localStorage.setItem("selectedCountry", store);
+      window.dispatchEvent(new CustomEvent("countryChanged"));
       console.log(`[store] Auto-detected country: ${countryCode} → ${store} store`);
     })
     .catch(() => {

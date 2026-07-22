@@ -206,18 +206,35 @@
 
             <!-- 🔸 Desktop Icons -->
             <div class="col-auto d-none d-lg-flex align-items-center gap-3">
+                <!-- COUNTRY TOGGLE -->
+  <div class="country-toggle-wrap" title="Switch Store">
+    <button class="country-toggle-btn" id="country-toggle-btn" onclick="toggleCountry()">
+      <span class="toggle-flag" id="toggle-flag">🇮🇳</span>
+      <span class="toggle-label" id="toggle-label">IN</span>
+      <div class="toggle-track" id="toggle-track">
+        <div class="toggle-thumb" id="toggle-thumb"></div>
+      </div>
+      <span class="toggle-label" id="toggle-label-us">US</span>
+      <span class="toggle-flag" id="toggle-flag-us">🇺🇸</span>
+    </button>
+  </div>
               <a href="cart.html" class="icon-btn position-relative" title="Shopping Cart">
                 <i class="far fa-shopping-cart"></i>
                 <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none;font-size:10px;">0</span>
               </a>
-              <a href="profile.html" class="icon-btn" title="Profile">
-                <i class="far fa-user-circle" style="font-size:20px;"></i>
-              </a>
+             <a href="javascript:void(0)" onclick="navigateToProfile()" class="icon-btn" title="Profile">
+  <i class="far fa-user-circle" style="font-size:20px;"></i>
+</a>
             </div>
           </div>
 
           <!-- 🔹 Mobile Navigation Buttons -->
           <div class="mobile-nav d-flex d-lg-none align-items-center gap-2">
+            <button class="country-toggle-btn country-toggle-mobile" id="country-toggle-btn-mobile"
+          onclick="toggleCountry()" title="Switch Store">
+    <span id="mobile-flag">🇮🇳</span>
+    <span id="mobile-label" style="font-size:11px;font-weight:700;color:#fff;">IN</span>
+  </button>
             <a href="javascript:void(0)" class="icon-btn th-menu-toggle" title="Menu">
               <i class="far fa-bars"></i>
             </a>
@@ -350,6 +367,101 @@
 .th-header.header-layout2 {
   margin-bottom: 0 !important;
 }
+/* ── COUNTRY TOGGLE ───────────────────────────── */
+.country-toggle-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.country-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #3f3f40;
+  border: none;
+  border-radius: 30px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background .2s ease;
+  height: 42px;
+}
+
+.country-toggle-btn:hover {
+  background: #555;
+}
+
+.toggle-flag {
+  font-size: 16px;
+  line-height: 1;
+  transition: opacity .25s ease;
+}
+
+.toggle-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .5px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* The sliding track */
+.toggle-track {
+  width: 36px;
+  height: 20px;
+  background: rgba(255,255,255,.15);
+  border-radius: 20px;
+  position: relative;
+  transition: background .25s ease;
+  flex-shrink: 0;
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform .25s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+}
+
+/* US selected state — thumb slides right */
+.country-toggle-btn.us-active .toggle-thumb {
+  transform: translateX(16px);
+}
+
+.country-toggle-btn.us-active .toggle-track {
+  background: rgba(255,255,255,.3);
+}
+
+/* dim inactive flags */
+.country-toggle-btn .toggle-flag {
+  opacity: .4;
+}
+
+.country-toggle-btn .toggle-flag:first-child {
+  opacity: 1; /* IN flag active by default */
+}
+
+.country-toggle-btn.us-active .toggle-flag:first-child {
+  opacity: .4;
+}
+
+.country-toggle-btn.us-active #toggle-flag-us {
+  opacity: 1 !important;
+}
+
+/* Mobile toggle button */
+.country-toggle-mobile {
+  background: #3f3f40;
+  border-radius: 20px;
+  padding: 5px 10px;
+  height: 36px;
+  gap: 4px;
+}
 
 </style>
 <br><br><br><br><br><br>  <!-- Hero section -->
@@ -436,6 +548,7 @@
 
 <!-- Swiper JS -->
  <script src="assets/js/config.js"></script>
+ <script src="assets/js/country-toggle.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>

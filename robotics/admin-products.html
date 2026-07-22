@@ -496,6 +496,7 @@ select.form-control{cursor:pointer;}
         </div>
         <div class="img-preview-grid" id="new-images-grid"></div>
       </div>
+
       <div class="form-section">
         <div class="form-section-title">Category Image <span style="font-weight:400;color:#bbb;">(optional)</span></div>
         <div id="existing-cat-img-wrap" style="display:none;margin-bottom:10px;">
@@ -512,6 +513,27 @@ select.form-control{cursor:pointer;}
         </div>
         <div id="new-cat-img-preview"></div>
       </div>
+      <div class="form-section">
+  <div class="form-section-title">Dimensions & Weight <span style="font-weight:400;color:#bbb;">(for shipping)</span></div>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Weight (kg) <span class="req">*</span></label>
+      <input type="number" id="f-weight" class="form-control" placeholder="e.g. 0.25" min="0" step="0.01">
+    </div>
+    <div class="form-group">
+      <label>Length (cm) <span class="req">*</span></label>
+      <input type="number" id="f-length" class="form-control" placeholder="e.g. 15" min="0" step="0.1">
+    </div>
+    <div class="form-group">
+      <label>Breadth (cm) <span class="req">*</span></label>
+      <input type="number" id="f-breadth" class="form-control" placeholder="e.g. 10" min="0" step="0.1">
+    </div>
+    <div class="form-group">
+      <label>Height (cm) <span class="req">*</span></label>
+      <input type="number" id="f-height" class="form-control" placeholder="e.g. 5" min="0" step="0.1">
+    </div>
+  </div>
+</div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeProductModal()">Cancel</button>
@@ -723,11 +745,20 @@ function openViewDrawer(id) {
         <span class="vd-label">Stock Qty</span>
         <span class="vd-value" style="color:${stockColor};">${p.stock ?? 0} units</span>
       </div>
+     
       <div class="vd-stock-bar-wrap">
         <div class="vd-stock-bar-bg">
           <div class="vd-stock-bar-fill" style="width:${stockPct}%;background:${stockColor};"></div>
         </div>
       </div>
+       <div class="vd-row" style="margin-top:10px;">
+  <span class="vd-label">Dimensions</span>
+  <span class="vd-value">${p.length ?? '—'} × ${p.breadth ?? '—'} × ${p.height ?? '—'} cm</span>
+</div>
+<div class="vd-row">
+  <span class="vd-label">Weight</span>
+  <span class="vd-value">${p.weight ?? '—'} kg</span>
+</div>
     </div>
 
     <div class="vd-section">
@@ -887,6 +918,10 @@ function openEditModal(id) {
   document.getElementById('f-status').value           = p.status           || 'active';
   document.getElementById('f-shortDescription').value = p.shortDescription || '';
   document.getElementById('f-fullDescription').value  = p.fullDescription  || '';
+  document.getElementById('f-weight').value  = p.weight  ?? '';
+document.getElementById('f-length').value  = p.length  ?? '';
+document.getElementById('f-breadth').value = p.breadth ?? '';
+document.getElementById('f-height').value  = p.height  ?? '';
 
   const existGrid = document.getElementById('existing-images-grid');
   const existWrap = document.getElementById('existing-images-wrap');
@@ -922,7 +957,7 @@ function closeProductModal() {
 function resetForm() {
   ['f-name','f-brand','f-country','f-sku','f-slug','f-category','f-subCategory',
    'f-tags','f-highlights','f-originalPrice','f-sellingPrice','f-stock',
-   'f-shortDescription','f-fullDescription'].forEach(id => {
+   'f-shortDescription','f-fullDescription','f-weight', 'f-length', 'f-breadth', 'f-height'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
@@ -968,10 +1003,18 @@ async function submitProduct() {
   const sellingPrice  = document.getElementById('f-sellingPrice').value.trim();
   const category      = document.getElementById('f-category').value.trim();
   const stock         = document.getElementById('f-stock').value.trim();
+  const weight  = document.getElementById('f-weight').value.trim();
+const length  = document.getElementById('f-length').value.trim();
+const breadth = document.getElementById('f-breadth').value.trim();
+const height  = document.getElementById('f-height').value.trim();
 
   if (!name)    { showToast('Product name is required', 'error'); return; }
   if (!country) { showToast('Country is required', 'error'); return; }
   if (!stock)   { showToast('Stock quantity is required', 'error'); return; }
+  if (!weight)  { showToast('Weight is required', 'error');  return; }
+if (!length)  { showToast('Length is required', 'error');  return; }
+if (!breadth) { showToast('Breadth is required', 'error'); return; }
+if (!height)  { showToast('Height is required', 'error');  return; }
   if (!editingId && !originalPrice) { showToast('Original price is required', 'error'); return; }
   if (!editingId && !sellingPrice)  { showToast('Selling price is required', 'error'); return; }
   if (!editingId && !category)      { showToast('Category is required', 'error'); return; }
@@ -987,7 +1030,7 @@ async function submitProduct() {
   try {
     const fd = new FormData();
     const textFields = {
-      name, category, country, stock,
+      name, category, country, stock,weight, length, breadth, height,
       brand:            document.getElementById('f-brand').value.trim(),
       sku:              document.getElementById('f-sku').value.trim(),
       slug:             document.getElementById('f-slug').value.trim(),

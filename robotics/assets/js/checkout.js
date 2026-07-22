@@ -23,6 +23,39 @@ const totalSteps   = 3;
 let selectedAddressId = null;
 let addressMode       = "form"; // "saved" | "form"
 
+
+const COUNTRY_NAME_MAP = {
+  "india":          "IN",
+  "in":             "IN",
+  "united states":  "US",
+  "usa":            "US",
+  "us":             "US",
+  "united states of america": "US",
+};
+function getCountryCodeFromAddress(countryString) {
+  return COUNTRY_NAME_MAP[(countryString || "").toLowerCase().trim()] || null;
+}
+function validateCountryMatch(addressCountry) {
+  const selectedCountry  = localStorage.getItem("selectedCountry") || "IN";
+  const addressCode      = getCountryCodeFromAddress(addressCountry);
+
+  if (!addressCode) {
+    showToast(`We don't deliver to "${addressCountry}" yet. Please use India or US address.`, "error");
+    return false;
+  }
+
+  if (addressCode !== selectedCountry) {
+    const storeLabel   = selectedCountry === "IN" ? "India (IN)" : "US";
+    const addressLabel = addressCode      === "IN" ? "India"      : "United States";
+    showToast(
+      `Your store is set to ${storeLabel} but your address is in ${addressLabel}. Please match them or switch your store country.`,
+      "error"
+    );
+    return false;
+  }
+
+  return true;
+}
 /* ── auth helpers ──────────────────────────────── */
 
 function getToken() {
@@ -91,7 +124,7 @@ function loadPayPalSDK() {
     const clientId = sandboxClientId;
 
     const script = document.createElement("script");
-    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currency}&intent=capture`;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${currency}&intent=capture&disable-funding=paylater,venmo`;
     script.onload  = () => resolve();
     script.onerror = () => reject(new Error("PayPal SDK failed to load"));
     document.body.appendChild(script);
@@ -634,6 +667,13 @@ function nextStep() {
 
 async function saveSelectedAddress() {
   try {
+    // fetch addresses to get the country of selected one
+    const addrRes  = await fetch(`${BASE_API}/user/checkout-addresses`, { headers: getAuthHeaders() });
+    const addrData = await addrRes.json();
+    const addr     = (addrData.addresses || []).find(a => a._id === selectedAddressId);
+
+    if (addr && !validateCountryMatch(addr.country)) return;
+
     const res  = await fetch(`${BASE_API}/user/select-address`, {
       method: "POST", headers: getAuthHeaders(),
       body:   JSON.stringify({ addressId: selectedAddressId })
@@ -669,6 +709,7 @@ async function saveFormAddress() {
     country:      form.elements.country.value.trim(),
     saveForFuture,
   };
+  if (!validateCountryMatch(addressData.country)) return;
 
   try {
     if (editingId) {
@@ -814,42 +855,45 @@ async function renderPayPalButton() {
   const amount          = finalTotal.toFixed(2);
 
   paypal.Buttons({
-    style: {
-      layout: "vertical",
-      color:  "blue",
-      shape:  "rect",
-      label:  "pay"
-    },
+  style: {
+    layout: "vertical",
+    color:  "blue",
+    shape:  "rect",
+    label:  "pay"
+  },
 
-    createOrder: function(data, actions) {
-      return actions.order.create({
-        purchase_units: [{
-          amount: { value: amount },
-          description: "AM Robotics Order"
-        }]
-      });
-    },
+  // explicitly disable funding sources that cause issues in sandbox
+  fundingSource: paypal.FUNDING.PAYPAL,
 
-    onApprove: function(data, actions) {
-      showLoader();
-      return actions.order.capture().then(function(details) {
-        hideLoader();
-        showToast(`Payment successful! Thank you, ${details.payer.name.given_name}.`, "success");
-        placeOrder(details.id);
-      });
-    },
+  createOrder: function(data, actions) {
+    return actions.order.create({
+      purchase_units: [{
+        amount: { value: amount },
+        description: "AM Robotics Order"
+      }]
+    });
+  },
 
-    onError: function(err) {
+  onApprove: function(data, actions) {
+    showLoader();
+    return actions.order.capture().then(function(details) {
       hideLoader();
-      console.error("[paypal] error:", err);
-      showToast("Payment failed. Please try again.", "error");
-    },
+      showToast(`Payment successful! Thank you, ${details.payer.name.given_name}.`, "success");
+      placeOrder(details.id);
+    });
+  },
 
-    onCancel: function() {
-      showToast("Payment cancelled.", "info");
-    }
+  onError: function(err) {
+    hideLoader();
+    console.error("[paypal] error:", err);
+    showToast("Payment failed. Please try again.", "error");
+  },
 
-  }).render("#paypal-button-container");
+  onCancel: function() {
+    showToast("Payment cancelled.", "info");
+  }
+
+}).render("#paypal-button-container");
 }
 
 /* ── init on DOM ready ─────────────────────────── */
